@@ -347,7 +347,7 @@ class SettingRepository
     {
         return Setting::firstOrCreate(
             ['key' => 'meta_description'],
-            ['value' => 'PT Anam Maju Pantang Mundur']
+            ['value' => 'Unit SIM Fakultas Saintek UIN Malang']
         )->value;
     }
 
@@ -373,7 +373,7 @@ class SettingRepository
     {
         return Setting::firstOrCreate(
             ['key' => 'meta_author'],
-            ['value' => 'Hairul Anam']
+            ['value' => 'Unit SIM Fakultas Saintek UIN Malang']
         )->value;
     }
 
@@ -386,7 +386,7 @@ class SettingRepository
     {
         return Setting::firstOrCreate(
             ['key' => 'developer_name'],
-            ['value' => 'Hairul Anam']
+            ['value' => 'Unit SIM Fakultas Saintek UIN Malang']
         )->value;
     }
 

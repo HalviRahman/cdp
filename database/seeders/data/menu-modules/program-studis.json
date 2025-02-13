@@ -1,0 +1,12 @@
+{
+    "group_name": "Navigasi",
+    "menus": [
+        {
+            "menu_name": "Program Studi",
+            "route_name": "program-studis.index",
+            "icon": "fas fa-building",
+            "permission": "Program Studi",
+            "is_active_if_url_includes": "program-studis*"
+        }
+    ]
+}

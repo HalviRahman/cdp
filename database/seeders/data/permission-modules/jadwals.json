@@ -1,0 +1,50 @@
+[
+    {
+        "name": "Jadwal",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Jadwal"
+    },
+    {
+        "name": "Jadwal Tambah",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Jadwal"
+    },
+    {
+        "name": "Jadwal Impor Excel",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Jadwal"
+    },
+    {
+        "name": "Jadwal Ubah",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Jadwal"
+    },
+    {
+        "name": "Jadwal Hapus",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Jadwal"
+    },
+    {
+        "name": "Jadwal Ekspor",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Jadwal"
+    }
+]

@@ -29,7 +29,7 @@ class EmailRepository
     {
         return Setting::firstOrCreate(
             ['key' => 'mail_from_address'],
-            ['value' => 'hairulanam21@gmail.com']
+            ['value' => 'saintek@uin-malang.ac.id']
         )->value;
     }
 

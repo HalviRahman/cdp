@@ -50,10 +50,10 @@ class ViewShare
             view()->share('_is_login_with_github', false);
             view()->share('_meta_description', 'Meta Description');
             view()->share('_meta_keywords', "stisla, laravel 8 template, bootstrap 4");
-            view()->share('_meta_author', "Hairul Anam");
+            view()->share('_meta_author', "Lab SIM Fakultas Saintek UIN Malang");
             view()->share('_skin', "style");
             view()->share('_stisla_bg_login', asset('stisla/assets/img/unsplash/eberhard-grossgasteiger-1207565-unsplash.jpg'));
-            view()->share('_city', "Jember");
+            view()->share('_city', "Malang");
             view()->share('_country', "Indonesia");
             view()->share('_stisla_bg_home', asset('stisla/assets/img/unsplash/andre-benz-1214056-unsplash.jpg'));
             view()->share('_app_description', "Ini hanyalah sistem biasa");

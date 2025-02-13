@@ -14,7 +14,7 @@ class TestingController extends Controller
 
     public function sendEmail()
     {
-        (new EmailService)->testing('hairulanam21@gmail.com', Str::random(20));
+        (new EmailService)->testing('saintek@uin-malang.ac.id', Str::random(20));
     }
 
     public function modal()

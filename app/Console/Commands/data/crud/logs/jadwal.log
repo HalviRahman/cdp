@@ -1,0 +1,18 @@
+Created migration file => C:\halxyz\cdp\database\migrations/2025_02_13_101345_create_jadwal_table.php
+Created seeder file => C:\halxyz\cdp\database\seeders/JadwalSeeder.php
+Created model file => C:\halxyz\cdp\app\Models/Jadwal.php
+Created controller file => C:\halxyz\cdp\app\Http/Controllers/JadwalController.php
+Created api controller file => C:\halxyz\cdp\app\Http/Controllers/Api/JadwalController.php
+Created repository file => C:\halxyz\cdp\app\Repositories/JadwalRepository.php
+Created request file => C:\halxyz\cdp\app\Http/Requests/JadwalRequest.php
+Created api request file => C:\halxyz\cdp\app\Http/Requests/Api/JadwalRequest.php
+Created export excel file => C:\halxyz\cdp\app\Exports/JadwalExport.php
+Created import excel file => C:\halxyz\cdp\app\Imports/JadwalImport.php
+Created view index file => C:\halxyz\cdp\resources/views/stisla/jadwals/index.blade.php
+Created view form file => C:\halxyz\cdp\resources/views/stisla/jadwals/form.blade.php
+Created view export pdf file => C:\halxyz\cdp\resources/views/stisla/jadwals/export-pdf.blade.php
+Created view export excel example file => C:\halxyz\cdp\resources/views/stisla/jadwals/export-excel-example.blade.php
+Created permission file => C:\halxyz\cdp\database\seeders/data/permission-modules/jadwals.json
+Created routing file => C:\halxyz\cdp\routes/modules/jadwal.php
+Created menu setting file => C:\halxyz\cdp\database\seeders/data/menu-modules/jadwals.json
+Created 17 files

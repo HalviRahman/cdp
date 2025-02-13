@@ -1,0 +1,18 @@
+Created migration file => C:\halxyz\cdp\database\migrations/2025_02_13_095917_create_program_studi_table.php
+Created seeder file => C:\halxyz\cdp\database\seeders/ProgramStudiSeeder.php
+Created model file => C:\halxyz\cdp\app\Models/ProgramStudi.php
+Created controller file => C:\halxyz\cdp\app\Http/Controllers/ProgramStudiController.php
+Created api controller file => C:\halxyz\cdp\app\Http/Controllers/Api/ProgramStudiController.php
+Created repository file => C:\halxyz\cdp\app\Repositories/ProgramStudiRepository.php
+Created request file => C:\halxyz\cdp\app\Http/Requests/ProgramStudiRequest.php
+Created api request file => C:\halxyz\cdp\app\Http/Requests/Api/ProgramStudiRequest.php
+Created export excel file => C:\halxyz\cdp\app\Exports/ProgramStudiExport.php
+Created import excel file => C:\halxyz\cdp\app\Imports/ProgramStudiImport.php
+Created view index file => C:\halxyz\cdp\resources/views/stisla/program-studis/index.blade.php
+Created view form file => C:\halxyz\cdp\resources/views/stisla/program-studis/form.blade.php
+Created view export pdf file => C:\halxyz\cdp\resources/views/stisla/program-studis/export-pdf.blade.php
+Created view export excel example file => C:\halxyz\cdp\resources/views/stisla/program-studis/export-excel-example.blade.php
+Created permission file => C:\halxyz\cdp\database\seeders/data/permission-modules/program-studis.json
+Created routing file => C:\halxyz\cdp\routes/modules/program-studi.php
+Created menu setting file => C:\halxyz\cdp\database\seeders/data/menu-modules/program-studis.json
+Created 17 files

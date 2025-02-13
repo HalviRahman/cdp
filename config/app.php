@@ -20,7 +20,7 @@ return [
 
     'is_cdn' => env('APP_IS_CDN', false),
     'template' => env('APP_TEMPLATE', 'stisla'),
-    'developer_name' => env('APP_DEVELOPER_NAME', 'Hairul Anam'),
+    'developer_name' => env('APP_DEVELOPER_NAME', 'Unit SIM Fakultas Saintek UIN Malang'),
     'is_showing_developer' => env('APP_IS_SHOWING_DEVELOPER', false),
     'version' => '1.0.0',
     'is_demo' => env('APP_IS_DEMO', false),
