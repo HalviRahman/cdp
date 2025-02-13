@@ -1,0 +1,50 @@
+[
+    {
+        "name": "Proposal",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Proposal"
+    },
+    {
+        "name": "Proposal Tambah",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Proposal"
+    },
+    {
+        "name": "Proposal Impor Excel",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Proposal"
+    },
+    {
+        "name": "Proposal Ubah",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Proposal"
+    },
+    {
+        "name": "Proposal Hapus",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Proposal"
+    },
+    {
+        "name": "Proposal Ekspor",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Proposal"
+    }
+]

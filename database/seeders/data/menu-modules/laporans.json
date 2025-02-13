@@ -1,0 +1,12 @@
+{
+    "group_name": "Navigasi",
+    "menus": [
+        {
+            "menu_name": "Laporan",
+            "route_name": "laporans.index",
+            "icon": "fas fa-file-text",
+            "permission": "Laporan",
+            "is_active_if_url_includes": "laporans*"
+        }
+    ]
+}

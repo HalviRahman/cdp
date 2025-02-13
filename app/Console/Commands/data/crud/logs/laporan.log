@@ -1,0 +1,18 @@
+Created migration file => C:\halxyz\cdp\database\migrations/2025_02_13_110915_create_laporan_table.php
+Created seeder file => C:\halxyz\cdp\database\seeders/LaporanSeeder.php
+Created model file => C:\halxyz\cdp\app\Models/Laporan.php
+Created controller file => C:\halxyz\cdp\app\Http/Controllers/LaporanController.php
+Created api controller file => C:\halxyz\cdp\app\Http/Controllers/Api/LaporanController.php
+Created repository file => C:\halxyz\cdp\app\Repositories/LaporanRepository.php
+Created request file => C:\halxyz\cdp\app\Http/Requests/LaporanRequest.php
+Created api request file => C:\halxyz\cdp\app\Http/Requests/Api/LaporanRequest.php
+Created export excel file => C:\halxyz\cdp\app\Exports/LaporanExport.php
+Created import excel file => C:\halxyz\cdp\app\Imports/LaporanImport.php
+Created view index file => C:\halxyz\cdp\resources/views/stisla/laporans/index.blade.php
+Created view form file => C:\halxyz\cdp\resources/views/stisla/laporans/form.blade.php
+Created view export pdf file => C:\halxyz\cdp\resources/views/stisla/laporans/export-pdf.blade.php
+Created view export excel example file => C:\halxyz\cdp\resources/views/stisla/laporans/export-excel-example.blade.php
+Created permission file => C:\halxyz\cdp\database\seeders/data/permission-modules/laporans.json
+Created routing file => C:\halxyz\cdp\routes/modules/laporan.php
+Created menu setting file => C:\halxyz\cdp\database\seeders/data/menu-modules/laporans.json
+Created 17 files

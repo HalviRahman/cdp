@@ -1,0 +1,50 @@
+[
+    {
+        "name": "Laporan",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Laporan"
+    },
+    {
+        "name": "Laporan Tambah",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Laporan"
+    },
+    {
+        "name": "Laporan Impor Excel",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Laporan"
+    },
+    {
+        "name": "Laporan Ubah",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Laporan"
+    },
+    {
+        "name": "Laporan Hapus",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Laporan"
+    },
+    {
+        "name": "Laporan Ekspor",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Laporan"
+    }
+]

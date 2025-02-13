@@ -1,0 +1,12 @@
+{
+    "group_name": "Navigasi",
+    "menus": [
+        {
+            "menu_name": "Proposal",
+            "route_name": "proposals.index",
+            "icon": "fas fa-file-text",
+            "permission": "Proposal",
+            "is_active_if_url_includes": "proposals*"
+        }
+    ]
+}
