@@ -1,0 +1,50 @@
+[
+    {
+        "name": "Kelompok",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Kelompok"
+    },
+    {
+        "name": "Kelompok Tambah",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Kelompok"
+    },
+    {
+        "name": "Kelompok Impor Excel",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Kelompok"
+    },
+    {
+        "name": "Kelompok Ubah",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Kelompok"
+    },
+    {
+        "name": "Kelompok Hapus",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Kelompok"
+    },
+    {
+        "name": "Kelompok Ekspor",
+        "roles": [
+            "superadmin",
+            "admin"
+        ],
+        "group": "Kelompok"
+    }
+]

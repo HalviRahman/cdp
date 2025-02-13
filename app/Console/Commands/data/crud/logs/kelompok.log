@@ -1,0 +1,18 @@
+Created migration file => C:\halxyz\cdp\database\migrations/2025_02_13_113305_create_kelompok_table.php
+Created seeder file => C:\halxyz\cdp\database\seeders/KelompokSeeder.php
+Created model file => C:\halxyz\cdp\app\Models/Kelompok.php
+Created controller file => C:\halxyz\cdp\app\Http/Controllers/KelompokController.php
+Created api controller file => C:\halxyz\cdp\app\Http/Controllers/Api/KelompokController.php
+Created repository file => C:\halxyz\cdp\app\Repositories/KelompokRepository.php
+Created request file => C:\halxyz\cdp\app\Http/Requests/KelompokRequest.php
+Created api request file => C:\halxyz\cdp\app\Http/Requests/Api/KelompokRequest.php
+Created export excel file => C:\halxyz\cdp\app\Exports/KelompokExport.php
+Created import excel file => C:\halxyz\cdp\app\Imports/KelompokImport.php
+Created view index file => C:\halxyz\cdp\resources/views/stisla/kelompoks/index.blade.php
+Created view form file => C:\halxyz\cdp\resources/views/stisla/kelompoks/form.blade.php
+Created view export pdf file => C:\halxyz\cdp\resources/views/stisla/kelompoks/export-pdf.blade.php
+Created view export excel example file => C:\halxyz\cdp\resources/views/stisla/kelompoks/export-excel-example.blade.php
+Created permission file => C:\halxyz\cdp\database\seeders/data/permission-modules/kelompoks.json
+Created routing file => C:\halxyz\cdp\routes/modules/kelompok.php
+Created menu setting file => C:\halxyz\cdp\database\seeders/data/menu-modules/kelompoks.json
+Created 17 files

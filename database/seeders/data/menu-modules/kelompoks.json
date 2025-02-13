@@ -1,0 +1,12 @@
+{
+    "group_name": "Navigasi",
+    "menus": [
+        {
+            "menu_name": "Kelompok",
+            "route_name": "kelompoks.index",
+            "icon": "fas fa-users",
+            "permission": "Kelompok",
+            "is_active_if_url_includes": "kelompoks*"
+        }
+    ]
+}
