@@ -45,7 +45,63 @@
 
     @include('stisla.auth.login.includes.btn-social')
 
-  </div>
-@endsection
+    <div class="mt-5">
+      <!-- Tabel Jadwal -->
+      <div class="schedule">
+        {{-- <h3>Jadwal</h3> --}}
+        <table class="table table-sm table-bordered table-striped table-hover">
+          <thead class="custom-thead">
+            <tr>
+              <th class="text-center">No</th>
+              <th>Tanggal Mulai</th>
+              <th>Tanggal Selesai</th>
+              <th>Kegiatan</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach ($jadwal as $index => $item)
+              <tr>
+                <td class="text-center">{{ $index + 1 }}</td>
+                <td>{{ \Carbon\Carbon::parse($item->tgl_mulai)->translatedFormat('d F Y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($item->tgl_selesai)->translatedFormat('d F Y') }}</td>
+                <td>{{ $item->keterangan }}</td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+      <!-- Akhir Tabel Jadwal -->
 
-@include('stisla.auth.script-gcaptcha')
+    </div>
+  @endsection
+
+  @include('stisla.auth.script-gcaptcha')
+
+  <style>
+    .custom-thead {
+      background-color: #3e5c76;
+      /* Ganti dengan warna yang diinginkan */
+      color: #fff !important;
+    }
+
+    .schedule table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .schedule td {
+      padding: 8px;
+      text-align: left;
+      border: 1px solid #424242 !important;
+      color: #000 !important;
+    }
+
+    .schedule th {
+      background-color: #3e5c76;
+      color: white;
+    }
+
+    .schedule tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  </style>

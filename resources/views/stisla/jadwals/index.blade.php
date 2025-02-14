@@ -108,7 +108,7 @@
                   <h6 class="text-primary">{!! __('Aksi Ekspor <small>(Client Side)</small>') !!}</h6>
                 @endif
 
-                <table class="table table-striped table-hovered" id="datatable"  @if ($canExport) data-export="true" data-title="{{ $title }}" @endif>
+                <table class="table table-striped table-hovered" id="datatable" @if ($canExport) data-export="true" data-title="{{ $title }}" @endif>
                   <thead>
                     <tr>
                       <th class="text-center">#</th>
@@ -122,8 +122,8 @@
                     @foreach ($data as $item)
                       <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->tgl_mulai }}</td>
-                        <td>{{ $item->tgl_selesai }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->tgl_mulai)->translatedFormat('d F Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->tgl_selesai)->translatedFormat('d F Y') }}</td>
                         <td>{{ $item->keterangan }}</td>
                         <td>
                           @if ($canUpdate)
@@ -156,9 +156,7 @@
 @endpush
 
 @push('scripts')
-  <script>
-
-  </script>
+  <script></script>
 @endpush
 
 @push('modals')

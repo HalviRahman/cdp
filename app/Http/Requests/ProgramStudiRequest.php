@@ -25,15 +25,15 @@ class ProgramStudiRequest extends FormRequest
     {
         if ($this->isMethod('put')) {
             return [
-				'nama_prodi' => ["required"],
-				'kuota' => ["required"],
-
+                'nama_prodi' => ["required"],
+                'kuota' => ["required"],
+                'jenjang' => ["required"],
             ];
         }
         return [
-			'nama_prodi' => ["required"],
-			'kuota' => ["required"],
-
+            'nama_prodi' => ["required"],
+            'kuota' => ["required"],
+            'jenjang' => ["required"],
         ];
     }
 }

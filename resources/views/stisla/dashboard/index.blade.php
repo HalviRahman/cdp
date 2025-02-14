@@ -6,28 +6,26 @@
 
 @section('content')
   <div class="section-header">
-    <h1>{{ __('Dashboard') }}</h1>
+    {{-- <h1>{{ __('Dashboard') }}</h1> --}}
+    <h1>Dashboard</h1>
   </div>
   <div class="row">
-    <div class="col-12 mb-4">
+    {{-- <div class="col-12 mb-4">
       <div class="hero text-white hero-bg-image" data-background="{{ $_stisla_bg_home }}">
         <div class="hero-inner">
-          <h2>{{ __('Selamat Datang') }}, {{ Auth::user()->name ?? 'Your Name' }}</h2>
+          <h2 class="float-left">{{ __('Halo') }}, {{ Auth::user()->name ?? 'Your Name' }}</h2>
+          <div class="mt-4 float-right">
+            <a href="{{ route('profile.index') }}" class="btn btn-outline-white btn-lg btn-icon icon-left">
+              <i class="far fa-user"></i> {{ __('Lihat Profil') }}
+            </a>
+          </div>
+          <div style="clear: both;"></div>
           <p class="lead">{{ $_app_description }}</p>
-
-          @if (auth()->user()->can('Profil'))
-            <div class="mt-4">
-              <a href="{{ route('profile.index') }}" class="btn btn-outline-white btn-lg btn-icon icon-left">
-                <i class="far fa-user"></i> {{ __('Lihat Profil') }}
-              </a>
-            </div>
-          @endif
-
         </div>
       </div>
-    </div>
+    </div> --}}
 
-    @foreach ($widgets ?? range(1, 8) as $item)
+    {{-- @foreach ($widgets ?? range(1, 8) as $item)
       <div class="col-lg-3 col-md-3 col-sm-6 col-12">
         <div class="card card-statistic-1" @if ($item->route ?? false) onclick="openTo('{{ $item->route }}')" style="cursor: pointer;" @endif>
           <div class="card-icon bg-{{ $item->bg ?? 'primary' }}">
@@ -43,9 +41,9 @@
           </div>
         </div>
       </div>
-    @endforeach
+    @endforeach --}}
 
-    @if ($user->can('Log Aktivitas'))
+    {{-- @if ($user->can('Log Aktivitas'))
       <div class="col-12">
         <div class="card">
           <div class="card-header">
@@ -99,7 +97,7 @@
           </div>
         </div>
       </div>
-    @endif
+    @endif --}}
 
     {{-- Box 1 --}}
     <div class="col-12 col-sm-12 col-lg-6">
@@ -112,7 +110,7 @@
                 <p>Kelola jadwal kegiatan CDP</p>
               </div>
               <div class="author-box-job text-center">
-                <a href="#" class="btn btn-warning mt-3">
+                <a href="{{ route('jadwals.index') }}" class="btn btn-warning mt-3">
                   <i class="fa fa-eye"></i> Akses
                 </a>
               </div>
@@ -152,7 +150,7 @@
                 <p>Lihat rekap laporan kegiatan CDP</p>
               </div>
               <div class="author-box-job text-center">
-                <a href="#" class="btn btn-info mt-3">
+                <a href="{{ route('laporans.index') }}" class="btn btn-info mt-3">
                   <i class="fa fa-eye"></i> Akses
                 </a>
               </div>
@@ -167,12 +165,12 @@
         <div class="card-body">
           <div class="card-body">
             <div class="author-box-name text-center">
-              <a href="#" class="text-dark">Kuota Proposal</a>
+              <a href="{{ route('program-studis.index') }}" class="text-dark">Kuota Proposal</a>
               <div class="author-box-job text-center">
                 <p>Setting kuota proposal Prodi</p>
               </div>
               <div class="author-box-job text-center">
-                <a href="#" class="btn btn-danger mt-3">
+                <a href="{{ route('program-studis.index') }}" class="btn btn-danger mt-3">
                   <i class="fa fa-eye"></i> Akses
                 </a>
               </div>
@@ -192,7 +190,7 @@
                 <p>Ajukan proposal CDP baru sebagai ketua atau anggota kelompok</p>
               </div>
               <div class="author-box-job text-center">
-                <a href="#" class="btn btn-primary mt-3">
+                <a href="{{ route('proposals.create') }}" class="btn btn-primary mt-3">
                   <i class="fa fa-plus-circle"></i> Ajukan
                 </a>
               </div>
@@ -212,7 +210,7 @@
                 <p>Upload laporan kegiatan dan laporan keuangan CDP</p>
               </div>
               <div class="author-box-job text-center">
-                <a href="#" class="btn btn-success mt-3">
+                <a href="{{ route('laporans.create') }}" class="btn btn-success mt-3">
                   <i class="fa fa-upload"></i> Upload
                 </a>
               </div>

@@ -36,14 +36,25 @@
               @endisset
 
               <div class="row">
-				<div class="col-md-6">
-                  @include('stisla.includes.forms.inputs.input', ['required'=>true, 'type'=>'text', 'id'=>'nama_prodi', 'name'=>'nama_prodi', 'label'=>__('Program Studi')])
+
+
+                <div class="col-md-2">
+                  @include('stisla.includes.forms.selects.select2', [
+                      'required' => true,
+                      'type' => 'text',
+                      'id' => 'jenjang',
+                      'name' => 'jenjang',
+                      'label' => __('Jenjang'),
+                      'options' => ['S1' => 'S1', 'S2' => 'S2', 'Kolaborasi' => 'Kolaborasi'],
+                  ])
+                </div>
+                <div class="col-md-10">
+                  @include('stisla.includes.forms.inputs.input', ['required' => true, 'type' => 'text', 'id' => 'nama_prodi', 'name' => 'nama_prodi', 'label' => __('Program Studi')])
                 </div>
 
-				<div class="col-md-6">
-                  @include('stisla.includes.forms.inputs.input', ['required'=>true, 'type'=>'number', 'id'=>'kuota', 'name'=>'kuota', 'label'=>__('Kuota')])
+                <div class="col-md-12">
+                  @include('stisla.includes.forms.inputs.input', ['required' => true, 'type' => 'number', 'id' => 'kuota', 'name' => 'kuota', 'label' => __('Kuota')])
                 </div>
-
 
 
                 <div class="col-md-12">
@@ -66,9 +77,7 @@
 @endsection
 
 @push('css')
-
 @endpush
 
 @push('js')
-
 @endpush

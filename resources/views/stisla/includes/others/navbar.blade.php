@@ -68,9 +68,11 @@
       </div>
     </div> --}}
     {{-- <div class="form-inline mr-auto w-50"> --}}
-    <img class="logoku" src="{{ $_logo_url }}" alt="{{ $_company_name }}">
+    {{-- <img class="logoku" src="{{ $_logo_url }}" alt="{{ $_company_name }}"> --}}
     <h5 class="nama_perusahaan">
-      {{ $_company_name }}
+      {{-- SIM Community Development Program (CDP) Fakultas Saintek --}}
+      SIM-CDP Fakultas Saintek
+      {{-- {{ $_company_name }} --}}
     </h5>
     {{-- </div> --}}
   </form>

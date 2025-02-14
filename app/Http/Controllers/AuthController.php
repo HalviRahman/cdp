@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use App\Models\Jadwal;
 
 class AuthController extends StislaController
 {
@@ -80,7 +81,11 @@ class AuthController extends StislaController
             DB::beginTransaction();
             $data = $request->only(
                 [
-                    'name', 'email', 'phone_number', 'birth_date', 'address',
+                    'name',
+                    'email',
+                    'phone_number',
+                    'birth_date',
+                    'address',
                 ]
             );
             $data = array_merge([
@@ -121,7 +126,8 @@ class AuthController extends StislaController
                 'isGoogleCaptcha' => $isGoogleCaptcha,
             ];
             if ($template === 'tampilan 2' || Route::is('login2')) {
-                return view('stisla.auth.login.index2', $data);
+                $jadwal = Jadwal::all();
+                return view('stisla.auth.login.index2', $data, compact('jadwal'));
             } else {
                 return view('stisla.auth.login.index', $data);
             }
