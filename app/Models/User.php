@@ -12,6 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\ProgramStudi;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -24,6 +25,8 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'name',
+        'nip',
+        'prodi',
         'email',
         'avatar',
         'email_verified_at',

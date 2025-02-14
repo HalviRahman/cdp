@@ -12,6 +12,26 @@
     </div>
     <div class="col-md-6">
       @include('stisla.includes.forms.inputs.input', [
+          'id' => 'nip',
+          'name' => 'nip',
+          'label' => __('NIP'),
+          'type' => 'number',
+          'required' => true,
+          'icon' => 'fas fa-id-card',
+      ])
+    </div>
+    <div class="col-md-6">
+      @include('stisla.includes.forms.selects.select2', [
+          'id' => 'prodi',
+          'name' => 'prodi',
+          'label' => __('Prodi'),
+          'options' => $prodiOptions,
+          'required' => true,
+          'icon' => 'fas fa-graduation-cap',
+      ])
+    </div>
+    <div class="col-md-6">
+      @include('stisla.includes.forms.inputs.input', [
           'id' => 'phone_number',
           'name' => 'phone_number',
           'label' => __('No HP'),

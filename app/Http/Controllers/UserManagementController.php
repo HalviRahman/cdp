@@ -10,6 +10,8 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use App\Repositories\UserRepository;
+// use App\Models\ProgramStudi;
 
 class UserManagementController extends StislaController
 {
@@ -55,6 +57,8 @@ class UserManagementController extends StislaController
         $data = $request->only([
             'name',
             'email',
+            'nip',
+            'prodi',
             'phone_number',
             'birth_date',
             'address',
@@ -154,7 +158,10 @@ class UserManagementController extends StislaController
     public function edit(User $user)
     {
         $data = $this->getDetailData($user, false);
-        return view('stisla.user-management.users.form', $data);
+        $prodiOptions = $this->userRepository->getProdiOptions();
+        return view('stisla.user-management.users.form', array_merge($data, [
+            'prodiOptions' => $prodiOptions,
+        ]));
     }
 
     /**

@@ -12,16 +12,18 @@
     <tr>
       <th class="text-center">#</th>
       <th>{{ __('Nama') }}</th>
-      <th>{{ __('No HP') }}</th>
+      <th>{{ __('NIP') }}</th>
+      <th>{{ __('Prodi') }}</th>
+      {{-- <th>{{ __('No HP') }}</th>
       <th>{{ __('Tanggal Lahir') }}</th>
-      <th>{{ __('Alamat') }}</th>
+      <th>{{ __('Alamat') }}</th> --}}
       <th>{{ __('Email') }}</th>
       @if ($roleCount > 1)
         <th>{{ __('Role') }}</th>
       @endif
       <th>{{ __('Terakhir Masuk') }}</th>
       @if ($_is_login_must_verified)
-        <th>{{ __('Waktu Verifikasi') }}</th>
+        {{-- <th>{{ __('Waktu Verifikasi') }}</th> --}}
       @endif
       @if (($canUpdate || $canDelete || ($canForceLogin && $item->id != auth()->id())) && $isExport === false)
         <th>{{ __('Aksi') }}</th>
@@ -33,9 +35,11 @@
       <tr>
         <td>{{ $loop->iteration }}</td>
         <td>{{ $item->name }}</td>
-        <td>{{ $item->phone_number }}</td>
+        <td>{{ $item->nip }}</td>
+        <td>{{ $item->prodi ?? '-' }}</td>
+        {{-- <td>{{ $item->phone_number }}</td>
         <td>{{ $item->birth_date }}</td>
-        <td>{{ $item->address }}</td>
+        <td>{{ $item->address }}</td> --}}
         <td>
           <a href="mailto:{{ $item->email }}" target="_blank">
             {{ $item->email }}
@@ -53,9 +57,9 @@
           </td>
         @endif
         <td>{{ $item->last_login ?? '-' }}</td>
-        @if ($_is_login_must_verified)
+        {{-- @if ($_is_login_must_verified)
           <td>{{ $item->email_verified_at ?? '-' }}</td>
-        @endif
+        @endif --}}
         @if (($canUpdate || $canDelete || ($canForceLogin && $item->id != auth()->id())) && $isExport === false)
           <td style="width: 150px;">
             @if ($canUpdate)

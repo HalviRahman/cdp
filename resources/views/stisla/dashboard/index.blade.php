@@ -101,6 +101,127 @@
       </div>
     @endif
 
+    {{-- Box 1 --}}
+    <div class="col-12 col-sm-12 col-lg-6">
+      <div class="card author-box card-warning">
+        <div class="card-body">
+          <div class="card-body">
+            <div class="author-box-name text-center">
+              <a href="#" class="text-dark">Jadwal Kegiatan</a>
+              <div class="author-box-job text-center">
+                <p>Kelola jadwal kegiatan CDP</p>
+              </div>
+              <div class="author-box-job text-center">
+                <a href="#" class="btn btn-warning mt-3">
+                  <i class="fa fa-eye"></i> Akses
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{-- Box 2 - Rekap Pendaftaran --}}
+    <div class="col-12 col-sm-12 col-lg-6">
+      <div class="card author-box card-success">
+        <div class="card-body">
+          <div class="card-body">
+            <div class="author-box-name text-center">
+              <a href="#" class="text-dark">Rekap Pendaftaran</a>
+              <div class="author-box-job text-center">
+                <p>Lihat rekap pendaftaran peserta</p>
+              </div>
+              <div class="author-box-job text-center">
+                <a href="#" class="btn btn-success mt-3">
+                  <i class="fa fa-eye"></i> Akses
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{-- Box 3 --}}
+    <div class="col-12 col-sm-12 col-lg-6">
+      <div class="card author-box card-info">
+        <div class="card-body">
+          <div class="card-body">
+            <div class="author-box-name text-center">
+              <a href="#" class="text-dark">Rekap Laporan</a>
+              <div class="author-box-job text-center">
+                <p>Lihat rekap laporan kegiatan CDP</p>
+              </div>
+              <div class="author-box-job text-center">
+                <a href="#" class="btn btn-info mt-3">
+                  <i class="fa fa-eye"></i> Akses
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{-- Box 4 - Kuota Proposal --}}
+    <div class="col-12 col-sm-12 col-lg-6">
+      <div class="card author-box card-danger">
+        <div class="card-body">
+          <div class="card-body">
+            <div class="author-box-name text-center">
+              <a href="#" class="text-dark">Kuota Proposal</a>
+              <div class="author-box-job text-center">
+                <p>Setting kuota proposal Prodi</p>
+              </div>
+              <div class="author-box-job text-center">
+                <a href="#" class="btn btn-danger mt-3">
+                  <i class="fa fa-eye"></i> Akses
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{-- Box 5 - Ajukan Proposal --}}
+    <div class="col-12 col-sm-12 col-lg-6">
+      <div class="card author-box card-primary">
+        <div class="card-body">
+          <div class="card-body">
+            <div class="author-box-name text-center">
+              <a href="#" class="text-dark">Ajukan Proposal</a>
+              <div class="author-box-job text-center">
+                <p>Ajukan proposal CDP baru sebagai ketua atau anggota kelompok</p>
+              </div>
+              <div class="author-box-job text-center">
+                <a href="#" class="btn btn-primary mt-3">
+                  <i class="fa fa-plus-circle"></i> Ajukan
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{-- Box 6 - Upload Laporan --}}
+    <div class="col-12 col-sm-12 col-lg-6">
+      <div class="card author-box card-success">
+        <div class="card-body">
+          <div class="card-body">
+            <div class="author-box-name text-center">
+              <a href="#" class="text-dark">Upload Laporan</a>
+              <div class="author-box-job text-center">
+                <p>Upload laporan kegiatan dan laporan keuangan CDP</p>
+              </div>
+              <div class="author-box-job text-center">
+                <a href="#" class="btn btn-success mt-3">
+                  <i class="fa fa-upload"></i> Upload
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
   </div>
 @endsection

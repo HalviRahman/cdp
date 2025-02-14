@@ -53,7 +53,9 @@ class UserRequest extends FormRequest
             return [
                 'name'  => 'required',
                 'email' => 'required|email|unique:users,email,' . ($user->id ?? null) . ',id',
-                'role'  => 'required'
+                'role'  => 'required',
+                'nip'   => 'required',
+                'prodi' => 'required',
             ];
         }
         if (Route::is('api.users.store')) {
@@ -61,6 +63,8 @@ class UserRequest extends FormRequest
                 'name'                  => 'required',
                 'email'                 => 'required|unique:users,email',
                 'role'                  => 'required',
+                'nip'                   => 'required',
+                'prodi'                 => 'required',
                 'password'              => 'required|min:6|confirmed',
                 'password_confirmation' => 'required|min:6',
             ];
@@ -68,7 +72,9 @@ class UserRequest extends FormRequest
         return [
             'name'  => 'required',
             'email' => 'required|unique:users,email',
-            'role'  => 'required'
+            'role'  => 'required',
+            'nip'   => 'required',
+            'prodi' => 'required',
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\ActivityLog;
 use App\Models\PermissionGroup;
+use App\Models\ProgramStudi;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\Permission\Models\Permission;
@@ -20,6 +21,16 @@ class UserRepository extends Repository
     public function __construct()
     {
         $this->model = new User();
+    }
+
+    /**
+     * get prodi options
+     *
+     * @return array
+     */
+    public function getProdiOptions()
+    {
+        return ProgramStudi::pluck('nama_prodi', 'nama_prodi')->toArray();
     }
 
     /**
