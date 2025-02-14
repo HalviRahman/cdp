@@ -1,11 +1,4 @@
-# Laravel 10 Template With Stisla
-
-[![N|Solid](https://res.cloudinary.com/sistem-informasi/image/upload/c_scale,w_100/v1677141031/logo_srs66z.png)](https://anamapp.my.id)
-
-Free Starter Laravel 10 Template menggunakan [stisla admin dashboard ](https://github.com/stisla/stisla)
-
-Beberapa fitur atau komponen yang ada
-[![N|Solid](https://res.cloudinary.com/sistem-informasi/image/upload/v1715076280/oxosvere2fsuuamoqif8.png)](https://anamapp.my.id)
+# Laravel 10 CDP APP
 
 ## Fitur dan komponen
 
@@ -66,14 +59,6 @@ Beberapa fitur atau komponen yang ada
 -   Service dan repository pattern
 -   Log Request
 
-## How to install and run
-
--   `composer install`
--   setup your DB in `.env`
--   `php artisan jwt:secret`
--   `php artisan migrate --seed`
--   [optional] setup google captcha, google login, facebook login, github login, twitter login in `.env`
-
 ## Libraries dan Link Penting
 
 -   https://demo.getstisla.com/
@@ -91,17 +76,6 @@ Beberapa fitur atau komponen yang ada
 -   https://github.com/yajra/laravel-datatables
 -   https://github.com/tymondesigns/jwt-auth
 
-Terima kasih, bisa distar ataupun difork ya guys. Kalau ada request module atau apapun itu, bisa tulis di issue.
-Rencana nanti bakal kuupdate ke versi laravel terbaru 11
-
-#### Yuk Ramaikan channel youtubeku biar semangat ngonten dan belajar barengnya
-
-[![N|Solid](https://res.cloudinary.com/sistem-informasi/image/upload/c_scale,w_120,z_2.7/v1677481731/youtube-logo-hd-8_x1zdwb.png)](https://www.youtube.com/channel/UCwF-njZKFE30pZwWFtp84fA)
-
-#### Yang mau intip2 portofolioku bisa klik gambar di bawah
-
-[![N|Solid](https://res.cloudinary.com/sistem-informasi/image/upload/c_thumb,w_100/v1677481520/1664200200147_it7bza.jpg)](https://anamapp.my.id)
-
-atau kunjungi https://anamapp.my.id
+Credits: https://anamapp.my.id
 
 https://github.com/Anamcoollzz/laravel-10-template
