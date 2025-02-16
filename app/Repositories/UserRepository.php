@@ -12,7 +12,6 @@ use Spatie\Permission\Models\Role;
 
 class UserRepository extends Repository
 {
-
     /**
      * constructor method
      *
@@ -30,7 +29,20 @@ class UserRepository extends Repository
      */
     public function getProdiOptions()
     {
-        return ProgramStudi::pluck('nama_prodi', 'nama_prodi')->toArray();
+        return ProgramStudi::all()
+            ->mapWithKeys(function ($item) {
+                return [$item->jenjang . ' ' . $item->nama_prodi => $item->jenjang . ' ' . $item->nama_prodi];
+            })
+            ->toArray();
+    }
+
+    public function getAnggotaOptions()
+    {
+        return User::whereNotNull('prodi')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->email => $item->name . ' - ' . $item->jenjang . ' ' . $item->prodi];
+            });
     }
 
     /**
@@ -109,7 +121,10 @@ class UserRepository extends Repository
      */
     public function getUsers()
     {
-        $users = $this->model->with(['roles'])->latest()->get();
+        $users = $this->model
+            ->with(['roles'])
+            ->latest()
+            ->get();
         return $users;
     }
 
@@ -120,9 +135,7 @@ class UserRepository extends Repository
      */
     public function getUserOptions()
     {
-        return $this->getUsers()
-            ->pluck('name', 'id')
-            ->toArray();
+        return $this->getUsers()->pluck('name', 'id')->toArray();
     }
 
     /**
@@ -133,7 +146,10 @@ class UserRepository extends Repository
      */
     public function getPaginateUsers($perPage = 20)
     {
-        $users = $this->model->with(['roles'])->latest()->paginate($perPage);
+        $users = $this->model
+            ->with(['roles'])
+            ->latest()
+            ->paginate($perPage);
         return $users;
     }
 
@@ -144,7 +160,10 @@ class UserRepository extends Repository
      */
     public function getRoles()
     {
-        $roles = Role::with(['permissions'])->withCount(['permissions'])->latest()->get();
+        $roles = Role::with(['permissions'])
+            ->withCount(['permissions'])
+            ->latest()
+            ->get();
         return $roles;
     }
 
@@ -155,9 +174,7 @@ class UserRepository extends Repository
      */
     public function getRoleOptions()
     {
-        return $this->getRoles()
-            ->pluck('name', 'id')
-            ->toArray();
+        return $this->getRoles()->pluck('name', 'id')->toArray();
     }
 
     /**
@@ -248,7 +265,8 @@ class UserRepository extends Repository
     public function getPermissionJoinGroups()
     {
         $permissions = Permission::select(['permissions.*', 'permission_groups.group_name'])
-            ->join('permission_groups', 'permissions.permission_group_id', '=', 'permission_groups.id')->get();
+            ->join('permission_groups', 'permissions.permission_group_id', '=', 'permission_groups.id')
+            ->get();
         return $permissions;
     }
 
@@ -316,7 +334,9 @@ class UserRepository extends Repository
      */
     public function findRole(int $roleId)
     {
-        return Role::where('id', $roleId)->with(['permissions'])->first();
+        return Role::where('id', $roleId)
+            ->with(['permissions'])
+            ->first();
     }
 
     /**
@@ -329,8 +349,8 @@ class UserRepository extends Repository
     public function createRole(string $roleName, array $data)
     {
         $role = Role::create([
-            'name'       => $roleName,
-            'guard_name' => 'web'
+            'name' => $roleName,
+            'guard_name' => 'web',
         ]);
         if (isset($data['permissions'])) {
             $permissions = Permission::whereIn('name', $data['permissions'])->get();
@@ -397,10 +417,7 @@ class UserRepository extends Repository
      */
     public function getLogActivitiesPaginate($perPage = 20)
     {
-        return ActivityLog::query()
-            ->where('user_id', $this->getUserIdLogin())
-            ->latest()
-            ->paginate($perPage);
+        return ActivityLog::query()->where('user_id', $this->getUserIdLogin())->latest()->paginate($perPage);
     }
 
     /**

@@ -25,27 +25,27 @@ class ProposalRequest extends FormRequest
     {
         if ($this->isMethod('put')) {
             return [
-				'id_kelompok' => ["required"],
-				'judul_proposal' => ["required"],
-				'file_proposal' => ["required"],
-				'tgl_upload' => [],
-				'status' => [],
-				'verifikator' => ["required"],
-				'keterangan' => [],
-				'tgl_verifikasi' => [],
-
+                'id_kelompok' => [],
+                'judul_proposal' => ['required'],
+                'file_proposal' => ['required'],
+                'tgl_upload' => [],
+                'status' => [],
+                'verifikator' => [],
+                'keterangan' => [],
+                'tgl_verifikasi' => [],
+                'mahasiswa' => [],
             ];
         }
         return [
-			'id_kelompok' => ["required"],
-			'judul_proposal' => ["required"],
-			'file_proposal' => ["required"],
-			'tgl_upload' => [],
-			'status' => [],
-			'verifikator' => ["required"],
-			'keterangan' => [],
-			'tgl_verifikasi' => [],
-
+            'id_kelompok' => [],
+            'judul_proposal' => ['required'],
+            'file_proposal' => ['required'],
+            'tgl_upload' => [],
+            'status' => [],
+            'verifikator' => [],
+            'keterangan' => [],
+            'tgl_verifikasi' => [],
+            'mahasiswa' => [],
         ];
     }
 }

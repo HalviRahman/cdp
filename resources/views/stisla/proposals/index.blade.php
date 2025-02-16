@@ -108,18 +108,18 @@
                   <h6 class="text-primary">{!! __('Aksi Ekspor <small>(Client Side)</small>') !!}</h6>
                 @endif
 
-                <table class="table table-striped table-hovered" id="datatable"  @if ($canExport) data-export="true" data-title="{{ $title }}" @endif>
+                <table class="table table-striped table-hovered" id="datatable" @if ($canExport) data-export="true" data-title="{{ $title }}" @endif>
                   <thead>
                     <tr>
                       <th class="text-center">#</th>
-                      <th class="text-center">{{ __('ID Kelompok') }}</th>
+                      {{-- <th class="text-center">{{ __('ID Kelompok') }}</th> --}}
                       <th class="text-center">{{ __('Judul Proposal') }}</th>
                       <th class="text-center">{{ __('File Proposal') }}</th>
                       <th class="text-center">{{ __('Tanggal Upload') }}</th>
-                      <th class="text-center">{{ __('Status') }}</th>
-                      <th class="text-center">{{ __('Verifikator') }}</th>
-                      <th class="text-center">{{ __('Keterangan') }}</th>
-                      <th class="text-center">{{ __('Tanggal Verifikasi') }}</th>
+                      {{-- <th class="text-center">{{ __('Status') }}</th> --}}
+                      {{-- <th class="text-center">{{ __('Verifikator') }}</th> --}}
+                      {{-- <th class="text-center">{{ __('Keterangan') }}</th> --}}
+                      {{-- <th class="text-center">{{ __('Tanggal Verifikasi') }}</th> --}}
                       <th>{{ __('Aksi') }}</th>
                     </tr>
                   </thead>
@@ -127,14 +127,14 @@
                     @foreach ($data as $item)
                       <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->id_kelompok }}</td>
+                        {{-- <td>{{ $item->id_kelompok }}</td> --}}
                         <td>{{ $item->judul_proposal }}</td>
                         <td>{{ $item->file_proposal }}</td>
                         <td>{{ $item->tgl_upload }}</td>
-                        <td>{{ $item->status }}</td>
-                        <td>{{ $item->verifikator }}</td>
-                        <td>{{ $item->keterangan }}</td>
-                        <td>{{ $item->tgl_verifikasi }}</td>
+                        {{-- <td>{{ $item->status }}</td> --}}
+                        {{-- <td>{{ $item->verifikator }}</td> --}}
+                        {{-- <td>{{ $item->keterangan }}</td> --}}
+                        {{-- <td>{{ $item->tgl_verifikasi }}</td> --}}
                         <td>
                           @if ($canUpdate)
                             @include('stisla.includes.forms.buttons.btn-edit', ['link' => route('proposals.edit', [$item->id])])
@@ -156,6 +156,30 @@
       </div>
 
     </div>
+
+    <h2 class="section-title">Daftar Proposal</h2>
+
+    @foreach ($data as $proposal)
+      <div class="card">
+        <div class="card-body">
+          <h5>{{ $proposal->judul_proposal }}</h5>
+          <p>Ketua: {{ $proposal->ketua }}</p>
+          @if ($proposal->verifikator)
+            <p>Verifikator: {{ $proposal->verifikator->name }} ({{ $proposal->verifikator->role }})</p>
+            <p>Tanggal Verifikasi: {{ $proposal->tanggal_verifikasi->format('d M Y, H:i') }} WIB</p>
+          @endif
+          @if ($proposal->status == 'disetujui')
+            <span class="badge badge-success">Disetujui</span>
+          @elseif($proposal->status == 'ditolak')
+            <span class="badge badge-danger">Ditolak</span>
+            <p>Alasan: {{ $proposal->alasan }}</p>
+          @else
+            <span class="badge badge-warning">Menunggu Verifikasi</span>
+          @endif
+          <a href="{{ route('proposals.show', $proposal->id) }}" class="btn btn-primary">Detail</a>
+        </div>
+      </div>
+    @endforeach
   </div>
 @endsection
 
@@ -166,9 +190,7 @@
 @endpush
 
 @push('scripts')
-  <script>
-
-  </script>
+  <script></script>
 @endpush
 
 @push('modals')

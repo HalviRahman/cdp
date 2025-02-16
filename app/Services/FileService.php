@@ -18,7 +18,6 @@ use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class FileService
 {
-
     /**
      * execute upload
      *
@@ -43,6 +42,11 @@ class FileService
         return asset('uploads/' . $folderName . '/' . $filename);
     }
 
+    public function uploadProposal(\Illuminate\Http\UploadedFile $file)
+    {
+        return $this->executeUpload($file, 'proposal');
+    }
+
     /**
      * execute delete from storage
      *
@@ -51,7 +55,7 @@ class FileService
      */
     public function executeDeleteFromStorage(string $filepath)
     {
-        $exist    = Storage::exists($filepath);
+        $exist = Storage::exists($filepath);
         if ($exist) {
             Storage::delete($filepath);
             return true;
@@ -113,17 +117,18 @@ class FileService
     public function backupDatabase(string $date = null)
     {
         try {
-            if (is_null($date))
+            if (is_null($date)) {
                 $date = date('Y-m-d');
-            $query   = "SELECT table_name FROM information_schema.tables WHERE table_type = 'base table' AND table_schema='" . config('database.connections.mysql.database') . "';";
+            }
+            $query = "SELECT table_name FROM information_schema.tables WHERE table_type = 'base table' AND table_schema='" . config('database.connections.mysql.database') . "';";
             $results = DB::select($query);
-            $tables  = collect($results)->pluck('table_name')->toArray();
+            $tables = collect($results)->pluck('table_name')->toArray();
             $folder = str_replace('/', '\\', database_path('seeders/backups-' . $date));
             if (!file_exists($folder)) {
                 mkdir($folder);
             }
             foreach ($tables as $table) {
-                $json    = DB::table($table)->get()->toJson();
+                $json = DB::table($table)->get()->toJson();
                 $filepath = $folder . '/' . $table . '.json';
                 file_put_contents($filepath, $json);
             }
@@ -151,8 +156,8 @@ class FileService
             foreach ($files as $path) {
                 $table_name = str_replace($folder . '/', '', $path);
                 $table_name = str_replace('.json', '', $table_name);
-                $json       = file_get_contents(database_path($path));
-                $jsonArray  = json_decode($json, true);
+                $json = file_get_contents(database_path($path));
+                $jsonArray = json_decode($json, true);
                 DB::table($table_name)->truncate();
                 DB::table($table_name)->insert($jsonArray);
             }
@@ -390,9 +395,9 @@ class FileService
             $phps = File::directories($folder);
             $phps = collect($phps)->map(function ($php) {
                 return [
-                    'version'     => basename($php),
-                    'status_fpm'  => shell_exec('service php' . basename($php) . '-fpm status'),
-                    'path'        => $php,
+                    'version' => basename($php),
+                    'status_fpm' => shell_exec('service php' . basename($php) . '-fpm status'),
+                    'path' => $php,
                     'directories' => File::directories($php),
                 ];
             });
@@ -428,14 +433,15 @@ class FileService
      * @param string $pathToSave
      * @return string
      */
-    function base64ToJpeg(String $base64_string, String $folder)
+    function base64ToJpeg(string $base64_string, string $folder)
     {
         $pathToSave = storage_path('app/public/' . $folder . '/' . date('YmdHis_') . Str::random(20) . '.jpg');
         $pathToSave = str_replace('\\', '/', $pathToSave);
         $pathToSave = str_replace('//', '/', $pathToSave);
         $folder = dirname($pathToSave);
-        if (!File::exists($folder))
+        if (!File::exists($folder)) {
             File::makeDirectory($folder);
+        }
         // open the output file for writing
         $ifp = fopen($pathToSave, 'wb');
 

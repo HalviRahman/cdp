@@ -21,16 +21,7 @@ class Proposal extends Model
      *
      * @var array
      */
-    protected $fillable = [
-		'id_kelompok',
-		'judul_proposal',
-		'file_proposal',
-		'tgl_upload',
-		'status',
-		'verifikator',
-		'keterangan',
-		'tgl_verifikasi',
-    ];
+    protected $fillable = ['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi', 'mahasiswa'];
 
     /**
      * The attributes that should be cast to native types.
@@ -51,8 +42,7 @@ class Proposal extends Model
      *
      * @var array
      */
-    const TYPES = [
-	];
+    const TYPES = [];
 
     /**
      * Default with relationship

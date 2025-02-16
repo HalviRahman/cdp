@@ -16,6 +16,7 @@ use Illuminate\Http\Response;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Barryvdh\DomPDF\Facade as PDF;
+use App\Models\User;
 
 class ProposalController extends Controller
 {
@@ -53,7 +54,7 @@ class ProposalController extends Controller
      * @var FileService
      */
     private EmailService $emailService;
-    
+
     /**
      * exportable
      *
@@ -75,11 +76,11 @@ class ProposalController extends Controller
      */
     public function __construct()
     {
-        $this->proposalRepository      = new ProposalRepository;
-        $this->fileService            = new FileService;
-        $this->emailService           = new EmailService;
-        $this->NotificationRepository = new NotificationRepository;
-        $this->UserRepository         = new UserRepository;
+        $this->proposalRepository = new ProposalRepository();
+        $this->fileService = new FileService();
+        $this->emailService = new EmailService();
+        $this->NotificationRepository = new NotificationRepository();
+        $this->UserRepository = new UserRepository();
 
         $this->middleware('can:Proposal');
         $this->middleware('can:Proposal Tambah')->only(['create', 'store']);
@@ -98,19 +99,19 @@ class ProposalController extends Controller
     {
         $user = auth()->user();
         return view('stisla.proposals.index', [
-            'data'             => $this->proposalRepository->getLatest(),
-            'canCreate'        => $user->can('Proposal Tambah'),
-            'canUpdate'        => $user->can('Proposal Ubah'),
-            'canDelete'        => $user->can('Proposal Hapus'),
-            'canImportExcel'   => $user->can('Order Impor Excel') && $this->importable,
-            'canExport'        => $user->can('Order Ekspor') && $this->exportable,
-            'title'            => __('Proposal'),
-            'routeCreate'      => route('proposals.create'),
-            'routePdf'         => route('proposals.pdf'),
-            'routePrint'       => route('proposals.print'),
-            'routeExcel'       => route('proposals.excel'),
-            'routeCsv'         => route('proposals.csv'),
-            'routeJson'        => route('proposals.json'),
+            'data' => $this->proposalRepository->getLatest(),
+            'canCreate' => $user->can('Proposal Tambah'),
+            'canUpdate' => $user->can('Proposal Ubah'),
+            'canDelete' => $user->can('Proposal Hapus'),
+            'canImportExcel' => $user->can('Order Impor Excel') && $this->importable,
+            'canExport' => $user->can('Order Ekspor') && $this->exportable,
+            'title' => __('Proposal'),
+            'routeCreate' => route('proposals.create'),
+            'routePdf' => route('proposals.pdf'),
+            'routePrint' => route('proposals.print'),
+            'routeExcel' => route('proposals.excel'),
+            'routeCsv' => route('proposals.csv'),
+            'routeJson' => route('proposals.json'),
             'routeImportExcel' => route('proposals.import-excel'),
             'excelExampleLink' => route('proposals.import-excel-example'),
         ]);
@@ -124,10 +125,11 @@ class ProposalController extends Controller
     public function create()
     {
         return view('stisla.proposals.form', [
-            'title'         => __('Proposal'),
-            'fullTitle'     => __('Tambah Proposal'),
-            'routeIndex'    => route('proposals.index'),
-            'action'        => route('proposals.store')
+            'title' => __('Proposal'),
+            'fullTitle' => __('Tambah Proposal'),
+            'routeIndex' => route('proposals.index'),
+            'action' => route('proposals.store'),
+            'anggota' => $this->UserRepository->getAnggotaOptions(),
         ]);
     }
 
@@ -139,21 +141,13 @@ class ProposalController extends Controller
      */
     public function store(ProposalRequest $request)
     {
-        $data = $request->only([
-			'id_kelompok',
-			'judul_proposal',
-			'file_proposal',
-			'tgl_upload',
-			'status',
-			'verifikator',
-			'keterangan',
-			'tgl_verifikasi',
-        ]);
+        $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi']);
 
         // gunakan jika ada file
-        // if ($request->hasFile('file')) {
-        //     $data['file'] = $this->fileService->methodName($request->file('file'));
-        // }
+        if ($request->hasFile('file_proposal')) {
+            $data['file_proposal'] = $this->fileService->uploadProposal($request->file('file_proposal'));
+        }
+        $data['tgl_upload'] = now();
 
         $result = $this->proposalRepository->create($data);
 
@@ -169,9 +163,9 @@ class ProposalController extends Controller
         // gunakan jika mau kirim email
         // $this->emailService->methodName($result);
 
-        logCreate("Proposal", $result);
+        logCreate('Proposal', $result);
 
-        $successMessage = successMessageCreate("Proposal");
+        $successMessage = successMessageCreate('Proposal');
         return redirect()->back()->with('successMessage', $successMessage);
     }
 
@@ -184,11 +178,11 @@ class ProposalController extends Controller
     public function edit(Proposal $proposal)
     {
         return view('stisla.proposals.form', [
-            'd'             => $proposal,
-            'title'         => __('Proposal'),
-            'fullTitle'     => __('Ubah Proposal'),
-            'routeIndex'    => route('proposals.index'),
-            'action'        => route('proposals.update', [$proposal->id])
+            'd' => $proposal,
+            'title' => __('Proposal'),
+            'fullTitle' => __('Ubah Proposal'),
+            'routeIndex' => route('proposals.index'),
+            'action' => route('proposals.update', [$proposal->id]),
         ]);
     }
 
@@ -201,16 +195,7 @@ class ProposalController extends Controller
      */
     public function update(ProposalRequest $request, Proposal $proposal)
     {
-        $data = $request->only([
-			'id_kelompok',
-			'judul_proposal',
-			'file_proposal',
-			'tgl_upload',
-			'status',
-			'verifikator',
-			'keterangan',
-			'tgl_verifikasi',
-        ]);
+        $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi']);
 
         // gunakan jika ada file
         // if ($request->hasFile('file')) {
@@ -231,9 +216,9 @@ class ProposalController extends Controller
         // gunakan jika mau kirim email
         // $this->emailService->methodName($newData);
 
-        logUpdate("Proposal", $proposal, $newData);
+        logUpdate('Proposal', $proposal, $newData);
 
-        $successMessage = successMessageUpdate("Proposal");
+        $successMessage = successMessageUpdate('Proposal');
         return redirect()->back()->with('successMessage', $successMessage);
     }
 
@@ -261,9 +246,9 @@ class ProposalController extends Controller
         // $this->emailService->methodName($proposal);
 
         $this->proposalRepository->delete($proposal->id);
-        logDelete("Proposal", $proposal);
+        logDelete('Proposal', $proposal);
 
-        $successMessage = successMessageDelete("Proposal");
+        $successMessage = successMessageDelete('Proposal');
         return redirect()->back()->with('successMessage', $successMessage);
     }
 
@@ -290,8 +275,8 @@ class ProposalController extends Controller
      */
     public function importExcel(\App\Http\Requests\ImportExcelRequest $request)
     {
-        Excel::import(new ProposalImport, $request->file('import_file'));
-        $successMessage = successMessageImportExcel("Proposal");
+        Excel::import(new ProposalImport(), $request->file('import_file'));
+        $successMessage = successMessageImportExcel('Proposal');
         return redirect()->back()->with('successMessage', $successMessage);
     }
 
@@ -338,8 +323,8 @@ class ProposalController extends Controller
         $data = $this->proposalRepository->getLatest();
         return PDF::setPaper('Letter', 'landscape')
             ->loadView('stisla.proposals.export-pdf', [
-                'data'    => $data,
-                'isPrint' => false
+                'data' => $data,
+                'isPrint' => false,
             ])
             ->download('proposals.pdf');
     }
@@ -353,8 +338,8 @@ class ProposalController extends Controller
     {
         $data = $this->proposalRepository->getLatest();
         return view('stisla.proposals.export-pdf', [
-            'data'    => $data,
-            'isPrint' => true
+            'data' => $data,
+            'isPrint' => true,
         ]);
     }
 }
