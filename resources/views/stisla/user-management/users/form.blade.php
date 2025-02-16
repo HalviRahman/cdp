@@ -24,7 +24,7 @@
       @include('stisla.includes.forms.selects.select2', [
           'id' => 'prodi',
           'name' => 'prodi',
-          'label' => __('Prodi'),
+          'label' => __('Program Studi'),
           'options' => $prodiOptions,
           'required' => true,
           'icon' => 'fas fa-graduation-cap',

@@ -13,15 +13,15 @@
       <th class="text-center">#</th>
       <th>{{ __('Nama') }}</th>
       <th>{{ __('NIP') }}</th>
-      <th>{{ __('Prodi') }}</th>
+      <th>{{ __('Program Studi') }}</th>
       {{-- <th>{{ __('No HP') }}</th>
       <th>{{ __('Tanggal Lahir') }}</th>
       <th>{{ __('Alamat') }}</th> --}}
       <th>{{ __('Email') }}</th>
       @if ($roleCount > 1)
-        <th>{{ __('Role') }}</th>
+        <th>{{ __('Hak Akses') }}</th>
       @endif
-      <th>{{ __('Terakhir Masuk') }}</th>
+      {{-- <th>{{ __('Terakhir Masuk') }}</th> --}}
       @if ($_is_login_must_verified)
         {{-- <th>{{ __('Waktu Verifikasi') }}</th> --}}
       @endif
@@ -56,7 +56,7 @@
             @endforeach
           </td>
         @endif
-        <td>{{ $item->last_login ?? '-' }}</td>
+        {{-- <td>{{ $item->last_login ?? '-' }}</td> --}}
         {{-- @if ($_is_login_must_verified)
           <td>{{ $item->email_verified_at ?? '-' }}</td>
         @endif --}}

@@ -15,7 +15,6 @@ use App\Repositories\UserRepository;
 
 class UserManagementController extends StislaController
 {
-
     /**
      * constructor method
      *
@@ -27,8 +26,8 @@ class UserManagementController extends StislaController
 
         $this->defaultMiddleware('Pengguna');
 
-        $this->icon           = 'fa fa-users';
-        $this->viewFolder     = 'user-management';
+        $this->icon = 'fa fa-users';
+        $this->viewFolder = 'user-management';
     }
 
     /**
@@ -41,7 +40,7 @@ class UserManagementController extends StislaController
         $roleOptions = $this->userRepository->getRoleOptions();
         $defaultData = $this->getDefaultDataIndex(__('Pengguna'), 'Pengguna', 'user-management.users');
         return array_merge($defaultData, [
-            'data'      => $this->userRepository->getUsers(),
+            'data' => $this->userRepository->getUsers(),
             'roleCount' => count($roleOptions),
         ]);
     }
@@ -54,15 +53,7 @@ class UserManagementController extends StislaController
      */
     private function getStoreData(UserRequest $request): array
     {
-        $data = $request->only([
-            'name',
-            'email',
-            'nip',
-            'prodi',
-            'phone_number',
-            'birth_date',
-            'address',
-        ]);
+        $data = $request->only(['name', 'email', 'nip', 'prodi', 'phone_number', 'birth_date', 'address']);
         if ($request->filled('password')) {
             $data['password'] = bcrypt($request->password);
         }
@@ -79,14 +70,15 @@ class UserManagementController extends StislaController
     private function getDetailData(User $user, bool $isDetail)
     {
         $roleOptions = $this->userRepository->getRoleOptions();
-        if ($user->roles->count() > 1)
+        if ($user->roles->count() > 1) {
             $user->role = $user->roles->pluck('id')->toArray();
-        else
+        } else {
             $user->role = $user->roles->first()->id ?? null;
+        }
         $defaultData = $this->getDefaultDataDetail(__('Pengguna'), 'user-management.users', $user, $isDetail);
         return array_merge($defaultData, [
             'roleOptions' => $roleOptions,
-            'fullTitle'   => $isDetail ? __('Detail Pengguna') : __('Ubah Pengguna'),
+            'fullTitle' => $isDetail ? __('Detail Pengguna') : __('Ubah Pengguna'),
         ]);
     }
 
@@ -99,11 +91,11 @@ class UserManagementController extends StislaController
     {
         $times = date('Y-m-d_H-i-s');
         $data = [
-            'isExport'   => true,
-            'pdf_name'   => $times . '_users.pdf',
+            'isExport' => true,
+            'pdf_name' => $times . '_users.pdf',
             'excel_name' => $times . '_users.xlsx',
-            'csv_name'   => $times . '_users.csv',
-            'json_name'  => $times . '_users.json',
+            'csv_name' => $times . '_users.csv',
+            'json_name' => $times . '_users.json',
         ];
         return array_merge($this->getIndexData(), $data);
     }
@@ -126,12 +118,17 @@ class UserManagementController extends StislaController
      */
     public function create()
     {
+        $prodiOptions = $this->userRepository->getProdiOptions();
         $roleOptions = $this->userRepository->getRoleOptions();
         $defaultData = $this->getDefaultDataCreate(__('Pengguna'), 'user-management.users');
-        return view('stisla.user-management.users.form', array_merge($defaultData, [
-            'roleOptions' => $roleOptions,
-            'fullTitle'   => __('Tambah Pengguna'),
-        ]));
+        return view(
+            'stisla.user-management.users.form',
+            array_merge($defaultData, [
+                'roleOptions' => $roleOptions,
+                'fullTitle' => __('Tambah Pengguna'),
+                'prodiOptions' => $prodiOptions,
+            ]),
+        );
     }
 
     /**
@@ -159,9 +156,12 @@ class UserManagementController extends StislaController
     {
         $data = $this->getDetailData($user, false);
         $prodiOptions = $this->userRepository->getProdiOptions();
-        return view('stisla.user-management.users.form', array_merge($data, [
-            'prodiOptions' => $prodiOptions,
-        ]));
+        return view(
+            'stisla.user-management.users.form',
+            array_merge($data, [
+                'prodiOptions' => $prodiOptions,
+            ]),
+        );
     }
 
     /**
@@ -239,8 +239,8 @@ class UserManagementController extends StislaController
      */
     public function importExcel(ImportExcelRequest $request): RedirectResponse
     {
-        $this->fileService->importExcel(new UserImport, $request->file('import_file'));
-        $successMessage = successMessageImportExcel("Pengguna");
+        $this->fileService->importExcel(new UserImport(), $request->file('import_file'));
+        $successMessage = successMessageImportExcel('Pengguna');
         return back()->with('successMessage', $successMessage);
     }
 
@@ -251,7 +251,7 @@ class UserManagementController extends StislaController
      */
     public function json(): BinaryFileResponse
     {
-        $data  = $this->getExportData();
+        $data = $this->getExportData();
         return $this->fileService->downloadJson($data['data'], $data['json_name']);
     }
 
@@ -262,7 +262,7 @@ class UserManagementController extends StislaController
      */
     public function excel(): BinaryFileResponse
     {
-        $data  = $this->getExportData();
+        $data = $this->getExportData();
         return $this->fileService->downloadExcelGeneral('stisla.user-management.users.table', $data, $data['excel_name']);
     }
 
@@ -273,7 +273,7 @@ class UserManagementController extends StislaController
      */
     public function csv(): BinaryFileResponse
     {
-        $data  = $this->getExportData();
+        $data = $this->getExportData();
         return $this->fileService->downloadCsvGeneral('stisla.user-management.users.table', $data, $data['csv_name']);
     }
 
@@ -284,7 +284,7 @@ class UserManagementController extends StislaController
      */
     public function pdf(): Response
     {
-        $data  = $this->getExportData();
+        $data = $this->getExportData();
         return $this->fileService->downloadPdfLetter('stisla.includes.others.export-pdf', $data, $data['pdf_name']);
     }
 }
