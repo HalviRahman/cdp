@@ -26,6 +26,7 @@ class ProgramStudi extends Model
     'nama_prodi',
     'kuota',
     'jenjang',
+    'tahun',
   ];
 
   /**

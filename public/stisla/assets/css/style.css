@@ -1736,7 +1736,7 @@ h6 .badge {
         border-radius: 0 0 3px 3px; }
       .nav-collapse .navbar-nav .nav-item .nav-link {
         background-color: #fff;
-        color: #6c757d; }
+        color: #000; }
         .nav-collapse .navbar-nav .nav-item .nav-link:hover {
           background-color: #fcfcfd;
           color: #3E5C76; }
@@ -1780,7 +1780,7 @@ h6 .badge {
     font-size: 14px;
     letter-spacing: normal;
     padding: 10px 20px;
-    color: #6c757d; }
+    color: #000; }
 
 a.dropdown-item {
   padding: 10px 20px;
@@ -1839,9 +1839,9 @@ a.dropdown-item {
         .dropdown-list .dropdown-item:focus .dropdown-item-desc b {
           color: #fff !important; }
     .dropdown-list .dropdown-item.dropdown-item-unread:active .dropdown-item-desc {
-      color: #6c757d; }
+      color: #000; }
       .dropdown-list .dropdown-item.dropdown-item-unread:active .dropdown-item-desc b {
-        color: #6c757d; }
+        color: #000; }
     .dropdown-list .dropdown-item:active .dropdown-item-desc {
       color: #fff; }
       .dropdown-list .dropdown-item:active .dropdown-item-desc b {
@@ -1850,9 +1850,9 @@ a.dropdown-item {
       background-color: #fbfbfb;
       border-bottom-color: #f2f2f2; }
       .dropdown-list .dropdown-item.dropdown-item-unread:focus .dropdown-item-desc {
-        color: #6c757d !important; }
+        color: #000 !important; }
         .dropdown-list .dropdown-item.dropdown-item-unread:focus .dropdown-item-desc b {
-          color: #6c757d !important; }
+          color: #000 !important; }
   .dropdown-list .dropdown-footer,
   .dropdown-list .dropdown-header {
     letter-spacing: .5px;
@@ -1948,7 +1948,7 @@ body {
   font-size: 14px;
   font-weight: 400;
   font-family: "Nunito", "Segoe UI", arial;
-  color: #6c757d; }
+  color: #000; }
 
 a.bb {
   text-decoration: none;
@@ -2700,7 +2700,7 @@ body.layout-3 .navbar.navbar-secondary {
   body.layout-3 .navbar.navbar-secondary .navbar-nav > .nav-item .dropdown-menu {
     padding: 0; }
     body.layout-3 .navbar.navbar-secondary .navbar-nav > .nav-item .dropdown-menu .nav-item .nav-link {
-      color: #6c757d;
+      color: #000;
       font-weight: 600;
       letter-spacing: .3px;
       padding: 7px !important;
@@ -2787,7 +2787,7 @@ body.layout-3 .main-footer {
       padding: 0 20px;
       width: 100%;
       letter-spacing: .3px;
-      color: #78828a;
+      color: #000;
       text-decoration: none; }
       .main-sidebar .sidebar-menu li a .badge {
         float: right;

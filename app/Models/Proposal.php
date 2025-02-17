@@ -21,7 +21,7 @@ class Proposal extends Model
      *
      * @var array
      */
-    protected $fillable = ['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi', 'mahasiswa'];
+    protected $fillable = ['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi', 'mahasiswa', 'ketua'];
 
     /**
      * The attributes that should be cast to native types.

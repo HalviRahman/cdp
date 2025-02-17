@@ -9,6 +9,7 @@ use App\Models\Proposal;
 use App\Repositories\ProposalRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\UserRepository;
+use App\Repositories\KelompokRepository;
 use App\Services\EmailService;
 use App\Services\FileService;
 use Illuminate\Http\Request;
@@ -81,6 +82,7 @@ class ProposalController extends Controller
         $this->emailService = new EmailService();
         $this->NotificationRepository = new NotificationRepository();
         $this->UserRepository = new UserRepository();
+        $this->kelompokRepository = new KelompokRepository();
 
         $this->middleware('can:Proposal');
         $this->middleware('can:Proposal Tambah')->only(['create', 'store']);
@@ -141,13 +143,26 @@ class ProposalController extends Controller
      */
     public function store(ProposalRequest $request)
     {
-        $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi']);
+        $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi', 'anggota_email']);
 
         // gunakan jika ada file
         if ($request->hasFile('file_proposal')) {
             $data['file_proposal'] = $this->fileService->uploadProposal($request->file('file_proposal'));
         }
         $data['tgl_upload'] = now();
+        $data['ketua'] = auth()->user()->name;
+
+        $anggotaEmails = $request->input('anggota_email', []);
+
+        // Simpan ketua_email ke dalam tabel kelompok
+        $kelompok = $this->kelompokRepository->create([
+            'ketua_email' => auth()->user()->email,
+            'anggota_email' => json_encode($anggotaEmails),
+            // tambahkan field lain yang diperlukan
+        ]);
+
+        // Gunakan id_kelompok dari tabel kelompok yang baru dibuat
+        $data['id_kelompok'] = $kelompok->id;
 
         $result = $this->proposalRepository->create($data);
 
@@ -180,9 +195,10 @@ class ProposalController extends Controller
         return view('stisla.proposals.form', [
             'd' => $proposal,
             'title' => __('Proposal'),
-            'fullTitle' => __('Ubah Proposal'),
+            'fullTitle' => __('Proposal'),
             'routeIndex' => route('proposals.index'),
             'action' => route('proposals.update', [$proposal->id]),
+            'anggota' => $this->UserRepository->getAnggotaOptions(),
         ]);
     }
 
@@ -201,7 +217,7 @@ class ProposalController extends Controller
         // if ($request->hasFile('file')) {
         //     $data['file'] = $this->fileService->methodName($request->file('file'));
         // }
-
+        // Simpan ketua_email ke dalam tabel kelompok
         $newData = $this->proposalRepository->update($data, $proposal->id);
 
         // use this if you want to create notification data

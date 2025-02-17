@@ -16,4 +16,15 @@ class ProgramStudiRepository extends Repository
     {
         $this->model = new ProgramStudi();
     }
+
+    public function getFilterTahun()
+    {
+        $query = $this->model->query();
+
+        $tahun = request('tahun', date('Y'));
+
+        $query->where('tahun', $tahun);
+
+        return $query->latest()->get();
+    }
 }

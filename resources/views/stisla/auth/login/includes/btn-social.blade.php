@@ -5,12 +5,17 @@
 
   <div class="row">
     <div class="col-md-12" align="center">
-      @if ($_is_login_with_google)
+      <div class="ms-auto">
+        <a href="{{ route('social-login', ['google']) }}" class="btn btn-danger">
+          <i class="fab fa-google me-2"></i> MASUK
+        </a>
+      </div>
+      {{-- @if ($_is_login_with_google)
         <a href="{{ route('social-login', ['google']) }}" class="btn btn-social-icon btn-facebook mr-1" style="background-color: rgba(220,20,20,1)">
           <i class="fab fa-google"></i>
         </a>
-      @endif
-      @if ($_is_login_with_facebook)
+      @endif --}}
+      {{-- @if ($_is_login_with_facebook)
         <a href="{{ route('social-login', ['facebook']) }}" class="btn btn-social-icon btn-facebook mr-1">
           <i class="fab fa-facebook-f"></i>
         </a>
@@ -24,7 +29,7 @@
         <a href="{{ route('social-login', ['github']) }}" class="btn btn-social-icon btn-github mr-1">
           <i class="fab fa-github"></i>
         </a>
-      @endif
+      @endif --}}
     </div>
   </div>
 

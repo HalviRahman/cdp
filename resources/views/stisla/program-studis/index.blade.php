@@ -9,8 +9,8 @@
 
   <div class="section-body">
 
-    <h2 class="section-title">{{ $title }}</h2>
-    <p class="section-lead">{{ __('Merupakan halaman yang menampilkan kumpulan data ' . $title) }}.</p>
+    {{-- <h2 class="section-title">{{ $title }}</h2>
+    <p class="section-lead">{{ __('Merupakan halaman yang menampilkan kumpulan data ' . $title) }}.</p> --}}
 
     <div class="row">
       <div class="col-12">
@@ -25,18 +25,18 @@
         </div> --}}
 
         {{-- gunakan jika mau ada filter --}}
-        {{-- <div class="card">
-          <div class="card-header">
-            <h4><i class="fa fa-filter"></i> Filter Data</h4>
+        <div class="card">
+          {{-- <div class="card-header">
+            <h4><i class="fa fa-filter"></i> Pilih Tahun</h4>
             <div class="card-header-action">
             </div>
-          </div>
+          </div> --}}
           <div class="card-body">
 
             <form action="">
               @csrf
               <div class="row">
-                <div class="col-md-3">
+                {{-- <div class="col-md-3">
                   @include('stisla.includes.forms.inputs.input', [
                       'type' => 'text',
                       'id' => 'filter_text',
@@ -44,17 +44,19 @@
                       'label' => __('Pilih Text'),
                       'value' => request('filter_text'),
                   ])
-                </div>
+                </div> --}}
                 <div class="col-md-3">
-                  @include('stisla.includes.forms.inputs.input', [
-                      'type' => 'date',
-                      'id' => 'filter_date',
+                  @include('stisla.includes.forms.selects.select', [
+                      'id' => 'tahun',
+                      'name' => 'tahun',
                       'required' => true,
-                      'label' => __('Pilih Date'),
-                      'value' => request('filter_date', date('Y-m-d')),
+                      'options' => array_combine(range(date('Y'), date('Y') + 5), range(date('Y'), date('Y') + 5)),
+                      'label' => __('Tahun'),
+                      'value' => request('tahun'),
+                      'selected' => request('tahun'),
                   ])
                 </div>
-                <div class="col-md-3">
+                {{-- <div class="col-md-3">
                   @include('stisla.includes.forms.selects.select2', [
                       'id' => 'filter_dropdown',
                       'name' => 'filter_dropdown',
@@ -63,12 +65,12 @@
                       'selected' => request('filter_dropdown'),
                       'with_all' => true,
                   ])
-                </div>
+                </div> --}}
               </div>
               <button class="btn btn-primary icon"><i class="fa fa-search"></i> Cari Data</button>
             </form>
           </div>
-        </div> --}}
+        </div>
 
         @if ($data->count() > 0)
           @if ($canExport)

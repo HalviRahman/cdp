@@ -168,15 +168,19 @@
             <p>Verifikator: {{ $proposal->verifikator->name }} ({{ $proposal->verifikator->role }})</p>
             <p>Tanggal Verifikasi: {{ $proposal->tanggal_verifikasi->format('d M Y, H:i') }} WIB</p>
           @endif
-          @if ($proposal->status == 'disetujui')
+          @if ($proposal->status == '0')
+            <span class="badge badge-warning">Menunggu Verifikasi</span>
+          @elseif($proposal->status == '1')
             <span class="badge badge-success">Disetujui</span>
-          @elseif($proposal->status == 'ditolak')
+          @elseif($proposal->status == '2')
             <span class="badge badge-danger">Ditolak</span>
-            <p>Alasan: {{ $proposal->alasan }}</p>
+            <p>Alasan: {{ $proposal->keterangan }}</p>
           @else
             <span class="badge badge-warning">Menunggu Verifikasi</span>
           @endif
-          <a href="{{ route('proposals.show', $proposal->id) }}" class="btn btn-primary">Detail</a>
+          <div class="float-right">
+            <a href="{{ route('proposals.edit', $proposal->id) }}" class="btn btn-outline-info">Detail</a>
+          </div>
         </div>
       </div>
     @endforeach

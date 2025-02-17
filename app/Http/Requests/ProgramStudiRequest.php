@@ -28,12 +28,14 @@ class ProgramStudiRequest extends FormRequest
                 'nama_prodi' => ["required"],
                 'kuota' => ["required"],
                 'jenjang' => ["required"],
+                'tahun' => ["required"],
             ];
         }
         return [
             'nama_prodi' => ["required"],
             'kuota' => ["required"],
             'jenjang' => ["required"],
+            'tahun' => ["required"],
         ];
     }
 }

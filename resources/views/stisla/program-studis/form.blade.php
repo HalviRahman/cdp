@@ -52,9 +52,21 @@
                   @include('stisla.includes.forms.inputs.input', ['required' => true, 'type' => 'text', 'id' => 'nama_prodi', 'name' => 'nama_prodi', 'label' => __('Program Studi')])
                 </div>
 
-                <div class="col-md-12">
+                <div class="col-md-2">
+                  @include('stisla.includes.forms.selects.select', [
+                      'required' => true,
+                      'type' => 'text',
+                      'id' => 'tahun',
+                      'name' => 'tahun',
+                      'label' => __('Tahun'),
+                      'options' => array_combine(range(date('Y'), date('Y') + 5), range(date('Y'), date('Y') + 5)),
+                  ])
+                </div>
+
+                <div class="col-md-10">
                   @include('stisla.includes.forms.inputs.input', ['required' => true, 'type' => 'number', 'id' => 'kuota', 'name' => 'kuota', 'label' => __('Kuota')])
                 </div>
+
 
 
                 <div class="col-md-12">

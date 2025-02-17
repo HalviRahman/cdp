@@ -98,7 +98,8 @@ class ProgramStudiController extends Controller
     {
         $user = auth()->user();
         return view('stisla.program-studis.index', [
-            'data'             => $this->programStudiRepository->getLatest(),
+            // 'data'             => $this->programStudiRepository->getLatest(),
+            'data'             => $this->programStudiRepository->getFilterTahun(),
             'canCreate'        => $user->can('Program Studi Tambah'),
             'canUpdate'        => $user->can('Program Studi Ubah'),
             'canDelete'        => $user->can('Program Studi Hapus'),
@@ -142,6 +143,8 @@ class ProgramStudiController extends Controller
         $data = $request->only([
 			'nama_prodi',
 			'kuota',
+            'tahun',
+            'jenjang',
         ]);
 
         // gunakan jika ada file
@@ -198,6 +201,8 @@ class ProgramStudiController extends Controller
         $data = $request->only([
 			'nama_prodi',
 			'kuota',
+            'tahun',
+            'jenjang',
         ]);
 
         // gunakan jika ada file

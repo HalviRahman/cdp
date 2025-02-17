@@ -26,13 +26,13 @@ class KelompokRequest extends FormRequest
         if ($this->isMethod('put')) {
             return [
 				'ketua_email' => [],
-				'anggota_email' => [],
+				'anggota_email' => ['array'],
 
             ];
         }
         return [
 			'ketua_email' => [],
-			'anggota_email' => [],
+			'anggota_email' => ['array'],
 
         ];
     }

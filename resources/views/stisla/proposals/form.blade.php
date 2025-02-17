@@ -9,8 +9,8 @@
 
   <div class="section-body">
 
-    <h2 class="section-title">{{ $fullTitle }}</h2>
-    <p class="section-lead">{{ __('Merupakan halaman yang menampilkan form ' . $title) }}.</p>
+    {{-- <h2 class="section-title">{{ $fullTitle }}</h2>
+    <p class="section-lead">{{ __('Merupakan halaman yang menampilkan form ' . $title) }}.</p> --}}
 
     {{-- gunakan jika ingin menampilkan sesuatu informasi --}}
     {{-- <div class="alert alert-info alert-has-icon">
@@ -25,9 +25,9 @@
       <div class="col-12">
 
         <div class="card">
-          <div class="card-header">
+          {{-- <div class="card-header">
             <h4><i class="fa fa-fas fa-file-text"></i> {{ $fullTitle }}</h4>
-          </div>
+          </div> --}}
           <div class="card-body">
             <form action="{{ $action }}" method="POST" enctype="multipart/form-data">
 
@@ -43,6 +43,7 @@
                       'id' => 'judul_proposal',
                       'name' => 'judul_proposal',
                       'label' => __('Judul Proposal'),
+                      'disabled' => isset($d) ? true : false,
                   ])
                 </div>
 
@@ -62,13 +63,25 @@
                       'required' => false,
                       'disabled' => true,
                       'type' => 'text',
-                      'id' => 'email_anggota',
-                      'name' => 'email_anggota',
+                      'id' => 'anggota_email',
+                      'name' => 'anggota_email',
                       'label' => __('Anggota Dosen'),
                       'options' => $anggota,
                       'multiple' => true,
                   ])
                 </div>
+
+                @if (isset($d))
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>NIP</th>
+                        <th>Nama</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                  </table>
+                @endif
 
                 {{-- <div class="col-md-12">
                   @include('stisla.includes.forms.inputs.input', ['required' => false, 'type' => 'text', 'id' => 'id_kelompok', 'name' => 'id_kelompok', 'label' => __('ID Kelompok')])

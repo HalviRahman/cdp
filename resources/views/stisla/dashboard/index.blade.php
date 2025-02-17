@@ -98,6 +98,25 @@
         </div>
       </div>
     @endif --}}
+    {{-- @if (auth()->user()->hasRole('Dosen')) --}}
+    <div class="col-12">
+      <div class="card status-card status-pending mb-4 author-box card-warning">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="card-title mb-1">Pengembangan Media Pembelajaran Berbasis AR</h5>
+              <p class="card-text text-muted mb-0">Status: Menunggu Verifikasi</p>
+            </div>
+            <div>
+              <button class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-eye me-2"></i>Detail
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{-- @endif --}}
 
     {{-- Box 1 --}}
     <div class="col-12 col-sm-12 col-lg-6">
@@ -223,6 +242,18 @@
 
   </div>
 @endsection
+
+@push('css')
+  <style>
+    .status-card {
+      border-left: 4px solid;
+    }
+
+    .status-pending {
+      border-left-color: #ffc107;
+    }
+  </style>
+@endpush
 
 @push('js')
   <script>
