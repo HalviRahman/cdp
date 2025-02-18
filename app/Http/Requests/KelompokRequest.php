@@ -25,15 +25,15 @@ class KelompokRequest extends FormRequest
     {
         if ($this->isMethod('put')) {
             return [
-				'ketua_email' => [],
-				'anggota_email' => ['array'],
-
+				'id_kelompok' => [],
+				'anggota_email' => [],
+				'peran' => [],
             ];
         }
         return [
-			'ketua_email' => [],
-			'anggota_email' => ['array'],
-
+			'id_kelompok' => [],
+			'anggota_email' => [],
+			'peran' => [],
         ];
     }
 }

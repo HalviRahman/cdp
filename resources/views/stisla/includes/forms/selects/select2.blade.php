@@ -10,7 +10,7 @@
   } else {
       $selected = $oldValue ?? ($selected ?? ($dname ?? false));
   }
-  
+
 @endphp
 
 <div class="form-group">
@@ -52,6 +52,11 @@
 
   @push('scripts')
     <script>
+      $('.select2').select2({
+        width: '100%', // Pastikan lebar 100%
+        placeholder: "Pilih opsi",
+        allowClear: true
+      });
       $(function() {
 
       });

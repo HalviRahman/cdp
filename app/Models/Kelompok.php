@@ -22,8 +22,9 @@ class Kelompok extends Model
      * @var array
      */
     protected $fillable = [
-		'ketua_email',
+		'id_kelompok',
 		'anggota_email',
+		'peran',
     ];
 
     /**
@@ -54,4 +55,9 @@ class Kelompok extends Model
      * @var array
      */
     protected $with = [];
+
+    public function user()
+{
+    return $this->belongsTo(User::class, 'anggota_email', 'email');
+}
 }

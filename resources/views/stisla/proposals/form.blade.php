@@ -30,57 +30,89 @@
           </div> --}}
           <div class="card-body">
             <form action="{{ $action }}" method="POST" enctype="multipart/form-data">
-
               @isset($d)
                 @method('PUT')
               @endisset
 
               <div class="row">
-                <div class="col-md-12">
-                  @include('stisla.includes.forms.editors.textarea', [
-                      'required' => true,
-                      'type' => 'textarea',
-                      'id' => 'judul_proposal',
-                      'name' => 'judul_proposal',
-                      'label' => __('Judul Proposal'),
-                      'disabled' => isset($d) ? true : false,
-                  ])
-                </div>
+                @if (!isset($d))
+                  <div class="col-md-12">
+                    @include('stisla.includes.forms.inputs.input', [
+                        'required' => true,
+                        'type' => 'text',
+                        'id' => 'judul_proposal',
+                        'name' => 'judul_proposal',
+                        'label' => __('Judul Proposal'),
+                        // 'disabled' => isset($d) ? true : false,
+                    ])
+                  </div>
 
-                <div class="col-md-12">
-                  @include('stisla.includes.forms.inputs.input', [
-                      'required' => false,
-                      'disabled' => true,
-                      'type' => 'text',
-                      'id' => 'ketua_email',
-                      'name' => 'ketua_email',
-                      'label' => __('Ketua Kelompok'),
-                      'value' => auth()->user()->name . ' - ' . auth()->user()->prodi,
-                  ])
-                </div>
-                <div class="col-md-12">
-                  @include('stisla.includes.forms.selects.select2', [
-                      'required' => false,
-                      'disabled' => true,
-                      'type' => 'text',
-                      'id' => 'anggota_email',
-                      'name' => 'anggota_email',
-                      'label' => __('Anggota Dosen'),
-                      'options' => $anggota,
-                      'multiple' => true,
-                  ])
-                </div>
+                  <div class="col-md-12">
+                    @include('stisla.includes.forms.inputs.input', [
+                        'required' => false,
+                        'disabled' => true,
+                        'type' => 'text',
+                        'id' => 'ketua_email',
+                        'name' => 'ketua_email',
+                        'label' => __('Ketua Kelompok'),
+                        'value' => auth()->user()->name . ' - ' . auth()->user()->prodi,
+                    ])
+                  </div>
+
+                  <div class="col-md-6">
+                    @include('stisla.includes.forms.selects.select2', [
+                        'required' => false,
+                        'disabled' => true,
+                        'type' => 'text',
+                        'id' => 'anggota_email',
+                        'name' => 'anggota_email',
+                        'label' => __('Anggota Dosen'),
+                        'options' => $anggota,
+                        'multiple' => true,
+                    ])
+                  </div>
+
+                  <div class="col-md-6">
+                    @include('stisla.includes.forms.inputs.input', [
+                        'required' => true,
+                        'type' => 'file',
+                        'id' => 'file_proposal',
+                        'name' => 'file_proposal',
+                        'label' => __('File Proposal'),
+                    ])
+                  </div>
+                @endif
 
                 @if (isset($d))
-                  <table class="table table-bordered">
-                    <thead>
-                      <tr>
-                        <th>NIP</th>
-                        <th>Nama</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                  </table>
+                  <div class="col-md-12 mb-3">
+                    {{-- <h6><i class="fas fa-file-alt me-2"></i> Judul Proposal:</h6> --}}
+                    <h4>{{ $d->judul_proposal }}</h4>
+                    <hr>
+                  </div>
+
+                  <div class="col-md-12">
+                    <h6><i class="fas fa-users me-2"></i> Anggota Kelompok:</h6>
+                    <table class="table table-sm table-striped">
+                      <thead class="table-dark">
+                        <tr>
+                          {{-- <th>NIP</th> --}}
+                          <th>Nama</th>
+                          <th>Program Studi</th>
+                          <th>Peran</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @foreach ($anggotas as $anggota)
+                          <tr>
+                            {{-- <td>{{ $anggota['nip'] }}</td> --}}
+                            <td>{{ $anggota['nama'] }}</td>
+                            <td>{{ $anggota['prodi'] }}</td>
+                            <td><span class="badge badge-primary">{{ $anggota['peran'] }}</span></td>
+                          </tr>
+                        @endforeach
+                      </tbody>
+                    </table>
+                  </div>
                 @endif
 
                 {{-- <div class="col-md-12">
@@ -107,15 +139,29 @@
                 </div> --}}
                 {{-- END MAHASISWA --}}
 
-                <div class="col-md-12">
-                  @include('stisla.includes.forms.inputs.input', [
-                      'required' => true,
-                      'type' => 'file',
-                      'id' => 'file_proposal',
-                      'name' => 'file_proposal',
-                      'label' => __('File Proposal'),
-                  ])
-                </div>
+                @if (isset($d))
+                  <div class="col-md-12">
+                    <h6 class="mb-3"><i class="fas fa-file-alt me-2"></i> File Proposal</h6>
+                    <div class="d-flex align-items-center">
+                      <div class="mr-3">
+                        <i class="fas fa-file-pdf text-danger fs-5"></i>
+                      </div>
+                      <div class="flex-grow-1">
+                        <p class="mb-0">{{ basename($d->file_proposal) }}</p>
+                        <small class="text-muted">Diunggah pada: {{ $d->tgl_upload }}</small>
+                      </div>
+                      <a href="{{ $d->file_proposal }}" class="btn btn-primary">
+                        <i class="fas fa-eye me-2"></i> Lihat Proposal
+                      </a>
+                    </div>
+                    {{-- <div class="form-group">
+                      <h6 for="file_proposal">File Proposal</h6>
+                      <hr>
+                      <a class="btn " href="{{ $d->file_proposal }}" target="_blank">aa<img src="{{ Storage::url('docs.png') }}" width="150px" alt=""></a>
+                    </div> --}}
+                  </div>
+                @else
+                @endif
                 {{-- 
                 <div class="col-md-6">
                   @include('stisla.includes.forms.inputs.input', ['required' => true, 'type' => 'date', 'id' => 'tgl_upload', 'name' => 'tgl_upload', 'label' => __('Tanggal Upload')])
@@ -150,8 +196,20 @@
 
                   @csrf
 
-                  @include('stisla.includes.forms.buttons.btn-save')
-                  @include('stisla.includes.forms.buttons.btn-reset')
+                  {{-- @include('stisla.includes.forms.buttons.btn-save') --}}
+                  @if (isset($d))
+                    @if ($d->status == 0)
+                      @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Setujui', 'icon' => 'fas fa-check-circle', 'color' => 'success'])
+                      @include('stisla.includes.forms.buttons.btn-reset', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger'])
+                    @elseif ($d->status == 1)
+                      @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Setujui', 'icon' => 'fas fa-check-circle', 'color' => 'success'])
+                      @include('stisla.includes.forms.buttons.btn-reset', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger'])
+                    @endif
+                  @else
+                    @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Ajukan Proposal', 'icon' => 'fas fa-paper-plane'])
+                  @endif
+
+                  {{-- @include('stisla.includes.forms.buttons.btn-reset') --}}
                 </div>
               </div>
             </form>

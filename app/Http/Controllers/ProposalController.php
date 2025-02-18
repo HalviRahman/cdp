@@ -6,6 +6,7 @@ use App\Exports\ProposalExport;
 use App\Http\Requests\ProposalRequest;
 use App\Imports\ProposalImport;
 use App\Models\Proposal;
+use App\Models\Kelompok;
 use App\Repositories\ProposalRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\UserRepository;
@@ -18,6 +19,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class ProposalController extends Controller
 {
@@ -150,19 +152,33 @@ class ProposalController extends Controller
             $data['file_proposal'] = $this->fileService->uploadProposal($request->file('file_proposal'));
         }
         $data['tgl_upload'] = now();
-        $data['ketua'] = auth()->user()->name;
+        $data['token'] = Str::random(64);
 
+        $idKelompok = Str::uuid();
+
+        $ketuaEmail = auth()->user()->email;
         $anggotaEmails = $request->input('anggota_email', []);
 
-        // Simpan ketua_email ke dalam tabel kelompok
-        $kelompok = $this->kelompokRepository->create([
-            'ketua_email' => auth()->user()->email,
-            'anggota_email' => json_encode($anggotaEmails),
-            // tambahkan field lain yang diperlukan
+        $peranKetua = 'Ketua';
+        $peranAnggota = 'Anggota';
+
+        $data['id_kelompok'] = $idKelompok;
+
+        // Simpan ketua_email dengan peran 'Ketua'
+        $this->kelompokRepository->create([
+            'id_kelompok' => $idKelompok,
+            'anggota_email' => $ketuaEmail,
+            'peran' => $peranKetua,
         ]);
 
-        // Gunakan id_kelompok dari tabel kelompok yang baru dibuat
-        $data['id_kelompok'] = $kelompok->id;
+        // Simpan setiap anggota_email dengan peran 'Anggota'
+        foreach ($anggotaEmails as $email) {
+            $this->kelompokRepository->create([
+                'id_kelompok' => $idKelompok,
+                'anggota_email' => $email,
+                'peran' => $peranAnggota,
+            ]);
+        }
 
         $result = $this->proposalRepository->create($data);
 
@@ -192,6 +208,16 @@ class ProposalController extends Controller
      */
     public function edit(Proposal $proposal)
     {
+        $kelompoks = Kelompok::with('user')->get();
+        $anggotas = $proposal->kelompoks->map(function ($kelompok) {
+            return [
+                // 'nip' => $kelompok->user->nip,
+                'nama' => $kelompok->user->name,
+                'prodi' => $kelompok->user->prodi,
+                'peran' => $kelompok->peran,
+            ];
+        });
+
         return view('stisla.proposals.form', [
             'd' => $proposal,
             'title' => __('Proposal'),
@@ -199,6 +225,7 @@ class ProposalController extends Controller
             'routeIndex' => route('proposals.index'),
             'action' => route('proposals.update', [$proposal->id]),
             'anggota' => $this->UserRepository->getAnggotaOptions(),
+            'anggotas' => $anggotas,
         ]);
     }
 

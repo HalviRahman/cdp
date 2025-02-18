@@ -69,7 +69,6 @@
             </form>
           </div>
         </div> --}}
-
         @if ($data->count() > 0)
           @if ($canExport)
             <div class="card">
@@ -163,7 +162,7 @@
       <div class="card">
         <div class="card-body">
           <h5>{{ $proposal->judul_proposal }}</h5>
-          <p>Ketua: {{ $proposal->ketua }}</p>
+          <p><strong>Ketua:</strong> {{ $proposal->ketuaKelompok->user->name }} - {{ $proposal->ketuaKelompok->user->prodi }}</p>
           @if ($proposal->verifikator)
             <p>Verifikator: {{ $proposal->verifikator->name }} ({{ $proposal->verifikator->role }})</p>
             <p>Tanggal Verifikasi: {{ $proposal->tanggal_verifikasi->format('d M Y, H:i') }} WIB</p>

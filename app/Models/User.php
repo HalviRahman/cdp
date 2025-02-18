@@ -111,4 +111,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function kelompoks()
+{
+    return $this->hasMany(Kelompok::class, 'anggota_email', 'email');
+}
 }

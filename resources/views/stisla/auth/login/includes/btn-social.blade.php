@@ -14,8 +14,8 @@
         <a href="{{ route('social-login', ['google']) }}" class="btn btn-social-icon btn-facebook mr-1" style="background-color: rgba(220,20,20,1)">
           <i class="fab fa-google"></i>
         </a>
-      @endif --}}
-      {{-- @if ($_is_login_with_facebook)
+      @endif
+       @if ($_is_login_with_facebook)
         <a href="{{ route('social-login', ['facebook']) }}" class="btn btn-social-icon btn-facebook mr-1">
           <i class="fab fa-facebook-f"></i>
         </a>

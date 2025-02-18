@@ -34,7 +34,7 @@ class ProposalRequest extends FormRequest
                 'keterangan' => [],
                 'tgl_verifikasi' => [],
                 'mahasiswa' => [],
-                'ketua' => [],
+                'token' => [],
             ];
         }
         return [
@@ -47,7 +47,7 @@ class ProposalRequest extends FormRequest
             'keterangan' => [],
             'tgl_verifikasi' => [],
             'mahasiswa' => [],
-            'ketua' => [],
+            'token' => [],
         ];
     }
 }
