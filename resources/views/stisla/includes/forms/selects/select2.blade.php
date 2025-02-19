@@ -35,6 +35,9 @@
       @endforeach
     @endif
   </select>
+  @if ($hint ?? false)
+    <small class="form-text text-muted">{{ $hint }}</small>
+  @endif
 </div>
 
 @if (!defined('SELECT2_IMPORT'))

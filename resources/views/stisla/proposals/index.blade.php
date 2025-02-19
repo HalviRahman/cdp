@@ -162,7 +162,8 @@
       <div class="card">
         <div class="card-body">
           <h5>{{ $proposal->judul_proposal }}</h5>
-          <p><strong>Ketua:</strong> {{ $proposal->ketuaKelompok->user->name }} - {{ $proposal->ketuaKelompok->user->prodi }}</p>
+          <p><strong>Ketua:</strong> {{ $proposal->ketuaKelompok->user->name }} - {{ implode('; ', json_decode($proposal->ketuaKelompok->user->prodi, true)) }}
+          </p>
           @if ($proposal->verifikator)
             <p>Verifikator: {{ $proposal->verifikator->name }} ({{ $proposal->verifikator->role }})</p>
             <p>Tanggal Verifikasi: {{ $proposal->tanggal_verifikasi->format('d M Y, H:i') }} WIB</p>

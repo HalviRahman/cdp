@@ -106,7 +106,7 @@
                           <tr>
                             {{-- <td>{{ $anggota['nip'] }}</td> --}}
                             <td>{{ $anggota['nama'] }}</td>
-                            <td>{{ $anggota['prodi'] }}</td>
+                            <td>{{ implode(', ', json_decode($anggota['prodi'], true)) }}</td>
                             <td><span class="badge badge-primary">{{ $anggota['peran'] }}</span></td>
                           </tr>
                         @endforeach

@@ -36,7 +36,15 @@
         <td>{{ $loop->iteration }}</td>
         <td>{{ $item->name }}</td>
         <td>{{ $item->nip }}</td>
-        <td>{{ $item->prodi ?? '-' }}</td>
+        <td>
+          @if ($item->prodi)
+            @foreach (json_decode($item->prodi, true) as $prodi)
+              <span class="badge badge-primary mb-1">{{ $prodi }}</span>
+            @endforeach
+          @else
+            -
+          @endif
+        </td>
         {{-- <td>{{ $item->phone_number }}</td>
         <td>{{ $item->birth_date }}</td>
         <td>{{ $item->address }}</td> --}}

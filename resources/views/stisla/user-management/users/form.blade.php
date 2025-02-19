@@ -26,10 +26,12 @@
           'name' => 'prodi',
           'label' => __('Program Studi'),
           'options' => $prodiOptions,
-          'required' => true,
-          'icon' => 'fas fa-graduation-cap',
+          'required' => false,
+          'multiple' => true,
+          'hint' => isset($d) && $d->prodi != null ? implode(', ', json_decode($d->prodi, true)) : null,
       ])
     </div>
+
     <div class="col-md-6">
       @include('stisla.includes.forms.inputs.input', [
           'id' => 'phone_number',

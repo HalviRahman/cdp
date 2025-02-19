@@ -6,6 +6,7 @@ use App\Repositories\UserRepository;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Illuminate\Support\Str;
 
 class UserImport implements ToCollection, WithHeadingRow
 {
@@ -37,13 +38,18 @@ class UserImport implements ToCollection, WithHeadingRow
         $dateTime = date('Y-m-d H:i:s');
         foreach ($rows->chunk(30) as $chunkData) {
             $insertData = $chunkData->map(function ($item) use ($dateTime) {
+                $prodiString = $item['prodi']; // Move this inside the map function
+                $prodiArray = explode(',', $prodiString); // Split string into array
+
                 return [
                     'name'         => $item['nama'],
+                    'nip'          => $item['nip'],
+                    'prodi'        => json_encode($prodiArray), // Corrected bracket
                     'email'        => $item['email'],
-                    'password'     => bcrypt($item['password']),
-                    'phone_number' => $item['no_hp'],
-                    'birth_date'   => $item['tanggal_lahir'],
-                    'address'      => $item['alamat'],
+                    'password'     => $item['password'],
+                    // 'phone_number' => $item['no_hp'],
+                    // 'birth_date'   => $item['tanggal_lahir'],
+                    // 'address'      => $item['alamat'],
                     'created_at'   => $dateTime,
                     'updated_at'   => $dateTime,
                     // 'avatar',

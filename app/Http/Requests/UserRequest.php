@@ -74,7 +74,7 @@ class UserRequest extends FormRequest
             'email' => 'required|unique:users,email',
             'role'  => 'required',
             'nip'   => 'required',
-            'prodi' => 'required',
+            'prodi' => '',
         ];
     }
 }

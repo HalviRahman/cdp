@@ -403,7 +403,9 @@ class AuthController extends StislaController
             if (!in_array($provider, $this->socialiteProviders)) {
                 abort(404);
             }
-            $user = Socialite::driver($provider)->user();
+            $user = Socialite::driver($provider)->stateless()->user();
+
+            dd($user);
             $isRegister = session('social_action') === 'register';
 
             if ($user->getEmail() || $provider === 'twitter') {
