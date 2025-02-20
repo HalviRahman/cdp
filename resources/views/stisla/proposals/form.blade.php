@@ -55,7 +55,7 @@
                         'id' => 'ketua_email',
                         'name' => 'ketua_email',
                         'label' => __('Ketua Kelompok'),
-                        'value' => auth()->user()->name . ' - ' . auth()->user()->prodi,
+                        'value' => auth()->user()->name,
                     ])
                   </div>
 

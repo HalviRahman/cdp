@@ -153,6 +153,7 @@ class ProposalController extends Controller
         }
         $data['tgl_upload'] = now();
         $data['token'] = Str::random(64);
+        $data['prodi'] = implode('; ', json_decode(auth()->user()->prodi, true));
 
         $idKelompok = Str::uuid();
 

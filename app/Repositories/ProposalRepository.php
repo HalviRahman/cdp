@@ -16,4 +16,28 @@ class ProposalRepository extends Repository
     {
         $this->model = new Proposal();
     }
+
+    public function getFilterTahun()
+    {
+        $query = $this->model->query();
+
+        $tahun = request('tahun', date('Y'));
+
+        $query->whereYear('tgl_upload', $tahun);
+
+        return $query->latest()->get();
+    }
+
+    public function getFilterProdi()
+    {
+        $user = auth()->user();
+        $query = $this->model->query();
+
+        $tahun = request('tahun', date('Y'));
+
+        $query->whereYear('tgl_upload', $tahun);
+        $query->where('prodi', json_decode($user->prodi, true));
+
+        return $query->latest()->get();
+    }
 }

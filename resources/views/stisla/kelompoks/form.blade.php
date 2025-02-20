@@ -36,12 +36,35 @@
               @endisset
 
               <div class="row">
-				<div class="col-md-6">
-                  @include('stisla.includes.forms.inputs.input', ['required'=>true, 'type'=>'text', 'id'=>'ketua_email', 'name'=>'ketua_email', 'label'=>__('Ketua Email')])
+                <div class="col-md-12">
+                  @include('stisla.includes.forms.inputs.input', [
+                      'required' => true,
+                      'type' => 'text',
+                      'id' => 'id_kelompok',
+                      'name' => 'id_kelompok',
+                      'label' => __('ID Kelompok'),
+                      'disabled' => true,
+                  ])
+                </div>
+                <div class="col-md-6">
+                  @include('stisla.includes.forms.inputs.input', [
+                      'required' => true,
+                      'type' => 'text',
+                      'id' => 'anggota_email',
+                      'name' => 'anggota_email',
+                      'label' => __('Anggota Email'),
+                  ])
                 </div>
 
-				<div class="col-md-6">
-                  @include('stisla.includes.forms.inputs.input', ['required'=>true, 'type'=>'text', 'id'=>'anggota_email', 'name'=>'anggota_email', 'label'=>__('Anggota Email')])
+                <div class="col-md-6">
+                  @include('stisla.includes.forms.selects.select', [
+                      'required' => true,
+                      'type' => 'text',
+                      'id' => 'peran',
+                      'name' => 'peran',
+                      'label' => __('Peran'),
+                      'options' => ['Ketua' => 'Ketua', 'Anggota' => 'Anggota'],
+                  ])
                 </div>
 
 
@@ -66,9 +89,7 @@
 @endsection
 
 @push('css')
-
 @endpush
 
 @push('js')
-
 @endpush

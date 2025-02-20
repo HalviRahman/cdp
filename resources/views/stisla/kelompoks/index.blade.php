@@ -108,21 +108,23 @@
                   <h6 class="text-primary">{!! __('Aksi Ekspor <small>(Client Side)</small>') !!}</h6>
                 @endif
 
-                <table class="table table-striped table-hovered" id="datatable"  @if ($canExport) data-export="true" data-title="{{ $title }}" @endif>
+                <table class="table table-striped table-hovered" id="datatable" @if ($canExport) data-export="true" data-title="{{ $title }}" @endif>
                   <thead>
                     <tr>
                       <th class="text-center">#</th>
-                      <th class="text-center">{{ __('Ketua Email') }}</th>
+                      <th class="text-center">{{ __('ID Kelompok') }}</th>
                       <th class="text-center">{{ __('Anggota Email') }}</th>
+                      <th class="text-center">{{ __('Peran') }}</th>
                       <th>{{ __('Aksi') }}</th>
                     </tr>
                   </thead>
                   <tbody>
                     @foreach ($data as $item)
-                      <tr>
+                      <tr class="text-center">
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->ketua_email }}</td>
+                        <td>{{ $item->id_kelompok }}</td>
                         <td>{{ $item->anggota_email }}</td>
+                        <td>{{ $item->peran }}</td>
                         <td>
                           @if ($canUpdate)
                             @include('stisla.includes.forms.buttons.btn-edit', ['link' => route('kelompoks.edit', [$item->id])])
@@ -154,9 +156,7 @@
 @endpush
 
 @push('scripts')
-  <script>
-
-  </script>
+  <script></script>
 @endpush
 
 @push('modals')

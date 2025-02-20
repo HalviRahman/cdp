@@ -21,7 +21,7 @@ class Proposal extends Model
      *
      * @var array
      */
-    protected $fillable = ['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi', 'mahasiswa', 'token'];
+    protected $fillable = ['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi', 'mahasiswa', 'token', 'prodi', 'laporan_kegiatan', 'laporan_keuangan'];
 
     /**
      * The attributes that should be cast to native types.
@@ -59,5 +59,10 @@ class Proposal extends Model
     public function kelompoks()
     {
         return $this->hasMany(Kelompok::class, 'id_kelompok', 'id_kelompok');
+    }
+
+    public function programStudi()
+    {
+        return $this->belongsTo(ProgramStudi::class, 'id');
     }
 }

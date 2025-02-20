@@ -41,7 +41,7 @@ class UserRepository extends Repository
         return User::whereNotNull('prodi')
             ->get()
             ->mapWithKeys(function ($item) {
-                return [$item->email => $item->name . ' - ' . $item->jenjang . ' ' . $item->prodi];
+                return [$item->email => $item->name . ' - ' . implode('; ', json_decode($item->prodi, true))];
             });
     }
 

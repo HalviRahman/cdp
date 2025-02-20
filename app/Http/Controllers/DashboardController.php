@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use App\Models\Proposal;
+use App\Repositories\ProposalRepository;
+use App\Models\ProgramStudi;
 
 class DashboardController extends StislaController
 {
@@ -24,7 +27,7 @@ class DashboardController extends StislaController
     public function __construct()
     {
         parent::__construct();
-
+        $this->proposalRepository = new ProposalRepository();
         // $this->middleware('can:Log Aktivitas');
     }
 
@@ -37,6 +40,9 @@ class DashboardController extends StislaController
     {
         $widgets = [];
         $user = auth()->user();
+        $userProdi = json_decode(auth()->user()->prodi, true);
+        $prodiName = explode(' ', $userProdi[0], 2)[1]; // Ambil nama_prodi dari prodi pertama
+        $programStudi = ProgramStudi::where('nama_prodi', $prodiName)->first();
 
         if ($user->can('Pengguna'))
             $widgets[] = (object)[
@@ -105,6 +111,11 @@ class DashboardController extends StislaController
             'widgets' => $widgets,
             'logs'    => $logs,
             'user'    => $user,
+            // 'dataProposal' => Proposal::where('prodi', json_decode($user->prodi, true))->get(),
+            // 'dataProposalKeuangan' => Proposal::all(),
+            'programStudi' => $programStudi,
+            'dataProposal' => $this->proposalRepository->getFilterProdi(),
+            'dataProposalKeuangan' => $this->proposalRepository->getFilterTahun()
         ]);
     }
 
