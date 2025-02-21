@@ -21,18 +21,12 @@ use App\Models\Jadwal;
 
 class AuthController extends StislaController
 {
-
     /**
      * active socialite providers
      *
      * @var array
      */
-    private array $socialiteProviders = [
-        'google',
-        'facebook',
-        'twitter',
-        'github',
-    ];
+    private array $socialiteProviders = ['google', 'facebook', 'twitter', 'github'];
 
     /**
      * constructor method
@@ -51,8 +45,9 @@ class AuthController extends StislaController
      */
     public function registerForm()
     {
-        if ($this->settingRepository->isActiveRegisterPage() === false)
+        if ($this->settingRepository->isActiveRegisterPage() === false) {
             abort(404);
+        }
 
         // if (config('app.template') === 'stisla') {
         //     $template = \App\Models\Setting::firstOrCreate(['key' => 'login_template'], ['value' => 'default'])->value;
@@ -63,10 +58,11 @@ class AuthController extends StislaController
         // }
         // return view('stisla.auth.login.index');
         $isGoogleCaptcha = $this->settingRepository->isGoogleCaptchaRegister();
-        if (TEMPLATE === STISLA)
+        if (TEMPLATE === STISLA) {
             return view('stisla.auth.register.index', [
-                'isGoogleCaptcha' => $isGoogleCaptcha
+                'isGoogleCaptcha' => $isGoogleCaptcha,
             ]);
+        }
     }
 
     /**
@@ -79,18 +75,13 @@ class AuthController extends StislaController
     {
         try {
             DB::beginTransaction();
-            $data = $request->only(
+            $data = $request->only(['name', 'email', 'phone_number', 'birth_date', 'address']);
+            $data = array_merge(
                 [
-                    'name',
-                    'email',
-                    'phone_number',
-                    'birth_date',
-                    'address',
-                ]
+                    'password' => bcrypt($request->password),
+                ],
+                $data,
             );
-            $data = array_merge([
-                'password' => bcrypt($request->password)
-            ], $data);
             $user = $this->userRepository->create($data);
             $this->userRepository->assignRole($user, 'user');
             if ($this->settingRepository->loginMustVerified()) {
@@ -122,7 +113,7 @@ class AuthController extends StislaController
         $isGoogleCaptcha = SettingRepository::isGoogleCaptchaLogin();
         if (TEMPLATE === STISLA) {
             $template = $this->settingRepository->stislaLoginTemplate();
-            $data     = [
+            $data = [
                 'isGoogleCaptcha' => $isGoogleCaptcha,
             ];
             if ($template === 'tampilan 2' || Route::is('login2')) {
@@ -199,7 +190,7 @@ class AuthController extends StislaController
             // return view('stisla.auth.login.index-stisla-2');
             // else
             return view('stisla.auth.forgot-password.index2', [
-                'isGoogleCaptcha' => $isGoogleCaptcha
+                'isGoogleCaptcha' => $isGoogleCaptcha,
             ]);
         }
         return view('stisla.auth.login.index');
@@ -213,18 +204,25 @@ class AuthController extends StislaController
      */
     public function forgotPassword(ForgotPasswordRequest $request)
     {
-        if ($this->settingRepository->isForgotPasswordSendToEmail() === false) abort(404);
+        if ($this->settingRepository->isForgotPasswordSendToEmail() === false) {
+            abort(404);
+        }
         DB::beginTransaction();
         try {
             $user = $this->userRepository->findByEmail($request->email);
-            $userNew = $this->userRepository->update([
-                'email_token' => Str::random(100),
-                'verification_code' => rand(100000, 999999)
-            ], $user->id);
+            $userNew = $this->userRepository->update(
+                [
+                    'email_token' => Str::random(100),
+                    'verification_code' => rand(100000, 999999),
+                ],
+                $user->id,
+            );
             $this->emailService->forgotPassword($userNew);
             logForgotPassword($user, $userNew);
             DB::commit();
-            return back()->withInput()->with('successMessage', __('Berhasil mengirim ke ' . $request->email));
+            return back()
+                ->withInput()
+                ->with('successMessage', __('Berhasil mengirim ke ' . $request->email));
         } catch (Exception $e) {
             DB::rollBack();
             // if (Str::contains($e->getMessage(), 'Connection could not be established')) {
@@ -302,7 +300,9 @@ class AuthController extends StislaController
      */
     public function verificationForm()
     {
-        if ($this->settingRepository->loginMustVerified() === false) abort(404);
+        if ($this->settingRepository->loginMustVerified() === false) {
+            abort(404);
+        }
         // if (config('app.template') === 'stisla') {
         //     $template = \App\Models\Setting::firstOrCreate(['key' => 'login_template'], ['value' => 'default'])->value;
         //     if ($template === 'tampilan 2')
@@ -311,8 +311,9 @@ class AuthController extends StislaController
         //         return view('stisla.auth.login.index-stisla');
         // }
         // return view('stisla.auth.login.index');
-        if (TEMPLATE === STISLA)
+        if (TEMPLATE === STISLA) {
             return view('stisla.auth.verification.index2');
+        }
     }
 
     /**
@@ -323,7 +324,9 @@ class AuthController extends StislaController
      */
     public function sendEmailVerification(ForgotPasswordRequest $request)
     {
-        if ($this->settingRepository->loginMustVerified() === false) abort(404);
+        if ($this->settingRepository->loginMustVerified() === false) {
+            abort(404);
+        }
         DB::beginTransaction();
         try {
             $user = $this->userRepository->findByEmail($request->email);
@@ -331,7 +334,9 @@ class AuthController extends StislaController
             $this->emailService->verifyAccount($userNew);
             logExecute(__('Email Verifikasi'), UPDATE, null, null);
             DB::commit();
-            return back()->withInput()->with('successMessage', __('Berhasil mengirim link verifikasi ke ' . $request->email));
+            return back()
+                ->withInput()
+                ->with('successMessage', __('Berhasil mengirim link verifikasi ke ' . $request->email));
         } catch (Exception $e) {
             DB::rollBack();
             // if (Str::contains($e->getMessage(), 'Connection could not be established')) {
@@ -349,14 +354,21 @@ class AuthController extends StislaController
      */
     public function verify($token)
     {
-        if ($this->settingRepository->loginMustVerified() === false) abort(404);
+        if ($this->settingRepository->loginMustVerified() === false) {
+            abort(404);
+        }
         $user = $this->userRepository->findByEmailToken($token);
-        if ($user === null) abort(404);
-        $userNew = $this->userRepository->update([
-            'email_verified_at' => now(),
-            'email_token'       => null,
-            'verification_code' => null
-        ], $user->id);
+        if ($user === null) {
+            abort(404);
+        }
+        $userNew = $this->userRepository->update(
+            [
+                'email_verified_at' => now(),
+                'email_token' => null,
+                'verification_code' => null,
+            ],
+            $user->id,
+        );
         logExecute(__('Verifikasi Akun'), UPDATE, $user, $userNew);
         return redirect()->route('login')->with('successMessage', __('Berhasil memverifikasi akun, silakan masuk menggunakan akun anda'));
     }
@@ -375,11 +387,11 @@ class AuthController extends StislaController
         $isValid = false;
         if ($provider === 'facebook') {
             $isValid = $this->settingRepository->isLoginWithFacebook();
-        } else if ($provider === 'google') {
+        } elseif ($provider === 'google') {
             $isValid = $this->settingRepository->isLoginWithGoogle();
-        } else if ($provider === 'twitter') {
+        } elseif ($provider === 'twitter') {
             $isValid = $this->settingRepository->isLoginWithTwitter();
-        } else if ($provider === 'github') {
+        } elseif ($provider === 'github') {
             $isValid = $this->settingRepository->isLoginWithGithub();
         }
 
@@ -405,11 +417,10 @@ class AuthController extends StislaController
             }
             $user = Socialite::driver($provider)->stateless()->user();
 
-            dd($user);
+            // dd($user);
             $isRegister = session('social_action') === 'register';
 
             if ($user->getEmail() || $provider === 'twitter') {
-
                 $successMsg = __('Berhasil masuk ke dalam sistem');
 
                 if ($provider === 'twitter') {
@@ -426,14 +437,14 @@ class AuthController extends StislaController
                     }
 
                     $data = [
-                        'name'                 => $user->getName(),
-                        'email'                => $user->getEmail(),
-                        'avatar'               => $user->getAvatar(),
-                        'email_verified_at'    => date('Y-m-d H:i:s'),
-                        'password'             => bcrypt(Str::random(10)),
-                        'last_login'           => date('Y-m-d H:i:s'),
+                        'name' => $user->getName(),
+                        'email' => $user->getEmail(),
+                        'avatar' => $user->getAvatar(),
+                        'email_verified_at' => date('Y-m-d H:i:s'),
+                        'password' => bcrypt(Str::random(10)),
+                        'last_login' => date('Y-m-d H:i:s'),
                         'last_password_change' => date('Y-m-d H:i:s'),
-                        'twitter_id'           => $user->getId(),
+                        'twitter_id' => $user->getId(),
                     ];
                     $userModel = $this->userRepository->create($data);
                     $userModel->syncRoles(['admin']);
@@ -472,11 +483,11 @@ class AuthController extends StislaController
         $isValid = false;
         if ($provider === 'facebook') {
             $isValid = $this->settingRepository->isRegisterWithFacebook();
-        } else if ($provider === 'google') {
+        } elseif ($provider === 'google') {
             $isValid = $this->settingRepository->isRegisterWithGoogle();
-        } else if ($provider === 'twitter') {
+        } elseif ($provider === 'twitter') {
             $isValid = $this->settingRepository->isRegisterWithTwitter();
-        } else if ($provider === 'github') {
+        } elseif ($provider === 'github') {
             $isValid = $this->settingRepository->isRegisterWithGithub();
         }
 

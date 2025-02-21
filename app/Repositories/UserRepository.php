@@ -39,6 +39,7 @@ class UserRepository extends Repository
     public function getAnggotaOptions()
     {
         return User::whereNotNull('prodi')
+            ->where('prodi', auth()->user()->prodi)
             ->get()
             ->mapWithKeys(function ($item) {
                 return [$item->email => $item->name . ' - ' . implode('; ', json_decode($item->prodi, true))];

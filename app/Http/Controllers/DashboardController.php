@@ -18,7 +18,6 @@ use App\Models\ProgramStudi;
 
 class DashboardController extends StislaController
 {
-
     /**
      * constructor method
      *
@@ -41,67 +40,70 @@ class DashboardController extends StislaController
         $widgets = [];
         $user = auth()->user();
         $userProdi = json_decode(auth()->user()->prodi, true);
-        $prodiName = explode(' ', $userProdi[0], 2)[1]; // Ambil nama_prodi dari prodi pertama
-        $programStudi = ProgramStudi::where('nama_prodi', $prodiName)->first();
 
-        if ($user->can('Pengguna'))
-            $widgets[] = (object)[
+        if ($user->can('Pengguna')) {
+            $widgets[] = (object) [
                 'title' => 'Pengguna',
                 'count' => User::count(),
-                'bg'    => 'primary',
-                'icon'  => 'users',
+                'bg' => 'primary',
+                'icon' => 'users',
                 'route' => route('user-management.users.index'),
             ];
-        if ($user->can('Role'))
-            $widgets[] = (object)[
+        }
+        if ($user->can('Role')) {
+            $widgets[] = (object) [
                 'title' => 'Role',
                 'count' => Role::count(),
-                'bg'    => 'danger',
-                'icon'  => 'lock',
-                'route' => route('user-management.roles.index')
+                'bg' => 'danger',
+                'icon' => 'lock',
+                'route' => route('user-management.roles.index'),
             ];
-        if ($user->can('Permission'))
-            $widgets[] = (object)[
+        }
+        if ($user->can('Permission')) {
+            $widgets[] = (object) [
                 'title' => 'Permission',
                 'count' => Permission::count(),
-                'bg'    => 'success',
-                'icon'  => 'key',
-                'route' => route('user-management.permissions.index')
+                'bg' => 'success',
+                'icon' => 'key',
+                'route' => route('user-management.permissions.index'),
             ];
-        if ($user->can('Group Permission'))
-            $widgets[] = (object)[
+        }
+        if ($user->can('Group Permission')) {
+            $widgets[] = (object) [
                 'title' => 'Group Permission',
                 'count' => PermissionGroup::count(),
-                'bg'    => 'info',
-                'icon'  => 'key',
-                'route' => route('user-management.permission-groups.index')
+                'bg' => 'info',
+                'icon' => 'key',
+                'route' => route('user-management.permission-groups.index'),
             ];
-        if ($user->can('Log Aktivitas'))
-            $widgets[] = (object)[
+        }
+        if ($user->can('Log Aktivitas')) {
+            $widgets[] = (object) [
                 'title' => 'Log Aktivitas',
                 'count' => ActivityLog::count(),
-                'bg'    => 'success',
-                'icon'  => 'clock-rotate-left',
-                'route' => route('activity-logs.index')
+                'bg' => 'success',
+                'icon' => 'clock-rotate-left',
+                'route' => route('activity-logs.index'),
             ];
+        }
 
         if ($user->can('Notifikasi')) {
-            $widgets[] = (object)[
+            $widgets[] = (object) [
                 'title' => 'Notifikasi',
                 'count' => Notification::where('user_id', $user->id)->count(),
-                'bg'    => 'info',
-                'icon'  => 'bell',
+                'bg' => 'info',
+                'icon' => 'bell',
                 'route' => route('notifications.index'),
             ];
         }
 
         if ($user->can('Backup Database')) {
-            $widgets[] = (object)[
+            $widgets[] = (object) [
                 'title' => 'Backup Database',
-                'count' => count((new DatabaseService)->getAllBackupMysql()),
-                'bg'    => 'primary',
-                'icon'  => 'database',
-                'route' => route('backup-databases.index')
+                'count' => count((new DatabaseService())->getAllBackupMysql()),
+                'bg' => 'primary',
+                'icon' => 'database',
+                'route' => route('backup-databases.index'),
             ];
         }
 
@@ -109,13 +111,13 @@ class DashboardController extends StislaController
 
         return view('stisla.dashboard.index', [
             'widgets' => $widgets,
-            'logs'    => $logs,
-            'user'    => $user,
+            'logs' => $logs,
+            'user' => $user,
             // 'dataProposal' => Proposal::where('prodi', json_decode($user->prodi, true))->get(),
             // 'dataProposalKeuangan' => Proposal::all(),
-            'programStudi' => $programStudi,
+            // 'programStudi' => $programStudi,
             'dataProposal' => $this->proposalRepository->getFilterProdi(),
-            'dataProposalKeuangan' => $this->proposalRepository->getFilterTahun()
+            'dataProposalKeuangan' => $this->proposalRepository->getFilterTahun(),
         ]);
     }
 
@@ -125,7 +127,9 @@ class DashboardController extends StislaController
             'file_upload' => 'required|file|max:102048',
         ]);
         $link = $this->fileService->uploadFile($request->file('file_upload'), 'file_upload');
-        auth()->user()->update(['file_upload' => $link]);
+        auth()
+            ->user()
+            ->update(['file_upload' => $link]);
         return redirect()->back()->with('successMessage', 'File berhasil diupload');
     }
 

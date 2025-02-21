@@ -102,6 +102,15 @@ class ProposalController extends Controller
     public function index()
     {
         $user = auth()->user();
+        if ($user->hasRole('Dosen')) {
+            return view('stisla.proposals.form', [
+                'title' => __('Proposal'),
+                'fullTitle' => __('Tambah Proposal'),
+                'routeIndex' => route('proposals.index'),
+                'action' => route('proposals.store'),
+                'anggota' => $this->UserRepository->getAnggotaOptions(),
+            ]);
+        }
         return view('stisla.proposals.index', [
             'data' => $this->proposalRepository->getLatest(),
             'canCreate' => $user->can('Proposal Tambah'),
