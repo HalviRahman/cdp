@@ -27,7 +27,7 @@ class ProposalRequest extends FormRequest
             return [
                 'id_kelompok' => [],
                 'judul_proposal' => ['required'],
-                'file_proposal' => ['required'],
+                'file_proposal' => ['file', 'mimes:pdf', 'max:10240'],
                 'tgl_upload' => [],
                 'status' => [],
                 'verifikator' => [],
@@ -40,7 +40,7 @@ class ProposalRequest extends FormRequest
         return [
             'id_kelompok' => [],
             'judul_proposal' => ['required'],
-            'file_proposal' => ['required'],
+            'file_proposal' => ['required', 'file', 'mimes:pdf', 'max:10240'],
             'tgl_upload' => [],
             'status' => [],
             'verifikator' => [],
@@ -48,6 +48,20 @@ class ProposalRequest extends FormRequest
             'tgl_verifikasi' => [],
             'mahasiswa' => [],
             'token' => [],
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'file_proposal.max' => 'Ukuran file proposal tidak boleh lebih dari 10MB',
+            'file_proposal.mimes' => 'File proposal harus berformat PDF',
+            'file_proposal.required' => 'File proposal wajib diupload',
         ];
     }
 }

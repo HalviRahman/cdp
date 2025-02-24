@@ -79,6 +79,8 @@
                         'id' => 'file_proposal',
                         'name' => 'file_proposal',
                         'label' => __('File Proposal'),
+                        'accept' => '.pdf',
+                        'hint' => 'Format File: PDF, Maksimal 5MB',
                     ])
                   </div>
                 @endif
