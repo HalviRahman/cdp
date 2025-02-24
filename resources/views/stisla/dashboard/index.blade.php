@@ -222,25 +222,33 @@
         </div>
       </div>
       {{-- Box 6 - Upload Laporan --}}
-      <div class="col-12 col-sm-12 col-lg-6">
-        <div class="card author-box card-success">
-          <div class="card-body">
+      @php
+        $kelompok = \App\Models\Kelompok::where('anggota_email', auth()->user()->email)
+            ->where('peran', 'Ketua')
+            ->first();
+        $proposal = $kelompok ? \App\Models\Proposal::where('id_kelompok', $kelompok->id_kelompok)->where('status', '3')->first() : null;
+      @endphp
+      @if ($proposal)
+        <div class="col-12 col-sm-12 col-lg-6">
+          <div class="card author-box card-success">
             <div class="card-body">
-              <div class="author-box-name text-center">
-                <a href="#" class="text-dark">Upload Laporan</a>
-                <div class="author-box-job text-center">
-                  <p>Upload laporan kegiatan dan laporan keuangan CDP</p>
-                </div>
-                <div class="author-box-job text-center">
-                  <a href="{{ route('laporans.create') }}" class="btn btn-success mt-3">
-                    <i class="fa fa-upload"></i> Upload
-                  </a>
+              <div class="card-body">
+                <div class="author-box-name text-center">
+                  <a href="#" class="text-dark">Upload Laporan</a>
+                  <div class="author-box-job text-center">
+                    <p>Upload laporan kegiatan dan laporan keuangan CDP</p>
+                  </div>
+                  <div class="author-box-job text-center">
+                    <a href="{{ route('laporans.create') }}" class="btn btn-success mt-3">
+                      <i class="fa fa-upload"></i> Upload
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      @endif
     @endif
 
     @if (auth()->user()->hasRole('Sysadmin'))
@@ -299,7 +307,7 @@
                       'id' => 'tahun',
                       'name' => 'tahun',
                       'required' => true,
-                      'options' => array_combine(range(date('Y'), date('Y') + 5), range(date('Y'), date('Y') + 5)),
+                      'options' => array_combine(range(date('Y'), date('Y')), range(date('Y'), date('Y'))),
                       'label' => __('Tahun'),
                       'value' => request('tahun'),
                       'selected' => request('tahun'),
@@ -360,21 +368,21 @@
 
       <div class="col-12">
         <h2 class="section-title">Daftar Proposal</h2>
-        @foreach ($dataProposal->where('status', '0') as $proposal)
+        @foreach ($dataProposal as $proposal)
           <div class="card">
             <div class="card-body">
               <h5>{{ $proposal->judul_proposal }}</h5>
               <p><strong>Ketua:</strong> {{ $proposal->ketuaKelompok->user->name }} - {{ implode('; ', json_decode($proposal->ketuaKelompok->user->prodi, true)) }}
               </p>
               @if ($proposal->verifikator)
-                <p>Verifikator: {{ $proposal->verifikator->name }} ({{ $proposal->verifikator->role }})</p>
-                <p>Tanggal Verifikasi: {{ $proposal->tanggal_verifikasi->format('d M Y, H:i') }} WIB</p>
+                <p>Verifikator: {{ $proposal->verifikator }} </p>
+                <p>Tanggal Verifikasi: {{ $proposal->tgl_verifikasi }} WIB</p>
               @endif
               @if ($proposal->status == '0')
                 <span class="badge badge-warning">Menunggu Verifikasi</span>
               @elseif($proposal->status == '1')
                 <span class="badge badge-success">Disetujui</span>
-              @elseif($proposal->status == '2')
+              @elseif($proposal->status == '10')
                 <span class="badge badge-danger">Ditolak</span>
                 <p>Alasan: {{ $proposal->keterangan }}</p>
               @else
@@ -403,7 +411,7 @@
                   'id' => 'tahun',
                   'name' => 'tahun',
                   'required' => true,
-                  'options' => array_combine(range(date('Y'), date('Y') + 5), range(date('Y'), date('Y') + 5)),
+                  'options' => array_combine(range(date('Y'), date('Y')), range(date('Y'), date('Y'))),
                   'label' => __('Tahun'),
                   'value' => request('tahun'),
                   'selected' => request('tahun'),
@@ -452,7 +460,7 @@
                   <td><span class="badge badge-warning">Menunggu Verifikasi</span></td>
                 @elseif($proposal->status == '1')
                   <td><span class="badge badge-success">Disetujui</span></td>
-                @elseif($proposal->status == '2')
+                @elseif($proposal->status == '10')
                   <td><span class="badge badge-danger">Ditolak</span></td>
                 @endif
               </tr>

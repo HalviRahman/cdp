@@ -7,6 +7,7 @@ use App\Http\Requests\ProposalRequest;
 use App\Imports\ProposalImport;
 use App\Models\Proposal;
 use App\Models\Kelompok;
+use App\Models\ProgramStudi;
 use App\Repositories\ProposalRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\UserRepository;
@@ -101,6 +102,18 @@ class ProposalController extends Controller
      */
     public function index()
     {
+        $tahun = request('tahun', date('Y'));
+
+        $programStudi = ProgramStudi::where('tahun', $tahun)
+            ->select('program_studis.*')
+            ->selectRaw(
+                '(SELECT COUNT(*) FROM proposals
+                        WHERE proposals.prodi = CONCAT(program_studis.jenjang, " ", program_studis.nama_prodi)
+                        AND YEAR(proposals.tgl_upload) = ?) as proposals_count',
+                [$tahun],
+            )
+            ->get();
+
         $user = auth()->user();
         if ($user->hasRole('Dosen')) {
             return view('stisla.proposals.form', [
@@ -112,7 +125,9 @@ class ProposalController extends Controller
             ]);
         }
         return view('stisla.proposals.index', [
-            'data' => $this->proposalRepository->getLatest(),
+            'data' => $this->proposalRepository->getFilterProdi(),
+            'programStudi' => $programStudi,
+            // 'data' => $this->proposalRepository->getLatest(),
             'canCreate' => $user->can('Proposal Tambah'),
             'canUpdate' => $user->can('Proposal Ubah'),
             'canDelete' => $user->can('Proposal Hapus'),
@@ -254,6 +269,11 @@ class ProposalController extends Controller
         // if ($request->hasFile('file')) {
         //     $data['file'] = $this->fileService->methodName($request->file('file'));
         // }
+        if (auth()->user()->hasRole('Prodi')) {
+            $data['status'] = '2';
+            $data['verifikator'] = auth()->user()->name;
+            $data['tgl_verifikasi'] = now();
+        }
         // Simpan ketua_email ke dalam tabel kelompok
         $newData = $this->proposalRepository->update($data, $proposal->id);
 
@@ -272,7 +292,7 @@ class ProposalController extends Controller
         logUpdate('Proposal', $proposal, $newData);
 
         $successMessage = successMessageUpdate('Proposal');
-        return redirect()->back()->with('successMessage', $successMessage);
+        return redirect()->route('dashboard.index')->with('successMessage', $successMessage);
     }
 
     /**
