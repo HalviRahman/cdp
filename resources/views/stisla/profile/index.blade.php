@@ -93,12 +93,12 @@
                   </div>
                 @endif
                 <div class="col-md-6">
-                  @include('stisla.includes.forms.inputs.input-email', ['value' => $user->email])
+                  @include('stisla.includes.forms.inputs.input-email', ['value' => $user->email, 'disabled' => true])
                 </div>
-                <div class="col-md-12">
+                {{-- <div class="col-md-12">
                   @include('stisla.includes.forms.buttons.btn-save')
                   @include('stisla.includes.forms.buttons.btn-reset')
-                </div>
+                </div> --}}
               </div>
             </div>
           </div>

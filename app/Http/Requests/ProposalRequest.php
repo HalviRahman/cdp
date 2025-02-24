@@ -26,8 +26,8 @@ class ProposalRequest extends FormRequest
         if ($this->isMethod('put')) {
             return [
                 'id_kelompok' => [],
-                'judul_proposal' => ['required'],
-                'file_proposal' => ['required'],
+                'judul_proposal' => [],
+                'file_proposal' => [],
                 'tgl_upload' => [],
                 'status' => [],
                 'verifikator' => [],
