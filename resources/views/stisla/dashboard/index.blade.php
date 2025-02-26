@@ -221,9 +221,14 @@
                   <p>Ajukan proposal CDP baru sebagai ketua atau anggota kelompok</p>
                 </div>
                 <div class="author-box-job text-center">
-                  <a href="{{ route('proposals.create') }}" class="btn btn-primary mt-3">
+                  @if ($hasProposal)
+                    <button class="btn btn-primary mt-3" disabled>Sudah Mengajukan Proposal</button>
+                  @else
+                    <a href="{{ route('proposals.create') }}" class="btn btn-primary mt-3">Ajukan Proposal</a>
+                  @endif
+                  {{-- <a href="{{ route('proposals.create') }}" class="btn btn-primary mt-3">
                     <i class="fa fa-plus-circle"></i> Ajukan
-                  </a>
+                  </a> --}}
                 </div>
               </div>
             </div>

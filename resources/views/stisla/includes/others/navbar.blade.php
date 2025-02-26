@@ -71,7 +71,7 @@
     {{-- <img class="logoku" src="{{ $_logo_url }}" alt="{{ $_company_name }}"> --}}
     <h5 class="nama_perusahaan">
       {{-- SIM Community Development Program (CDP) Fakultas Saintek --}}
-      SIM-CDP Fakultas Saintek
+      SIM-CDP
       {{-- {{ $_company_name }} --}}
     </h5>
     {{-- </div> --}}

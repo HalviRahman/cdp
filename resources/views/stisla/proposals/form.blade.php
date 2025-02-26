@@ -144,7 +144,7 @@
                 @if (isset($d))
                   <div class="col-md-12">
                     <h6 class="mb-3"><i class="fas fa-file-alt me-2"></i> File Proposal</h6>
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center mb-2">
                       <div class="mr-3">
                         <i class="fas fa-file-pdf text-danger fs-5"></i>
                       </div>
@@ -152,7 +152,9 @@
                         <p class="mb-0">{{ basename($d->file_proposal) }}</p>
                         <small class="text-muted">Diunggah pada: {{ $d->tgl_upload }}</small>
                       </div>
-                      <a href="{{ $d->file_proposal }}" class="btn btn-primary">
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <a href="{{ $d->file_proposal }}" class="btn btn-primary" target="_blank">
                         <i class="fas fa-eye me-2"></i> Lihat Proposal
                       </a>
                     </div>
