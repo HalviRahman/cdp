@@ -200,15 +200,21 @@
 
                   {{-- @include('stisla.includes.forms.buttons.btn-save') --}}
                   @if (isset($d))
-                    @if ($d->status == 0)
-                      @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Setujui', 'icon' => 'fas fa-check-circle', 'color' => 'success'])
-                      @include('stisla.includes.forms.buttons.btn-reset', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger'])
-                    @elseif ($d->status == 1)
-                      @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Setujui', 'icon' => 'fas fa-check-circle', 'color' => 'success'])
-                      @include('stisla.includes.forms.buttons.btn-reset', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger'])
+                    @if (auth()->user()->hasRole('Prodi'))
+                      @if ($d->status == 0)
+                        @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Setujui', 'icon' => 'fas fa-check-circle', 'color' => 'success'])
+                        @include('stisla.includes.forms.buttons.btn-reset', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger'])
+                      @elseif ($d->status == 1)
+                        @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Setujui', 'icon' => 'fas fa-check-circle', 'color' => 'success'])
+                        @include('stisla.includes.forms.buttons.btn-reset', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger'])
+                      @endif
+                    @endif
+                    @if (auth()->user()->hasRole('Dosen'))
                     @endif
                   @else
-                    @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Ajukan Proposal', 'icon' => 'fas fa-paper-plane'])
+                    @if (auth()->user()->hasRole('Dosen'))
+                      @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Ajukan Proposal', 'icon' => 'fas fa-paper-plane'])
+                    @endif
                   @endif
 
                   {{-- @include('stisla.includes.forms.buttons.btn-reset') --}}

@@ -37,14 +37,31 @@ class UserRepository extends Repository
     }
 
     public function getAnggotaOptions()
-    {
-        return User::whereNotNull('prodi')
-            ->where('prodi', auth()->user()->prodi)
-            ->get()
-            ->mapWithKeys(function ($item) {
-                return [$item->email => $item->name . ' - ' . implode('; ', json_decode($item->prodi, true))];
-            });
-    }
+{
+    $userProdi = json_decode(auth()->user()->prodi, true);
+
+    return User::whereNotNull('prodi')
+        ->where(function($query) use ($userProdi) {
+            foreach ($userProdi as $prodi) {
+                $query->orWhere('prodi', 'like', '%' . $prodi . '%');
+            }
+        })
+        ->get()
+        ->mapWithKeys(function ($item) {
+            return [
+                $item->email => $item->name . ' - ' . implode('; ', json_decode($item->prodi, true))
+            ];
+        });
+}
+    // public function getAnggotaOptions()
+    // {
+    //     return User::whereNotNull('prodi')
+    //         ->where('prodi', auth()->user()->prodi)
+    //         ->get()
+    //         ->mapWithKeys(function ($item) {
+    //             return [$item->email => $item->name . ' - ' . implode('; ', json_decode($item->prodi, true))];
+    //         });
+    // }
 
     /**
      * get user id login

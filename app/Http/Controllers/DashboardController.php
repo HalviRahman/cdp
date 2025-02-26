@@ -107,6 +107,12 @@ class DashboardController extends StislaController
 
         $logs = $this->activityLogRepository->getMineLatest();
 
+        $userEmail = auth()->user()->email;
+
+        $dataProposalDosen = Proposal::whereHas('kelompoks', function($query) use ($userEmail) {
+            $query->where('anggota_email', $userEmail);
+        })->get();
+        // dd($dataProposalDosen);
         return view('stisla.dashboard.index', [
             'widgets' => $widgets,
             'logs'    => $logs,
@@ -115,7 +121,8 @@ class DashboardController extends StislaController
             // 'dataProposalKeuangan' => Proposal::all(),
             'programStudi' => $programStudi,
             'dataProposal' => $this->proposalRepository->getFilterProdi(),
-            'dataProposalKeuangan' => $this->proposalRepository->getFilterTahun()
+            'dataProposalKeuangan' => $this->proposalRepository->getFilterTahun(),
+            'dataProposalDosen' => $dataProposalDosen
         ]);
     }
     /**
