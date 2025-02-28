@@ -38,7 +38,7 @@
         <td>{{ $item->nip }}</td>
         <td>
           @if ($item->prodi)
-            @foreach (json_decode($item->prodi, true) as $prodi)
+            @foreach ($item->prodi as $prodi)
               <span class="badge badge-primary mb-1">{{ $prodi }}</span>
             @endforeach
           @else

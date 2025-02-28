@@ -36,7 +36,7 @@ class ProposalRepository extends Repository
         $tahun = request('tahun', date('Y'));
 
         $query->whereYear('tgl_upload', $tahun);
-        $query->where('prodi', json_decode($user->prodi, true));
+        $query->where('prodi', $user->prodi);
 
         return $query->latest()->get();
     }

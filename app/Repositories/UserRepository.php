@@ -38,7 +38,8 @@ class UserRepository extends Repository
 
     public function getAnggotaOptions()
 {
-    $userProdi = json_decode(auth()->user()->prodi, true);
+    $userProdi = auth()->user()->prodi;
+    // $userProdi = json_decode(auth()->user()->prodi, true);
 
     return User::whereNotNull('prodi')
         ->where(function($query) use ($userProdi) {
@@ -49,7 +50,7 @@ class UserRepository extends Repository
         ->get()
         ->mapWithKeys(function ($item) {
             return [
-                $item->email => $item->name . ' - ' . implode('; ', json_decode($item->prodi, true))
+                $item->email => $item->name . ' - ' . implode('; ', $item->prodi)
             ];
         });
 }

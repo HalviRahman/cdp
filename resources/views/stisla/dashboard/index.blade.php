@@ -99,6 +99,33 @@
       </div>
     @endif --}}
 
+    @if (auth()->user()->hasRole('Prodi'))
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+
+            <form action="">
+              @csrf
+              <div class="row">
+
+                <div class="col-md-3">
+                  @include('stisla.includes.forms.selects.select', [
+                      'id' => 'tahun',
+                      'name' => 'tahun',
+                      'required' => true,
+                      'options' => array_combine(range(date('Y'), date('Y')), range(date('Y'), date('Y'))),
+                      'label' => __('Tahun'),
+                      'value' => request('tahun'),
+                      'selected' => request('tahun'),
+                  ])
+                </div>
+              </div>
+              <button class="btn btn-primary icon"><i class="fa fa-search"></i> Cari Data</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    @endif
     @if (auth()->user()->hasRole('Fakultas'))
       {{-- Box 1 --}}
       <div class="col-12 col-sm-12 col-lg-6">
@@ -181,89 +208,7 @@
         </div>
       </div>
     @endif
-    @if (auth()->user()->hasRole('Dosen'))
-      @if ($dataProposalDosen)
-        @foreach ($dataProposalDosen as $proposal)
-          <div class="col-12">
-            <div class="card status-card status-pending mb-4 author-box card-{{ $proposal->status == '0' ? 'warning' : ($proposal->status == '1' ? 'success' : 'danger') }}">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div>
-                    <h5 class="card-title mb-1">{{ $proposal->judul_proposal }}</h5>
-                    <p class="card-text text-muted mb-0">Status: @if ($proposal->status == '0')
-                        Menunggu Verifikasi
-                      @elseif($proposal->status == '1')
-                        Disetujui
-                      @elseif($proposal->status == '10')
-                        Ditolak
-                      @endif
-                    </p>
-                  </div>
-                  <div>
-                    <a href="{{ route('proposals.edit', $proposal->id) }}" class="btn btn-outline-primary btn-sm">
-                      <i class="bi bi-eye me-2"></i>Detail
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        @endforeach
-      @endif
-      {{-- Box 5 - Ajukan Proposal --}}
-      <div class="col-12 col-sm-12 col-lg-6">
-        <div class="card author-box card-primary">
-          <div class="card-body">
-            <div class="card-body">
-              <div class="author-box-name text-center">
-                <a href="#" class="text-dark">Ajukan Proposal</a>
-                <div class="author-box-job text-center">
-                  <p>Ajukan proposal CDP baru sebagai ketua atau anggota kelompok</p>
-                </div>
-                <div class="author-box-job text-center">
-                  @if ($hasProposal)
-                    <button class="btn btn-primary mt-3" disabled>Sudah Mengajukan Proposal</button>
-                  @else
-                    <a href="{{ route('proposals.create') }}" class="btn btn-primary mt-3">Ajukan Proposal</a>
-                  @endif
-                  {{-- <a href="{{ route('proposals.create') }}" class="btn btn-primary mt-3">
-                    <i class="fa fa-plus-circle"></i> Ajukan
-                  </a> --}}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {{-- Box 6 - Upload Laporan --}}
-      @php
-        $kelompok = \App\Models\Kelompok::where('anggota_email', auth()->user()->email)
-            ->where('peran', 'Ketua')
-            ->first();
-        $proposal = $kelompok ? \App\Models\Proposal::where('id_kelompok', $kelompok->id_kelompok)->where('status', '3')->first() : null;
-      @endphp
-      @if ($proposal)
-        <div class="col-12 col-sm-12 col-lg-6">
-          <div class="card author-box card-success">
-            <div class="card-body">
-              <div class="card-body">
-                <div class="author-box-name text-center">
-                  <a href="#" class="text-dark">Upload Laporan</a>
-                  <div class="author-box-job text-center">
-                    <p>Upload laporan kegiatan dan laporan keuangan CDP</p>
-                  </div>
-                  <div class="author-box-job text-center">
-                    <a href="{{ route('laporans.create') }}" class="btn btn-success mt-3">
-                      <i class="fa fa-upload"></i> Upload
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      @endif
-    @endif
+
 
     @if (auth()->user()->hasRole('Sysadmin'))
       {{-- Box 1 - Kelola Pengguna --}}
@@ -307,32 +252,94 @@
         </div>
       </div>
     @endif
-    @if (auth()->user()->hasRole('Prodi'))
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body">
 
-            <form action="">
-              @csrf
-              <div class="row">
-
-                <div class="col-md-3">
-                  @include('stisla.includes.forms.selects.select', [
-                      'id' => 'tahun',
-                      'name' => 'tahun',
-                      'required' => true,
-                      'options' => array_combine(range(date('Y'), date('Y')), range(date('Y'), date('Y'))),
-                      'label' => __('Tahun'),
-                      'value' => request('tahun'),
-                      'selected' => request('tahun'),
-                  ])
+    @if (auth()->user()->hasRole('Dosen'))
+      @if ($dataProposalDosen)
+        @foreach ($dataProposalDosen as $proposal)
+          <div class="col-12">
+            <div class="card status-card status-pending mb-4 author-box card-{{ $proposal->status == '0' ? 'warning' : ($proposal->status == '1' ? 'success' : 'danger') }}">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h5 class="card-title mb-1">{{ $proposal->judul_proposal }}</h5>
+                    <p class="card-text text-muted mb-0">Status: @if ($proposal->status == '0')
+                        Menunggu Verifikasi
+                      @elseif($proposal->status == '1')
+                        Disetujui
+                      @elseif($proposal->status == '10')
+                        Ditolak
+                      @endif
+                    </p>
+                  </div>
+                  <div>
+                    <a href="{{ route('proposals.edit', $proposal->id) }}" class="btn btn-outline-primary btn-sm">
+                      <i class="bi bi-eye me-2"></i>Detail
+                    </a>
+                  </div>
                 </div>
               </div>
-              <button class="btn btn-primary icon"><i class="fa fa-search"></i> Cari Data</button>
-            </form>
+            </div>
+          </div>
+        @endforeach
+      @endif
+      {{-- Box 5 - Ajukan Proposal --}}
+      @if ($hasProposal)
+      @else
+        <div class="col-12 col-sm-12 col-lg-6">
+          <div class="card author-box card-primary">
+            <div class="card-body">
+              <div class="card-body">
+                <div class="author-box-name text-center">
+                  <a href="#" class="text-dark">Ajukan Proposal</a>
+                  <div class="author-box-job text-center">
+                    <p>Ajukan proposal CDP baru sebagai ketua atau anggota kelompok</p>
+                  </div>
+                  <div class="author-box-job text-center">
+                    @if ($hasProposal)
+                      <button class="btn btn-primary mt-3" disabled>Sudah Mengajukan Proposal</button>
+                    @else
+                      <a href="{{ route('proposals.create') }}" class="btn btn-primary mt-3">Ajukan Proposal</a>
+                    @endif
+                    {{-- <a href="{{ route('proposals.create') }}" class="btn btn-primary mt-3">
+                    <i class="fa fa-plus-circle"></i> Ajukan
+                  </a> --}}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      @endif
+      {{-- Box 6 - Upload Laporan --}}
+      @php
+        $kelompok = \App\Models\Kelompok::where('anggota_email', auth()->user()->email)
+            ->where('peran', 'Ketua')
+            ->first();
+        $proposal = $kelompok ? \App\Models\Proposal::where('id_kelompok', $kelompok->id_kelompok)->where('status', '3')->first() : null;
+      @endphp
+      @if ($proposal)
+        <div class="col-12 col-sm-12 col-lg-6">
+          <div class="card author-box card-success">
+            <div class="card-body">
+              <div class="card-body">
+                <div class="author-box-name text-center">
+                  <a href="#" class="text-dark">Upload Laporan</a>
+                  <div class="author-box-job text-center">
+                    <p>Upload laporan kegiatan dan laporan keuangan CDP</p>
+                  </div>
+                  <div class="author-box-job text-center">
+                    <a href="{{ route('laporans.create') }}" class="btn btn-success mt-3">
+                      <i class="fa fa-upload"></i> Upload
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      @endif
+    @endif
+    @if (auth()->user()->hasRole('Prodi'))
       <div class="col-lg-4 col-md-4 col-sm-6 col-12 stats-card">
         <div class="card card-statistic-1">
           <div class="card-icon bg-info">
@@ -481,7 +488,12 @@
             @endforeach
           </tbody>
         </table>
+      </div>
+    </div>
   @endif
+
+
+
 @endsection
 
 @push('css')

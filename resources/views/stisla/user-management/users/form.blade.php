@@ -28,7 +28,7 @@
           'options' => $prodiOptions,
           'required' => false,
           'multiple' => true,
-          'hint' => isset($d) && $d->prodi != null ? implode(', ', json_decode($d->prodi, true)) : null,
+          'hint' => isset($d) && $d->prodi != null ? implode(', ', $d->prodi) : null,
       ])
     </div>
 

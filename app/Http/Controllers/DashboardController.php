@@ -40,7 +40,8 @@ class DashboardController extends StislaController
     {
         $widgets = [];
         $user = auth()->user();
-        $userProdi = json_decode(auth()->user()->prodi, true);
+        $userProdi = auth()->user()->prodi;
+        // $userProdi = json_decode(auth()->user()->prodi, true);
         $prodiName = explode(' ', $userProdi[0], 2)[1]; // Ambil nama_prodi dari prodi pertama
         $programStudi = ProgramStudi::where('nama_prodi', $prodiName)->first();
 
