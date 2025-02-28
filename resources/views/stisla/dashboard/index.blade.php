@@ -389,16 +389,16 @@
               <p><strong>Ketua:</strong> {{ $proposal->ketuaKelompok->user->name }} - {{ implode('; ', json_decode($proposal->ketuaKelompok->user->prodi, true)) }}
               </p>
               @if ($proposal->verifikator)
-                <p>Verifikator: {{ $proposal->verifikator }} </p>
-                <p>Tanggal Verifikasi: {{ $proposal->tgl_verifikasi }} WIB</p>
+                <p class="mb-0"><i class="fas fa-user-check me-2"></i> Verifikator: {{ $proposal->verifikator }} </p>
+                <p class="mb-0"><i class="fas fa-calendar-check me-2"></i> Tanggal Verifikasi: {{ $proposal->tgl_verifikasi }} WIB</p>
               @endif
               @if ($proposal->status == '0')
                 <span class="badge badge-warning">Menunggu Verifikasi</span>
               @elseif($proposal->status == '1')
                 <span class="badge badge-success">Disetujui</span>
               @elseif($proposal->status == '10')
+                <p class="mb-1"><i class="fas fa-exclamation-circle me-2"></i> Alasan: {{ $proposal->keterangan }}</p>
                 <span class="badge badge-danger">Ditolak</span>
-                <p>Alasan: {{ $proposal->keterangan }}</p>
               @else
                 <span class="badge badge-warning">Menunggu Verifikasi</span>
               @endif

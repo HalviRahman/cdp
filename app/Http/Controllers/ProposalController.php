@@ -265,12 +265,19 @@ class ProposalController extends Controller
     {
         $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi']);
 
+        $action = $request->input('action');
+
+
         // gunakan jika ada file
         // if ($request->hasFile('file')) {
         //     $data['file'] = $this->fileService->methodName($request->file('file'));
         // }
         if (auth()->user()->hasRole('Prodi')) {
-            $data['status'] = '2';
+            if ($action == 'reject') {
+                $data['status'] = '10';
+            } else {
+                $data['status'] = '1';
+            }
             $data['verifikator'] = auth()->user()->name;
             $data['tgl_verifikasi'] = now();
         }

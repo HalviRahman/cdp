@@ -205,10 +205,11 @@
                     @if (auth()->user()->hasRole('Prodi'))
                       @if ($d->status == 0)
                         @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Setujui', 'icon' => 'fas fa-check-circle', 'color' => 'success'])
-                        @include('stisla.includes.forms.buttons.btn-reset', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger'])
-                      @elseif ($d->status == 1)
-                        @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Setujui', 'icon' => 'fas fa-check-circle', 'color' => 'success'])
-                        @include('stisla.includes.forms.buttons.btn-reset', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger'])
+                        {{-- @include('stisla.includes.forms.buttons.btn-tolak', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger']) --}}
+                        @include('stisla.includes.forms.buttons.btn-modal-tolak', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger'])
+                        {{-- @elseif ($d->status == 1) --}}
+                        {{-- @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Setujui', 'icon' => 'fas fa-check-circle', 'color' => 'success'])
+                        @include('stisla.includes.forms.buttons.btn-tolak', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger']) --}}
                       @endif
                     @endif
                     @if (auth()->user()->hasRole('Dosen'))
@@ -233,6 +234,11 @@
 @endsection
 
 @push('css')
+@endpush
+
+@push('modals')
+  {{-- @include('stisla.includes.modals.modal-import-excel', ['formAction' => $routeImportExcel, 'downloadLink' => $excelExampleLink]) --}}
+  @include('stisla.includes.modals.modal-alasan-tolak', ['formAction' => $routeIndex])
 @endpush
 
 @push('js')
