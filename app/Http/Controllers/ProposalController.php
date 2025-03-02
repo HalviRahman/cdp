@@ -177,7 +177,13 @@ class ProposalController extends Controller
         }
         $data['tgl_upload'] = now();
         $data['token'] = Str::random(64);
-        $data['prodi'] = implode('; ', auth()->user()->prodi);
+        if (count(auth()->user()->prodi) > 1) {
+            $data['prodi'] = $request->prodi; // ambil dari form request
+        } else {
+            $data['prodi'] = auth()->user()->prodi[0]; // ambil langsung dari user
+        }
+
+        // $data['prodi'] = implode('; ', auth()->user()->prodi);
         // $data['prodi'] = implode('; ', json_decode(auth()->user()->prodi, true));
 
         $idKelompok = Str::uuid();
@@ -267,7 +273,6 @@ class ProposalController extends Controller
         $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi']);
 
         $action = $request->input('action');
-
 
         // gunakan jika ada file
         // if ($request->hasFile('file')) {

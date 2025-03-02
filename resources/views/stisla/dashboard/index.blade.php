@@ -253,6 +253,40 @@
       </div>
     @endif
 
+
+    @if (auth()->user()->hasRole('Prodi'))
+      @if ($dataProposalDosen)
+        @foreach ($dataProposalDosen as $proposal)
+          <div class="col-12">
+            <div class="card status-card status-pending mb-4 author-box card-{{ $proposal->status == '0' ? 'warning' : ($proposal->status == '1' ? 'success' : 'danger') }}">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h5 class="card-title mb-1">{{ $proposal->judul_proposal }}</h5>
+                    <p class="card-text text-muted mb-0">Status: @if ($proposal->status == '0')
+                        Menunggu Verifikasi
+                      @elseif($proposal->status == '1')
+                        Disetujui
+                      @elseif($proposal->status == '10')
+                        Ditolak
+                      @endif
+                    </p>
+                    @if ($proposal->status == '10')
+                      <p class="card-text text-muted mb-0">Alasan: {{ $proposal->keterangan }}</p>
+                    @endif
+                  </div>
+                  <div>
+                    <a href="{{ route('proposals.edit', $proposal->id) }}" class="btn btn-outline-primary btn-sm">
+                      <i class="bi bi-eye me-2"></i>Detail
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        @endforeach
+      @endif
+    @endif
     @if (auth()->user()->hasRole('Dosen'))
       @if ($dataProposalDosen)
         @foreach ($dataProposalDosen as $proposal)
@@ -270,6 +304,9 @@
                         Ditolak
                       @endif
                     </p>
+                    @if ($proposal->status == '10')
+                      <p class="card-text text-muted mb-0">Alasan: {{ $proposal->keterangan }}</p>
+                    @endif
                   </div>
                   <div>
                     <a href="{{ route('proposals.edit', $proposal->id) }}" class="btn btn-outline-primary btn-sm">
@@ -340,7 +377,7 @@
       @endif
     @endif
     @if (auth()->user()->hasRole('Prodi'))
-      <div class="col-lg-4 col-md-4 col-sm-6 col-12 stats-card">
+      <div class="col-lg-4 col-md-4 col-sm-6 stats-card">
         <div class="card card-statistic-1">
           <div class="card-icon bg-info">
             <i class="fas fa-file-text"></i>
@@ -355,7 +392,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-4 col-md-4 col-sm-6 col-12 stats-card">
+      <div class="col-lg-4 col-md-4 col-sm-6 stats-card">
         <div class="card card-statistic-1">
           <div class="card-icon bg-success">
             <i class="fas fa-file-text"></i>
@@ -365,12 +402,12 @@
               <h4 class="text-dark">Kuota</h4>
             </div>
             <div class="card-body">
-              {{-- <h4>{{ $programStudi->kuota }} </h4> --}}
+              <h4>{{ $programStudi->kuota }} </h4>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-lg-4 col-md-4 col-sm-6 col-12 stats-card">
+      <div class="col-lg-4 col-md-4 col-sm-6 stats-card">
         <div class="card card-statistic-1">
           <div class="card-icon bg-warning">
             <i class="fas fa-file-text"></i>
@@ -393,11 +430,11 @@
           <div class="card">
             <div class="card-body">
               <h5>{{ $proposal->judul_proposal }}</h5>
-              <p><strong>Ketua:</strong> {{ $proposal->ketuaKelompok->user->name }} - {{ implode('; ', json_decode($proposal->ketuaKelompok->user->prodi, true)) }}
+              <p><strong>Ketua:</strong> {{ $proposal->ketuaKelompok->user->name }} - {{ implode('; ', $proposal->ketuaKelompok->user->prodi) }}
               </p>
               @if ($proposal->verifikator)
                 <p class="mb-0"><i class="fas fa-user-check me-2"></i> Verifikator: {{ $proposal->verifikator }} </p>
-                <p class="mb-0"><i class="fas fa-calendar-check me-2"></i> Tanggal Verifikasi: {{ $proposal->tgl_verifikasi }} WIB</p>
+                <p class="mb-0"><i class="fas fa-calendar-check me-2"></i> Tanggal Verifikasi: {{ Carbon\Carbon::parse($proposal->tgl_verifikasi)->format('d F Y H:i') }} WIB</p>
               @endif
               @if ($proposal->status == '0')
                 <span class="badge badge-warning">Menunggu Verifikasi</span>
@@ -464,7 +501,7 @@
               <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $proposal->ketuaKelompok->user->name }}</td>
-                <td>{{ implode('; ', json_decode($proposal->ketuaKelompok->user->prodi, true)) }}</td>
+                <td>{{ implode('; ', $proposal->ketuaKelompok->user->prodi) }}</td>
                 <td>{{ $proposal->judul_proposal }}</td>
                 <td><a href="{{ $proposal->file_proposal }}" class="btn btn-outline-info" target="_blank"><i class="fa fa-file-pdf"></i> Unduh</a></td>
                 @if ($proposal->laporan_kegiatan)

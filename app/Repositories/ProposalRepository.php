@@ -6,7 +6,6 @@ use App\Models\Proposal;
 
 class ProposalRepository extends Repository
 {
-
     /**
      * constructor method
      *
@@ -37,6 +36,7 @@ class ProposalRepository extends Repository
 
         $query->whereYear('tgl_upload', $tahun);
         $query->where('prodi', $user->prodi);
+        $query->orWhere('prodi', $user->kaprodi);
 
         return $query->latest()->get();
     }

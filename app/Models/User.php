@@ -23,37 +23,14 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'nip',
-        'prodi',
-        'email',
-        'avatar',
-        'email_verified_at',
-        'password',
-        'last_login',
-        'email_token',
-        'verification_code',
-        'is_locked',
-        'phone_number',
-        'birth_date',
-        'address',
-        'last_password_change',
-        'twitter_id',
-        'file_upload',
-        'wrong_login',
-        'is_active',
-    ];
+    protected $fillable = ['name', 'nip', 'prodi', 'email', 'avatar', 'email_verified_at', 'password', 'last_login', 'email_token', 'verification_code', 'is_locked', 'phone_number', 'birth_date', 'address', 'last_password_change', 'twitter_id', 'kaprodi', 'wrong_login', 'is_active'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
     /**
      * The attributes that should be cast.
@@ -71,9 +48,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
-    protected $appends = [
-        'avatar_url'
-    ];
+    protected $appends = ['avatar_url'];
 
     /**
      * add custom column avatar url
@@ -114,7 +89,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function kelompoks()
-{
-    return $this->hasMany(Kelompok::class, 'anggota_email', 'email');
-}
+    {
+        return $this->hasMany(Kelompok::class, 'anggota_email', 'email');
+    }
 }

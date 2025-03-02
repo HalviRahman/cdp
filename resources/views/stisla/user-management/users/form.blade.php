@@ -80,6 +80,27 @@
       <input type="hidden" name="role" value="{{ collect($roleOptions)->first() }}">
     @endif
     <div class="col-md-6">
+      @include('stisla.includes.forms.selects.select', [
+          'id' => 'kaprodi',
+          'name' => 'kaprodi',
+          'options' => [
+              'S1 Biologi' => 'S1 Biologi',
+              'S1 Kimia' => 'S1 Kimia',
+              'S1 Fisika' => 'S1 Fisika',
+              'S1 Matematika' => 'S1 Matematika',
+              'S1 Teknik Informatika' => 'S1 Teknik Informatika',
+              'S1 Teknik Arsitektur' => 'S1 Teknik Arsitektur',
+              'S1 Perpustakaan dan Sains Informasi' => 'S1 Perpustakaan dan Sains Informasi',
+              'S2 Magister Biologi' => 'S2 Magister Biologi',
+              'S2 Magister Informatika' => 'S2 Magister Informatika',
+          ],
+          'label' => __('Is Kaprodi?'),
+          'multiple' => false,
+          'pilih' => true,
+      ])
+    </div>
+
+    <div class="col-md-6">
       @include('stisla.includes.forms.inputs.input-email')
     </div>
     <div class="col-md-6">

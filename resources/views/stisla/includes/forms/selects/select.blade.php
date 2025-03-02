@@ -1,15 +1,15 @@
 @php
-$name = $name ?? $id;
-$oldValue = old($name);
-$isMultiple = $multiple ?? ($isMultiple ?? false);
-$isRequired = $required ?? ($isRequired ?? false);
-$dname = $d[$name] ?? false;
-if ($isMultiple) {
-    $selectedArray = is_array($dname) ? $dname : ($dname ? [$dname] : []);
-    $selected = $oldValue ?? ($selected ?? $selectedArray);
-} else {
-    $selected = $oldValue ?? ($selected ?? ($dname ?? false));
-}
+  $name = $name ?? $id;
+  $oldValue = old($name);
+  $isMultiple = $multiple ?? ($isMultiple ?? false);
+  $isRequired = $required ?? ($isRequired ?? false);
+  $dname = $d[$name] ?? false;
+  if ($isMultiple) {
+      $selectedArray = is_array($dname) ? $dname : ($dname ? [$dname] : []);
+      $selected = $oldValue ?? ($selected ?? $selectedArray);
+  } else {
+      $selected = $oldValue ?? ($selected ?? ($dname ?? false));
+  }
 
 @endphp
 
@@ -24,6 +24,9 @@ if ($isMultiple) {
     class="form-control">
     @if ($with_all ?? false)
       <option value="">{{ __('Semua') }}</option>
+    @endif
+    @if ($pilih ?? false)
+      <option disabled selected value="">--- Pilih ---</option>
     @endif
     @if ($isMultiple)
       @foreach ($options as $value => $text)

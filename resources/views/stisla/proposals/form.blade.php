@@ -85,6 +85,32 @@
                   </div>
                 @endif
 
+                @php
+                  // $userProdi = [{{ auth()->user()->prodi }} => auth()->user()->prodi];
+                  $userProdi = auth()->user()->prodi;
+                  $prodiOptions = [];
+                  foreach ($userProdi as $prodi) {
+                      $prodiOptions[$prodi] = $prodi;
+                  }
+                  // dd($prodiOptions);
+                @endphp
+
+                @if (count($userProdi) > 1)
+                  <div class="col-md-12">
+                    @include('stisla.includes.forms.selects.select', [
+                        'required' => false,
+                        'disabled' => true,
+                        'type' => 'text',
+                        'id' => 'prodi',
+                        'name' => 'prodi',
+                        'label' => __('Program Studi'),
+                        'options' => $prodiOptions,
+                        'multiple' => false,
+                    ])
+                  </div>
+                @endif
+
+
                 @if (isset($d))
                   <div class="col-md-12 mb-3">
                     {{-- <h6><i class="fas fa-file-alt me-2"></i> Judul Proposal:</h6> --}}

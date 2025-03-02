@@ -53,7 +53,7 @@ class UserManagementController extends StislaController
      */
     private function getStoreData(UserRequest $request): array
     {
-        $data = $request->only(['name', 'email', 'nip', 'prodi', 'phone_number', 'birth_date', 'address']);
+        $data = $request->only(['name', 'email', 'nip', 'prodi', 'phone_number', 'birth_date', 'address', 'kaprodi']);
         if ($request->filled('password')) {
             $data['password'] = bcrypt($request->password);
         }

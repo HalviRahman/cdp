@@ -116,7 +116,7 @@
         <div class="card">
           <div class="card-body">
             <h5>{{ $proposal->judul_proposal }}</h5>
-            <p><strong>Ketua:</strong> {{ $proposal->ketuaKelompok->user->name }} - {{ implode('; ', json_decode($proposal->ketuaKelompok->user->prodi, true)) }}
+            <p><strong>Ketua:</strong> {{ $proposal->ketuaKelompok->user->name }} - {{ implode('; ', $proposal->ketuaKelompok->user->prodi) }}
             </p>
             @if ($proposal->verifikator)
               <p>Verifikator: {{ $proposal->verifikator }} </p>
