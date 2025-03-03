@@ -83,6 +83,36 @@
                         'hint' => 'Format File: PDF, Maksimal 5MB',
                     ])
                   </div>
+
+                  {{-- MAHASISWA --}}
+                  <div class="col-md-12">
+                    <h6 class="mb-3"><i class="fas fa-users me-2"></i> Tambah Mahasiswa</h6>
+                    <div id="mahasiswaInputs">
+                      <div class="row mahasiswa-row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>{{ __('NIM Mahasiswa') }}</label>
+                            <input type="text" class="form-control" name="nim_mahasiswa[]" placeholder="{{ __('Masukkan NIM') }}" required>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>{{ __('Nama Mahasiswa') }}</label>
+                            <input type="text" class="form-control" name="nama_mahasiswa[]" placeholder="{{ __('Masukkan Nama') }}" required>
+                          </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                          <button type="button" class="btn btn-danger btn-remove-mahasiswa mb-3" style="display:none;">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <button type="button" class="btn btn-info" id="addMahasiswaBtn">
+                      <i class="fas fa-plus"></i> {{ __('Tambah Mahasiswa') }}
+                    </button>
+                  </div>
+                  {{-- END MAHASISWA --}}
                 @endif
 
                 @php
@@ -136,6 +166,14 @@
                             <td>{{ $anggota['nama'] }}</td>
                             <td>{{ implode(', ', $anggota['prodi']) }}</td>
                             <td><span class="badge badge-primary">{{ $anggota['peran'] }}</span></td>
+                          </tr>
+                        @endforeach
+                        @foreach ($mahasiswas as $mahasiswa)
+                          <tr>
+                            {{-- <td>{{ $anggota['nip'] }}</td> --}}
+                            <td>{{ $mahasiswa['nip'] }} - {{ $mahasiswa['name'] }}</td>
+                            <td><span class="badge badge-info">Mahasiswa</span></td>
+                            <td><span class="badge badge-primary">Anggota</span></td>
                           </tr>
                         @endforeach
                       </tbody>
@@ -269,29 +307,19 @@
 
 @push('js')
   <script>
-    document.getElementById('addMahasiswaBtn').addEventListener('click', function() {
-      var mahasiswaInputs = document.getElementById('mahasiswaInputs');
-      var index = mahasiswaInputs.querySelectorAll('.form-group').length; // Menghitung jumlah input yang ada
+    $(document).ready(function() {
+      $('#addMahasiswaBtn').click(function() {
+        let newRow = $('.mahasiswa-row').first().clone();
+        newRow.find('input').val('');
+        newRow.find('.btn-remove-mahasiswa').show();
+        $('#mahasiswaInputs').append(newRow);
+      });
 
-      var nimInput = `
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="nim_mahasiswa_${index}">{{ __('NIM Mahasiswa') }}</label>
-            <input type="text" class="form-control" id="nim_mahasiswa_${index}" name="nim_mahasiswa[]" placeholder="{{ __('Masukkan NIM') }}">
-          </div>
-        </div>
-      `;
-
-      var namaInput = `
-        <div class="col-md-8">
-          <div class="form-group">
-            <label for="nama_mahasiswa_${index}">{{ __('Nama Mahasiswa') }}</label>
-            <input type="text" class="form-control" id="nama_mahasiswa_${index}" name="nama_mahasiswa[]" placeholder="{{ __('Masukkan Nama') }}">
-          </div>
-        </div>
-      `;
-
-      mahasiswaInputs.insertAdjacentHTML('beforeend', nimInput + namaInput);
+      $(document).on('click', '.btn-remove-mahasiswa', function() {
+        if ($('.mahasiswa-row').length > 1) {
+          $(this).closest('.mahasiswa-row').remove();
+        }
+      });
     });
   </script>
 @endpush

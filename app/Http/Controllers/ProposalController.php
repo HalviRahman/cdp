@@ -169,7 +169,7 @@ class ProposalController extends Controller
      */
     public function store(ProposalRequest $request)
     {
-        $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi', 'anggota_email']);
+        $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi', 'anggota_email', 'remember_token']);
 
         // gunakan jika ada file
         if ($request->hasFile('file_proposal')) {
@@ -182,6 +182,7 @@ class ProposalController extends Controller
         } else {
             $data['prodi'] = auth()->user()->prodi[0]; // ambil langsung dari user
         }
+
 
         // $data['prodi'] = implode('; ', auth()->user()->prodi);
         // $data['prodi'] = implode('; ', json_decode(auth()->user()->prodi, true));
@@ -196,6 +197,14 @@ class ProposalController extends Controller
 
         $data['id_kelompok'] = $idKelompok;
 
+        foreach($request->nim_mahasiswa as $key => $nim) {
+            User::create([
+                'nip' => $nim,
+                'name' => $request->nama_mahasiswa[$key],
+                'remember_token' => $idKelompok,
+                'is_mahasiswa' => true
+            ]);
+        }
         // Simpan ketua_email dengan peran 'Ketua'
         $this->kelompokRepository->create([
             'id_kelompok' => $idKelompok,
@@ -241,6 +250,7 @@ class ProposalController extends Controller
     public function edit(Proposal $proposal)
     {
         $kelompoks = Kelompok::with('user')->get();
+        $mahasiswas = User::where('remember_token', $proposal->id_kelompok)->get();
         $anggotas = $proposal->kelompoks->map(function ($kelompok) {
             return [
                 // 'nip' => $kelompok->user->nip,
@@ -258,6 +268,7 @@ class ProposalController extends Controller
             'action' => route('proposals.update', [$proposal->id]),
             'anggota' => $this->UserRepository->getAnggotaOptions(),
             'anggotas' => $anggotas,
+            'mahasiswas' => $mahasiswas,
         ]);
     }
 
