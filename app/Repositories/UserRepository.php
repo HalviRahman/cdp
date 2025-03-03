@@ -142,6 +142,7 @@ class UserRepository extends Repository
     {
         $users = $this->model
             ->with(['roles'])
+            ->where('is_mahasiswa', null)
             ->latest()
             ->get();
         return $users;
