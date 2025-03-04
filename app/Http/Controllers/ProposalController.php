@@ -116,6 +116,19 @@ class ProposalController extends Controller
 
         $user = auth()->user();
         if ($user->hasRole('Dosen')) {
+            // Cek apakah dosen sudah menjadi ketua di tahun ini
+            $isKetuaExist = Kelompok::where('anggota_email', $user->email)
+                ->where('peran', 'Ketua')
+                ->whereYear('created_at', date('Y'))
+                ->whereHas('proposal', function ($query) {
+                    $query->where('status', '!=', '10'); // 10 = ditolak
+                })
+                ->exists();
+
+            if ($isKetuaExist) {
+                return redirect()->route('dashboard.index')->with('errorMessage', 'Anda sudah mengajukan proposal sebagai ketua di tahun ini.');
+            }
+
             return view('stisla.proposals.form', [
                 'title' => __('Proposal'),
                 'fullTitle' => __('Tambah Proposal'),
@@ -153,6 +166,18 @@ class ProposalController extends Controller
      */
     public function create()
     {
+        $user = auth()->user();
+        $isKetuaExist = Kelompok::where('anggota_email', $user->email)
+            ->where('peran', 'Ketua')
+            ->whereYear('created_at', date('Y'))
+            ->whereHas('proposal', function ($query) {
+                $query->where('status', '!=', '10'); // 10 = ditolak
+            })
+            ->exists();
+
+        if ($isKetuaExist) {
+            return redirect()->route('dashboard.index')->with('errorMessage', 'Anda sudah mengajukan proposal sebagai ketua di tahun ini.');
+        }
         return view('stisla.proposals.form', [
             'title' => __('Proposal'),
             'fullTitle' => __('Tambah Proposal'),
@@ -198,21 +223,22 @@ class ProposalController extends Controller
         $data['id_kelompok'] = $idKelompok;
 
         // Cek apakah ada input mahasiswa
-    if ($request->filled('nim_mahasiswa') && $request->filled('nama_mahasiswa')) {
-        foreach($request->nim_mahasiswa as $key => $nim) {
-            // Pastikan NIM dan nama tidak kosong
-            if (!empty($nim) && !empty($request->nama_mahasiswa[$key])) {
-                User::create([
-                    'nip' => $nim,
-                    'name' => $request->nama_mahasiswa[$key],
-                    'remember_token' => $idKelompok, // atau ID yang relevan
-                    'is_mahasiswa' => 1,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
+        if ($request->filled('nim_mahasiswa') && $request->filled('nama_mahasiswa')) {
+            foreach ($request->nim_mahasiswa as $key => $nim) {
+                // Pastikan NIM dan nama tidak kosong
+                if (!empty($nim) && !empty($request->nama_mahasiswa[$key])) {
+                    User::create([
+                        'nip' => $nim,
+                        'name' => $request->nama_mahasiswa[$key],
+                        'remember_token' => $idKelompok, // atau ID yang relevan
+                        'is_mahasiswa' => 1,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
             }
         }
-    }
+        $result = $this->proposalRepository->create($data);
         // foreach ($request->nim_mahasiswa as $key => $nim) {
         //     User::create([
         //         'nip' => $nim,
@@ -236,8 +262,6 @@ class ProposalController extends Controller
                 'peran' => $peranAnggota,
             ]);
         }
-
-        $result = $this->proposalRepository->create($data);
 
         // use this if you want to create notification data
         // $title = 'Notify Title';

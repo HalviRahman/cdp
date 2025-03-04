@@ -21,11 +21,7 @@ class Kelompok extends Model
      *
      * @var array
      */
-    protected $fillable = [
-		'id_kelompok',
-		'anggota_email',
-		'peran',
-    ];
+    protected $fillable = ['id_kelompok', 'anggota_email', 'peran'];
 
     /**
      * The attributes that should be cast to native types.
@@ -46,8 +42,7 @@ class Kelompok extends Model
      *
      * @var array
      */
-    const TYPES = [
-	];
+    const TYPES = [];
 
     /**
      * Default with relationship
@@ -57,7 +52,12 @@ class Kelompok extends Model
     protected $with = [];
 
     public function user()
-{
-    return $this->belongsTo(User::class, 'anggota_email', 'email');
-}
+    {
+        return $this->belongsTo(User::class, 'anggota_email', 'email');
+    }
+
+    public function proposal()
+    {
+        return $this->belongsTo(Proposal::class, 'id_kelompok', 'id_kelompok');
+    }
 }

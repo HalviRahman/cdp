@@ -37,28 +37,34 @@ class UserRepository extends Repository
     }
 
     public function getAnggotaOptions()
-{
-    $userProdi = auth()->user()->prodi;
-    // $userProdi = json_decode(auth()->user()->prodi, true);
+    {
+        $userProdi = auth()->user()->prodi;
+        // $userProdi = json_decode(auth()->user()->prodi, true);
 
-    return User::whereNotNull('prodi')
-        ->whereNotIn('email', function($query) {
-            $query->select('email')
-                ->from('kelompoks')
-                ->whereNotNull('anggota_email');
-        })
-        ->where(function($query) use ($userProdi) {
-            foreach ($userProdi as $prodi) {
-                $query->orWhere('prodi', 'like', '%' . $prodi . '%');
-            }
-        })
-        ->get()
-        ->mapWithKeys(function ($item) {
-            return [
-                $item->email => $item->name . ' - ' . implode('; ', $item->prodi)
-            ];
-        });
-}
+        return User::whereNotNull('prodi')
+            // Query untuk menghilangkan nama dosen yang sudah ada di kelompok
+
+            // ini query sebelum diubah (tidak mempertimbangkan status proposal)
+            // ->whereNotIn('email', function ($query) {
+            //     $query->select('anggota_email')->from('kelompoks')->whereNotNull('anggota_email')->whereYear('created_at', date('Y')); // hanya cek data tahun ini
+            // })
+            ->whereNotIn('email', function ($query) {
+                $query->select('kelompoks.anggota_email')->from('kelompoks')->join('proposals', 'kelompoks.id_kelompok', '=', 'proposals.id_kelompok')->whereNotNull('kelompoks.anggota_email')->whereYear('kelompoks.created_at', date('Y'))->where('proposals.status', '!=', '10'); // cek status di tabel proposals
+            })
+            // end
+            // Query untuk menampilkan nama mahasiswa yang memiliki prodi yang sama dengan prodi user login
+            ->where(function ($query) use ($userProdi) {
+                foreach ($userProdi as $prodi) {
+                    $query->orWhere('prodi', 'like', '%' . $prodi . '%');
+                }
+            })
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [
+                    $item->email => $item->name . ' - ' . implode('; ', $item->prodi),
+                ];
+            });
+    }
     // public function getAnggotaOptions()
     // {
     //     return User::whereNotNull('prodi')
