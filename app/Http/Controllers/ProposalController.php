@@ -127,6 +127,7 @@ class ProposalController extends Controller
         return view('stisla.proposals.index', [
             'data' => $this->proposalRepository->getFilterProdi(),
             'programStudi' => $programStudi,
+            'proposalMasuk' => $this->proposalRepository->getFilterProdiCount(),
             // 'data' => $this->proposalRepository->getLatest(),
             'canCreate' => $user->can('Proposal Tambah'),
             'canUpdate' => $user->can('Proposal Ubah'),
@@ -183,7 +184,6 @@ class ProposalController extends Controller
             $data['prodi'] = auth()->user()->prodi[0]; // ambil langsung dari user
         }
 
-
         // $data['prodi'] = implode('; ', auth()->user()->prodi);
         // $data['prodi'] = implode('; ', json_decode(auth()->user()->prodi, true));
 
@@ -197,12 +197,12 @@ class ProposalController extends Controller
 
         $data['id_kelompok'] = $idKelompok;
 
-        foreach($request->nim_mahasiswa as $key => $nim) {
+        foreach ($request->nim_mahasiswa as $key => $nim) {
             User::create([
                 'nip' => $nim,
                 'name' => $request->nama_mahasiswa[$key],
                 'remember_token' => $idKelompok,
-                'is_mahasiswa' => true
+                'is_mahasiswa' => true,
             ]);
         }
         // Simpan ketua_email dengan peran 'Ketua'
