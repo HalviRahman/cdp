@@ -197,14 +197,30 @@ class ProposalController extends Controller
 
         $data['id_kelompok'] = $idKelompok;
 
-        foreach ($request->nim_mahasiswa as $key => $nim) {
-            User::create([
-                'nip' => $nim,
-                'name' => $request->nama_mahasiswa[$key],
-                'remember_token' => $idKelompok,
-                'is_mahasiswa' => true,
-            ]);
+        // Cek apakah ada input mahasiswa
+    if ($request->filled('nim_mahasiswa') && $request->filled('nama_mahasiswa')) {
+        foreach($request->nim_mahasiswa as $key => $nim) {
+            // Pastikan NIM dan nama tidak kosong
+            if (!empty($nim) && !empty($request->nama_mahasiswa[$key])) {
+                User::create([
+                    'nip' => $nim,
+                    'name' => $request->nama_mahasiswa[$key],
+                    'remember_token' => $idKelompok, // atau ID yang relevan
+                    'is_mahasiswa' => 1,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
         }
+    }
+        // foreach ($request->nim_mahasiswa as $key => $nim) {
+        //     User::create([
+        //         'nip' => $nim,
+        //         'name' => $request->nama_mahasiswa[$key],
+        //         'remember_token' => $idKelompok,
+        //         'is_mahasiswa' => true,
+        //     ]);
+        // }
         // Simpan ketua_email dengan peran 'Ketua'
         $this->kelompokRepository->create([
             'id_kelompok' => $idKelompok,
