@@ -45,7 +45,7 @@
                 <h4 class="text-dark">Total Proposal Masuk</h4>
               </div>
               <div class="card-body">
-                <h4>5</h4>
+                <h4>{{ $proposalMasuk }}</h4>
               </div>
             </div>
           </div>
@@ -62,7 +62,7 @@
                 <h4 class="text-dark">Total Proposal Belum Masuk</h4>
               </div>
               <div class="card-body">
-                <h4>5</h4>
+                <h4></h4>
               </div>
             </div>
           </div>

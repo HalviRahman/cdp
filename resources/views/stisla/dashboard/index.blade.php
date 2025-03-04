@@ -158,7 +158,7 @@
                   <p>Lihat rekap pendaftaran peserta</p>
                 </div>
                 <div class="author-box-job text-center">
-                  <a href="#" class="btn btn-success mt-3">
+                  <a href="{{ route('proposals.index') }}" class="btn btn-success mt-3">
                     <i class="fa fa-eye"></i> Akses
                   </a>
                 </div>

@@ -40,4 +40,17 @@ class ProposalRepository extends Repository
 
         return $query->latest()->get();
     }
+
+    public function getFilterProdiCount()
+    {
+        $user = auth()->user();
+        $query = $this->model->query();
+        $tahun = request('tahun', date('Y'));
+
+        $query->whereYear('tgl_upload', $tahun);
+        // $query->where('prodi', $user->prodi);
+        // $query->orWhere('prodi', $user->kaprodi);
+
+        return $query->count();
+    }
 }
