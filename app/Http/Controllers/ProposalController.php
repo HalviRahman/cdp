@@ -278,7 +278,7 @@ class ProposalController extends Controller
         logCreate('Proposal', $result);
 
         $successMessage = successMessageCreate('Proposal');
-        return redirect()->back()->with('successMessage', $successMessage);
+        return redirect()->route('dashboard.index')->with('successMessage', $successMessage);
     }
 
     /**
