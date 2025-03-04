@@ -402,7 +402,7 @@
               <h4 class="text-dark">Kuota</h4>
             </div>
             <div class="card-body">
-              <h4>{{ $programStudi->kuota }} </h4>
+              <h4>{{ $programStudi->kuota ?? 0 }} </h4>
             </div>
           </div>
         </div>

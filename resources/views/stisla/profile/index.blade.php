@@ -32,8 +32,19 @@
                   @include('stisla.includes.forms.inputs.input-name', ['value' => $user->name, 'required' => true])
                 </div>
                 <div class="col-md-6">
-                  @include('stisla.includes.forms.inputs.input-avatar', ['required' => false])
+                  @include('stisla.includes.forms.inputs.input', [
+                      'id' => 'nip',
+                      'name' => 'nip',
+                      'label' => __('NIP'),
+                      'type' => 'text',
+                      'required' => false,
+                      'icon' => 'fas fa-user',
+                      'disabled' => true,
+                  ])
                 </div>
+                {{-- <div class="col-md-6">
+                  @include('stisla.includes.forms.inputs.input-avatar', ['required' => false])
+                </div> --}}
                 <div class="col-md-6">
                   @include('stisla.includes.forms.inputs.input', [
                       'id' => 'phone_number',
@@ -54,7 +65,7 @@
                       'icon' => 'fas fa-calendar',
                   ])
                 </div>
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
                   @include('stisla.includes.forms.inputs.input', [
                       'id' => 'address',
                       'name' => 'address',
@@ -63,7 +74,7 @@
                       'required' => false,
                       'icon' => 'fas fa-map-marker-alt',
                   ])
-                </div>
+                </div> --}}
                 <div class="col-md-12">
                   @include('stisla.includes.forms.buttons.btn-save')
                   @include('stisla.includes.forms.buttons.btn-reset')
@@ -81,7 +92,7 @@
         <form action="{{ route('profile.update-email') }}" method="post" class="needs-validation">
           <div class="card">
             <div class="card-header">
-              <h4> <i class="fa fa-envelope"></i> {{ __('Perbarui Email') }}</h4>
+              <h4> <i class="fa fa-envelope"></i> {{ __('Email') }}</h4>
             </div>
             <div class="card-body">
               @method('PUT')

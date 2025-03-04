@@ -83,7 +83,27 @@
                         'hint' => 'Format File: PDF, Maksimal 5MB',
                     ])
                   </div>
-
+                  @php
+                    $userProdi = auth()->user()->prodi;
+                    $prodiOptions = [];
+                    foreach ($userProdi as $prodi) {
+                        $prodiOptions[$prodi] = $prodi;
+                    }
+                  @endphp
+                  @if (count($userProdi) > 1)
+                    <div class="col-md-12">
+                      @include('stisla.includes.forms.selects.select', [
+                          'required' => false,
+                          'disabled' => true,
+                          'type' => 'text',
+                          'id' => 'prodi',
+                          'name' => 'prodi',
+                          'label' => __('Program Studi'),
+                          'options' => $prodiOptions,
+                          'multiple' => false,
+                      ])
+                    </div>
+                  @endif
                   {{-- MAHASISWA --}}
                   <div class="col-md-12">
                     <h6 class="mb-3"><i class="fas fa-users me-2"></i> Tambah Mahasiswa</h6>
@@ -92,13 +112,13 @@
                         <div class="col-md-6">
                           <div class="form-group">
                             <label>{{ __('NIM Mahasiswa') }}</label>
-                            <input type="text" class="form-control" name="nim_mahasiswa[]" placeholder="{{ __('Masukkan NIM') }}" required>
+                            <input type="text" class="form-control" name="nim_mahasiswa[]" placeholder="{{ __('Masukkan NIM') }}">
                           </div>
                         </div>
                         <div class="col-md-6">
                           <div class="form-group">
                             <label>{{ __('Nama Mahasiswa') }}</label>
-                            <input type="text" class="form-control" name="nama_mahasiswa[]" placeholder="{{ __('Masukkan Nama') }}" required>
+                            <input type="text" class="form-control" name="nama_mahasiswa[]" placeholder="{{ __('Masukkan Nama') }}">
                           </div>
                         </div>
                         <div class="col-md-2 d-flex align-items-end">
@@ -115,30 +135,6 @@
                   {{-- END MAHASISWA --}}
                 @endif
 
-                @php
-                  // $userProdi = [{{ auth()->user()->prodi }} => auth()->user()->prodi];
-                  $userProdi = auth()->user()->prodi;
-                  $prodiOptions = [];
-                  foreach ($userProdi as $prodi) {
-                      $prodiOptions[$prodi] = $prodi;
-                  }
-                  // dd($prodiOptions);
-                @endphp
-
-                @if (count($userProdi) > 1)
-                  <div class="col-md-12">
-                    @include('stisla.includes.forms.selects.select', [
-                        'required' => false,
-                        'disabled' => true,
-                        'type' => 'text',
-                        'id' => 'prodi',
-                        'name' => 'prodi',
-                        'label' => __('Program Studi'),
-                        'options' => $prodiOptions,
-                        'multiple' => false,
-                    ])
-                  </div>
-                @endif
 
 
                 @if (isset($d))

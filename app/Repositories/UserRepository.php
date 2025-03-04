@@ -42,6 +42,11 @@ class UserRepository extends Repository
     // $userProdi = json_decode(auth()->user()->prodi, true);
 
     return User::whereNotNull('prodi')
+        ->whereNotIn('email', function($query) {
+            $query->select('email')
+                ->from('kelompoks')
+                ->whereNotNull('anggota_email');
+        })
         ->where(function($query) use ($userProdi) {
             foreach ($userProdi as $prodi) {
                 $query->orWhere('prodi', 'like', '%' . $prodi . '%');

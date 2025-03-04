@@ -43,7 +43,7 @@ class DashboardController extends StislaController
         $userProdi = auth()->user()->prodi;
         // $userProdi = json_decode(auth()->user()->prodi, true);
         $prodiName = explode(' ', $userProdi[0], 2)[1]; // Ambil nama_prodi dari prodi pertama
-        $programStudi = ProgramStudi::where('nama_prodi', $prodiName)->first();
+        $programStudi = ProgramStudi::where('nama_prodi', $prodiName)->where('tahun', request('tahun', date('Y')))->first();
 
         if ($user->can('Pengguna'))
             $widgets[] = (object)[
@@ -113,7 +113,9 @@ class DashboardController extends StislaController
             $query->where('anggota_email', $userEmail)->where('peran', 'Ketua')->whereYear('created_at', now()->year);
         })->exists();
         $dataProposalDosen = Proposal::whereHas('kelompoks', function($query) use ($userEmail) {
-            $query->where('anggota_email', $userEmail);
+            $tahun = request('tahun', date('Y'));
+            $query->where('anggota_email', $userEmail)
+            ->whereYear('tgl_upload', $tahun);
         })->get();
         // dd($dataProposalDosen);
         return view('stisla.dashboard.index', [
