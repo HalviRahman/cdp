@@ -168,7 +168,7 @@
         </div>
       </div>
       {{-- Box 3 - Rekap Laporan --}}
-      <div class="col-12 col-sm-12 col-lg-6">
+      {{-- <div class="col-12 col-sm-12 col-lg-6">
         <div class="card author-box card-info">
           <div class="card-body">
             <div class="card-body">
@@ -186,7 +186,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> --}}
       {{-- Box 4 - Kuota Proposal --}}
       <div class="col-12 col-sm-12 col-lg-6">
         <div class="card author-box card-danger">
@@ -482,7 +482,14 @@
     </div>
     <div class="card">
       <div class="card-body">
-        <h5>Daftar Pengajuan CDP (Community Development Program)</h5>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5>Daftar Pengajuan CDP (Community Development Program)</h5>
+          <a href="{{ route('proposals.excel', [
+              'tahun' => request('tahun', date('Y')),
+          ]) }}" class="btn btn-success">
+            <i class="fas fa-file-excel"></i> Export Excel
+          </a>
+        </div>
         <table class="table table-striped table-hovered">
           <thead>
             <tr>

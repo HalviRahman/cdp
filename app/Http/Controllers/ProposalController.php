@@ -102,7 +102,19 @@ class ProposalController extends Controller
      */
     public function index(Request $request)
     {
+        if (auth()->user()->hasRole('Keuangan')) {
+            return redirect()->route('dashboard.index');
+        }
         if (auth()->user()->hasRole('Fakultas')) {
+            // Hitung total proposal masuk
+            $proposalMasuk = Proposal::whereYear('created_at', request('tahun', date('Y')))
+                ->where(function ($query) {
+                    $query->where('status', '0')->orWhere('status', '1');
+                })
+                ->count();
+
+            // Hitung total kuota dari semua prodi
+            $totalKuota = ProgramStudi::where('tahun', request('tahun', date('Y')))->sum('kuota');
             $tahun = $request->tahun ?? date('Y');
 
             // Jika parameter view=table, tampilkan tabel
@@ -129,88 +141,107 @@ class ProposalController extends Controller
                     [$tahun],
                 )
                 ->get();
-            // dd($programStudi);
-            $user = auth()->user();
-            if ($user->hasRole('Dosen')) {
-                $tahunSekarang = date('Y');
+        }
+        // dd($programStudi);
+        $user = auth()->user();
+        if ($user->hasRole('Dosen')) {
+            $tahunSekarang = date('Y');
+            // Cek apakah user sudah terdaftar sebagai anggota di kelompok manapun
+            $isAnggotaExist = Kelompok::where('anggota_email', auth()->user()->email)
+                ->whereYear('created_at', $tahunSekarang)
+                ->whereHas('proposal', function ($query) {
+                    $query->where('status', '!=', '10'); // tidak termasuk proposal yang ditolak
+                })
+                ->exists();
 
-                // Siapkan array untuk menyimpan prodi yang masih available
-                $availableProdi = [];
+            if ($isAnggotaExist) {
+                return redirect()
+                    ->route('dashboard.index')
+                    ->with('errorMessage', 'Anda sudah terdaftar sebagai anggota/ketua dalam proposal di tahun ' . $tahunSekarang);
+            }
 
-                // Cek setiap prodi yang diampu user
-                foreach (auth()->user()->prodi as $userProdi) {
-                    // Cek kuota di program studi
-                    $programStudis = ProgramStudi::where('nama_prodi', explode(' ', $userProdi, 2)[1])->where('jenjang', explode(' ', $userProdi)[0])->where('tahun', $tahunSekarang)->first();
+            // Siapkan array untuk menyimpan prodi yang masih available
+            $availableProdi = [];
 
-                    if ($programStudis) {
-                        // Hitung jumlah proposal yang sudah ada
-                        $existingProposals = Proposal::where('prodi', $userProdi)
-                            ->whereYear('created_at', $tahunSekarang)
-                            ->where(function ($query) {
-                                $query->where('status', '0')->orWhere('status', '1');
-                            })
-                            ->count();
+            // Cek setiap prodi yang diampu user
+            foreach (auth()->user()->prodi as $userProdi) {
+                // Cek kuota di program studi
+                $programStudis = ProgramStudi::where('nama_prodi', explode(' ', $userProdi, 2)[1])->where('jenjang', explode(' ', $userProdi)[0])->where('tahun', $tahunSekarang)->first();
 
-                        // Jika masih ada kuota, tambahkan ke array available
-                        if ($existingProposals < $programStudis->kuota) {
-                            $availableProdi[$userProdi] = [
-                                'nama' => $userProdi,
-                                'kuota_tersisa' => $programStudis->kuota - $existingProposals,
-                            ];
-                        }
+                if ($programStudis) {
+                    // Hitung jumlah proposal yang sudah ada
+                    $existingProposals = Proposal::where('prodi', $userProdi)
+                        ->whereYear('created_at', $tahunSekarang)
+                        ->where(function ($query) {
+                            $query->where('status', '0')->orWhere('status', '1');
+                        })
+                        ->count();
+
+                    // Jika masih ada kuota, tambahkan ke array available
+                    if ($existingProposals < $programStudis->kuota) {
+                        $availableProdi[$userProdi] = [
+                            'nama' => $userProdi,
+                            'kuota_tersisa' => $programStudis->kuota - $existingProposals,
+                        ];
                     }
                 }
-
-                // Cek apakah dosen sudah menjadi ketua
-                $isKetuaExist = Kelompok::where('anggota_email', auth()->user()->email)
-                    ->where('peran', 'Ketua')
-                    ->whereYear('created_at', $tahunSekarang)
-                    ->whereHas('proposal', function ($query) {
-                        $query->where('status', '!=', '10');
-                    })
-                    ->exists();
-
-                if ($isKetuaExist) {
-                    return redirect()->route('dashboard.index')->with('errorMessage', 'Anda sudah mengajukan proposal sebagai ketua di tahun ini.');
-                }
-
-                // Jika tidak ada prodi yang available
-                if (empty($availableProdi)) {
-                    return redirect()
-                        ->route('dashboard.index')
-                        ->with('errorMessage', 'Tidak ada prodi yang memiliki kuota tersedia untuk tahun ' . $tahunSekarang);
-                }
-
-                return view('stisla.proposals.form', [
-                    'title' => __('Proposal'),
-                    'fullTitle' => __('Tambah Proposal'),
-                    'routeIndex' => route('proposals.index'),
-                    'action' => route('proposals.store'),
-                    'anggota' => $this->UserRepository->getAnggotaOptions(),
-                    'availableProdi' => $availableProdi, // kirim prodi yang masih ada kuota
-                ]);
             }
-            return view('stisla.proposals.index', [
-                'data' => $this->proposalRepository->getFilterProdi(),
-                'programStudi' => $programStudi,
-                'proposalMasuk' => $this->proposalRepository->getFilterProdiCount(),
-                // 'data' => $this->proposalRepository->getLatest(),
-                'canCreate' => $user->can('Proposal Tambah'),
-                'canUpdate' => $user->can('Proposal Ubah'),
-                'canDelete' => $user->can('Proposal Hapus'),
-                'canImportExcel' => $user->can('Order Impor Excel') && $this->importable,
-                'canExport' => $user->can('Order Ekspor') && $this->exportable,
+
+            // Cek apakah dosen sudah menjadi ketua
+            $isKetuaExist = Kelompok::where('anggota_email', auth()->user()->email)
+                ->where('peran', 'Ketua')
+                ->whereYear('created_at', $tahunSekarang)
+                ->whereHas('proposal', function ($query) {
+                    $query->where('status', '!=', '10');
+                })
+                ->exists();
+
+            if ($isKetuaExist) {
+                return redirect()->route('dashboard.index')->with('errorMessage', 'Anda sudah mengajukan proposal sebagai ketua di tahun ini.');
+            }
+
+            // Jika tidak ada prodi yang available
+            if (empty($availableProdi)) {
+                return redirect()
+                    ->route('dashboard.index')
+                    ->with('errorMessage', 'Tidak ada prodi yang memiliki kuota tersedia untuk tahun ' . $tahunSekarang);
+            }
+
+            return view('stisla.proposals.form', [
                 'title' => __('Proposal'),
-                'routeCreate' => route('proposals.create'),
-                'routePdf' => route('proposals.pdf'),
-                'routePrint' => route('proposals.print'),
-                'routeExcel' => route('proposals.excel'),
-                'routeCsv' => route('proposals.csv'),
-                'routeJson' => route('proposals.json'),
-                'routeImportExcel' => route('proposals.import-excel'),
-                'excelExampleLink' => route('proposals.import-excel-example'),
+                'fullTitle' => __('Tambah Proposal'),
+                'routeIndex' => route('proposals.index'),
+                'action' => route('proposals.store'),
+                'anggota' => $this->UserRepository->getAnggotaOptions(),
+                'availableProdi' => $availableProdi, // kirim prodi yang masih ada kuota
             ]);
         }
+        // dd($totalKuota);
+        return view('stisla.proposals.index', [
+            'data' => $this->proposalRepository->getFilterProdi(),
+            'programStudi' => $programStudi,
+            'totalKuota' => $totalKuota,
+            // 'proposalMasuk' => $proposalMasuk,
+            'proposalMasuk' => $this->proposalRepository->getFilterProdiCount(),
+            // 'data' => $this->proposalRepository->getLatest(),
+            'canCreate' => $user->can('Proposal Tambah'),
+            'canUpdate' => $user->can('Proposal Ubah'),
+            'canDelete' => $user->can('Proposal Hapus'),
+            'canImportExcel' => $user->can('Order Impor Excel') && $this->importable,
+            'canExport' => $user->can('Order Ekspor') && $this->exportable,
+            'title' => __('Proposal'),
+            'routeCreate' => route('proposals.create'),
+            'routePdf' => route('proposals.pdf'),
+            'routePrint' => route('proposals.print'),
+            'routeExcel' => route('proposals.excel'),
+            'routeCsv' => route('proposals.csv'),
+            'routeJson' => route('proposals.json'),
+            'routeImportExcel' => route('proposals.import-excel'),
+            'excelExampleLink' => route('proposals.import-excel-example'),
+        ]);
+        // } else {
+        //     return redirect()->route('dashboard.index')->with('errorMessage', 'Anda tidak memiliki akses ke halaman ini.');
+        // }
     }
 
     /**
@@ -222,6 +253,20 @@ class ProposalController extends Controller
     {
         $user = auth()->user();
         $tahunSekarang = date('Y');
+
+        // Cek apakah user sudah terdaftar sebagai anggota di kelompok manapun
+        $isAnggotaExist = Kelompok::where('anggota_email', auth()->user()->email)
+            ->whereYear('created_at', $tahunSekarang)
+            ->whereHas('proposal', function ($query) {
+                $query->where('status', '!=', '10'); // tidak termasuk proposal yang ditolak
+            })
+            ->exists();
+
+        if ($isAnggotaExist) {
+            return redirect()
+                ->route('dashboard.index')
+                ->with('errorMessage', 'Anda sudah terdaftar sebagai anggota/ketua dalam proposal lain di tahun ' . $tahunSekarang);
+        }
 
         // Siapkan array untuk menyimpan prodi yang masih available
         $availableProdi = [];
@@ -526,10 +571,23 @@ class ProposalController extends Controller
      *
      * @return Response
      */
-    public function excel()
+    public function excel(Request $request)
     {
-        $data = $this->proposalRepository->getLatest();
-        return (new ProposalExport($data))->download('proposals.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+        $query = Proposal::with(['ketuaKelompok.user'])->whereYear('created_at', $request->tahun);
+
+        // Filter by prodi if specified
+        if ($request->prodi) {
+            $query->where('prodi', $request->prodi);
+            $prodiTitle = $request->prodi;
+            $filename = 'proposal-' . str_replace(' ', '-', strtolower($request->prodi)) . '-' . $request->tahun;
+        } else {
+            $prodiTitle = 'Semua Program Studi';
+            $filename = 'proposal-cdp-' . $request->tahun;
+        }
+
+        $data = $query->get();
+
+        return Excel::download(new ProposalExport($data, $prodiTitle), $filename . '.xlsx');
     }
 
     /**

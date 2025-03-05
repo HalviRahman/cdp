@@ -116,7 +116,8 @@ class DashboardController extends StislaController
 
         $userEmail = auth()->user()->email;
         $hasProposal = Proposal::whereHas('kelompoks', function ($query) use ($userEmail) {
-            $query->where('anggota_email', $userEmail)->where('peran', 'Ketua')->whereYear('created_at', now()->year);
+            $query->where('anggota_email', $userEmail)->whereYear('created_at', now()->year);
+            // $query->where('anggota_email', $userEmail)->where('peran', 'Ketua')->whereYear('created_at', now()->year);
         })
             ->where(function ($query) {
                 $query->where('status', '0')->orWhere('status', '1');

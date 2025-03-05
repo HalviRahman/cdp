@@ -53,7 +53,7 @@ class ProgramStudiController extends Controller
      * @var FileService
      */
     private EmailService $emailService;
-    
+
     /**
      * exportable
      *
@@ -75,11 +75,11 @@ class ProgramStudiController extends Controller
      */
     public function __construct()
     {
-        $this->programStudiRepository      = new ProgramStudiRepository;
-        $this->fileService            = new FileService;
-        $this->emailService           = new EmailService;
-        $this->NotificationRepository = new NotificationRepository;
-        $this->UserRepository         = new UserRepository;
+        $this->programStudiRepository = new ProgramStudiRepository();
+        $this->fileService = new FileService();
+        $this->emailService = new EmailService();
+        $this->NotificationRepository = new NotificationRepository();
+        $this->UserRepository = new UserRepository();
 
         $this->middleware('can:Program Studi');
         $this->middleware('can:Program Studi Tambah')->only(['create', 'store']);
@@ -99,19 +99,19 @@ class ProgramStudiController extends Controller
         $user = auth()->user();
         return view('stisla.program-studis.index', [
             // 'data'             => $this->programStudiRepository->getLatest(),
-            'data'             => $this->programStudiRepository->getFilterTahun(),
-            'canCreate'        => $user->can('Program Studi Tambah'),
-            'canUpdate'        => $user->can('Program Studi Ubah'),
-            'canDelete'        => $user->can('Program Studi Hapus'),
-            'canImportExcel'   => $user->can('Order Impor Excel') && $this->importable,
-            'canExport'        => $user->can('Order Ekspor') && $this->exportable,
-            'title'            => __('Program Studi'),
-            'routeCreate'      => route('program-studis.create'),
-            'routePdf'         => route('program-studis.pdf'),
-            'routePrint'       => route('program-studis.print'),
-            'routeExcel'       => route('program-studis.excel'),
-            'routeCsv'         => route('program-studis.csv'),
-            'routeJson'        => route('program-studis.json'),
+            'data' => $this->programStudiRepository->getFilterTahun(),
+            'canCreate' => $user->can('Program Studi Tambah'),
+            'canUpdate' => $user->can('Program Studi Ubah'),
+            'canDelete' => $user->can('Program Studi Hapus'),
+            'canImportExcel' => $user->can('Order Impor Excel') && $this->importable,
+            'canExport' => $user->can('Order Ekspor') && $this->exportable,
+            'title' => __('Program Studi'),
+            'routeCreate' => route('program-studis.create'),
+            'routePdf' => route('program-studis.pdf'),
+            'routePrint' => route('program-studis.print'),
+            'routeExcel' => route('program-studis.excel'),
+            'routeCsv' => route('program-studis.csv'),
+            'routeJson' => route('program-studis.json'),
             'routeImportExcel' => route('program-studis.import-excel'),
             'excelExampleLink' => route('program-studis.import-excel-example'),
         ]);
@@ -125,10 +125,10 @@ class ProgramStudiController extends Controller
     public function create()
     {
         return view('stisla.program-studis.form', [
-            'title'         => __('Program Studi'),
-            'fullTitle'     => __('Tambah Program Studi'),
-            'routeIndex'    => route('program-studis.index'),
-            'action'        => route('program-studis.store')
+            'title' => __('Program Studi'),
+            'fullTitle' => __('Tambah Program Studi'),
+            'routeIndex' => route('program-studis.index'),
+            'action' => route('program-studis.store'),
         ]);
     }
 
@@ -140,12 +140,7 @@ class ProgramStudiController extends Controller
      */
     public function store(ProgramStudiRequest $request)
     {
-        $data = $request->only([
-			'nama_prodi',
-			'kuota',
-            'tahun',
-            'jenjang',
-        ]);
+        $data = $request->only(['nama_prodi', 'kuota', 'tahun', 'jenjang']);
 
         // gunakan jika ada file
         // if ($request->hasFile('file')) {
@@ -166,10 +161,10 @@ class ProgramStudiController extends Controller
         // gunakan jika mau kirim email
         // $this->emailService->methodName($result);
 
-        logCreate("Program Studi", $result);
+        logCreate('Program Studi', $result);
 
-        $successMessage = successMessageCreate("Program Studi");
-        return redirect()->back()->with('successMessage', $successMessage);
+        $successMessage = successMessageCreate('Program Studi');
+        return redirect()->route('program-studis.index')->with('successMessage', $successMessage);
     }
 
     /**
@@ -181,11 +176,11 @@ class ProgramStudiController extends Controller
     public function edit(ProgramStudi $programStudi)
     {
         return view('stisla.program-studis.form', [
-            'd'             => $programStudi,
-            'title'         => __('Program Studi'),
-            'fullTitle'     => __('Ubah Program Studi'),
-            'routeIndex'    => route('program-studis.index'),
-            'action'        => route('program-studis.update', [$programStudi->id])
+            'd' => $programStudi,
+            'title' => __('Program Studi'),
+            'fullTitle' => __('Ubah Program Studi'),
+            'routeIndex' => route('program-studis.index'),
+            'action' => route('program-studis.update', [$programStudi->id]),
         ]);
     }
 
@@ -198,12 +193,7 @@ class ProgramStudiController extends Controller
      */
     public function update(ProgramStudiRequest $request, ProgramStudi $programStudi)
     {
-        $data = $request->only([
-			'nama_prodi',
-			'kuota',
-            'tahun',
-            'jenjang',
-        ]);
+        $data = $request->only(['nama_prodi', 'kuota', 'tahun', 'jenjang']);
 
         // gunakan jika ada file
         // if ($request->hasFile('file')) {
@@ -224,10 +214,10 @@ class ProgramStudiController extends Controller
         // gunakan jika mau kirim email
         // $this->emailService->methodName($newData);
 
-        logUpdate("Program Studi", $programStudi, $newData);
+        logUpdate('Program Studi', $programStudi, $newData);
 
-        $successMessage = successMessageUpdate("Program Studi");
-        return redirect()->back()->with('successMessage', $successMessage);
+        $successMessage = successMessageUpdate('Program Studi');
+        return redirect()->route('program-studis.index')->with('successMessage', $successMessage);
     }
 
     /**
@@ -254,9 +244,9 @@ class ProgramStudiController extends Controller
         // $this->emailService->methodName($programStudi);
 
         $this->programStudiRepository->delete($programStudi->id);
-        logDelete("Program Studi", $programStudi);
+        logDelete('Program Studi', $programStudi);
 
-        $successMessage = successMessageDelete("Program Studi");
+        $successMessage = successMessageDelete('Program Studi');
         return redirect()->back()->with('successMessage', $successMessage);
     }
 
@@ -283,8 +273,8 @@ class ProgramStudiController extends Controller
      */
     public function importExcel(\App\Http\Requests\ImportExcelRequest $request)
     {
-        Excel::import(new ProgramStudiImport, $request->file('import_file'));
-        $successMessage = successMessageImportExcel("Program Studi");
+        Excel::import(new ProgramStudiImport(), $request->file('import_file'));
+        $successMessage = successMessageImportExcel('Program Studi');
         return redirect()->back()->with('successMessage', $successMessage);
     }
 
@@ -331,8 +321,8 @@ class ProgramStudiController extends Controller
         $data = $this->programStudiRepository->getLatest();
         return PDF::setPaper('Letter', 'landscape')
             ->loadView('stisla.program-studis.export-pdf', [
-                'data'    => $data,
-                'isPrint' => false
+                'data' => $data,
+                'isPrint' => false,
             ])
             ->download('program-studis.pdf');
     }
@@ -346,8 +336,8 @@ class ProgramStudiController extends Controller
     {
         $data = $this->programStudiRepository->getLatest();
         return view('stisla.program-studis.export-pdf', [
-            'data'    => $data,
-            'isPrint' => true
+            'data' => $data,
+            'isPrint' => true,
         ]);
     }
 }

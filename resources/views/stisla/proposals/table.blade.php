@@ -8,9 +8,18 @@
   @include('stisla.includes.breadcrumbs.breadcrumb-table', [
       'title' => __('Daftar Proposal CDP - ' . $prodi),
   ])
+
   <div class="section-body">
     <div class="card">
       <div class="card-body">
+        <div class="mb-3">
+          <a href="{{ route('proposals.excel', [
+              'prodi' => $prodi,
+              'tahun' => request('tahun', date('Y')),
+          ]) }}" class="btn btn-success">
+            <i class="fas fa-file-excel"></i> Export Excel
+          </a>
+        </div>
         <div class="table-responsive">
           <table class="table table-striped" id="table-1">
             <thead>
