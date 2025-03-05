@@ -76,7 +76,12 @@
     </div>
     <div class="row">
       @foreach ($programStudi as $prodi)
-        <div class="col-4">
+        <a href="{{ route('proposals.index', [
+            'prodi' => $prodi->jenjang . ' ' . $prodi->nama_prodi,
+            'tahun' => request('tahun', date('Y')),
+            'view' => 'table',
+        ]) }}"
+          class="col-4">
           <div class="stats-card">
             <div class="card card-statistic-1">
               <div class="card-icon bg-info">
@@ -92,7 +97,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </a>
       @endforeach
     </div>
   @endif

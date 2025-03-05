@@ -275,13 +275,9 @@
                   {{-- @include('stisla.includes.forms.buttons.btn-save') --}}
                   @if (isset($d))
                     @if (auth()->user()->hasRole('Prodi'))
-                      @if ($d->status == 0)
+                      @if ($d->status == 0 && $d->prodi == auth()->user()->kaprodi)
                         @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Setujui', 'icon' => 'fas fa-check-circle', 'color' => 'success'])
-                        {{-- @include('stisla.includes.forms.buttons.btn-tolak', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger']) --}}
                         @include('stisla.includes.forms.buttons.btn-modal-tolak', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger'])
-                        {{-- @elseif ($d->status == 1) --}}
-                        {{-- @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Setujui', 'icon' => 'fas fa-check-circle', 'color' => 'success'])
-                        @include('stisla.includes.forms.buttons.btn-tolak', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger']) --}}
                       @endif
                     @endif
                     @if (auth()->user()->hasRole('Dosen'))

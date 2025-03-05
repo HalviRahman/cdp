@@ -142,9 +142,10 @@ class DashboardController extends StislaController
                     $query->where('status', '0')->orWhere('status', '1');
                 })
                 ->count();
-
+            // dd($existingProposals);
+            // dd($programStudi->kuota, );
             // Hitung sisa kuota
-            $sisaKuota = $programStudi ? $programStudi->kuota - $existingProposals : 0;
+            $sisaKuota = $programStudi->kuota - $existingProposals;
         }
 
         return view('stisla.dashboard.index', [
