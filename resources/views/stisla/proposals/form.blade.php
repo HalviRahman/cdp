@@ -90,7 +90,19 @@
                         $prodiOptions[$prodi] = $prodi;
                     }
                   @endphp
-                  @if (count($userProdi) > 1)
+                  @if (count($availableProdi) > 0 && count(auth()->user()->prodi) > 1)
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label>Program Studi</label>
+                        <select name="prodi" class="form-control" required>
+                          @foreach ($availableProdi as $prodi)
+                            <option value="{{ $prodi['nama'] }}">{{ $prodi['nama'] }} (Sisa Kuota: {{ $prodi['kuota_tersisa'] }})</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+                  @endif
+                  {{-- @if (isset($userProdi) && count($userProdi) > 1)
                     <div class="col-md-12">
                       @include('stisla.includes.forms.selects.select', [
                           'required' => false,
@@ -103,7 +115,7 @@
                           'multiple' => false,
                       ])
                     </div>
-                  @endif
+                  @endif --}}
                   {{-- MAHASISWA --}}
                   <div class="col-md-12">
                     <h6 class="mb-3"><i class="fas fa-users me-2"></i> Tambah Mahasiswa</h6>

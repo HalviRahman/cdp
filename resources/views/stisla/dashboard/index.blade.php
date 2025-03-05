@@ -399,10 +399,10 @@
           </div>
           <div class="card-wrap">
             <div class="card-header">
-              <h4 class="text-dark">Kuota</h4>
+              <h4 class="text-dark">Kuota (Sisa)</h4>
             </div>
             <div class="card-body">
-              <h4>{{ $programStudi->kuota ?? 0 }} </h4>
+              <h4>{{ $programStudi->kuota ?? 0 }} ({{ $sisaKuota ?? 0 }})</h4>
             </div>
           </div>
         </div>
