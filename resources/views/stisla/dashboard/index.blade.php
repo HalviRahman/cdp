@@ -127,6 +127,37 @@
       </div>
     @endif
     @if (auth()->user()->hasRole('Fakultas'))
+      @if ($dataProposalDosen)
+        @foreach ($dataProposalDosen as $proposal)
+          <div class="col-12">
+            <div class="card status-card status-pending mb-4 author-box card-{{ $proposal->status == '0' ? 'warning' : ($proposal->status == '1' ? 'success' : 'danger') }}">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h5 class="card-title mb-1">{{ $proposal->judul_proposal }}</h5>
+                    <p class="card-text text-muted mb-0">Status: @if ($proposal->status == '0')
+                        Menunggu Verifikasi
+                      @elseif($proposal->status == '1')
+                        Disetujui
+                      @elseif($proposal->status == '10')
+                        Ditolak
+                      @endif
+                    </p>
+                    @if ($proposal->status == '10')
+                      <p class="card-text text-muted mb-0">Alasan: {{ $proposal->keterangan }}</p>
+                    @endif
+                  </div>
+                  <div>
+                    <a href="{{ route('proposals.edit', $proposal->id) }}" class="btn btn-outline-primary btn-sm">
+                      <i class="bi bi-eye me-2"></i>Detail
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        @endforeach
+      @endif
       {{-- Box 1 --}}
       <div class="col-12 col-sm-12 col-lg-6">
         <div class="card author-box card-warning">
