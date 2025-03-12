@@ -48,9 +48,14 @@ class UserRepository extends Repository
             // ->whereNotIn('email', function ($query) {
             //     $query->select('anggota_email')->from('kelompoks')->whereNotNull('anggota_email')->whereYear('created_at', date('Y')); // hanya cek data tahun ini
             // })
-            ->whereNotIn('email', function ($query) {
-                $query->select('kelompoks.anggota_email')->from('kelompoks')->join('proposals', 'kelompoks.id_kelompok', '=', 'proposals.id_kelompok')->whereNotNull('kelompoks.anggota_email')->whereYear('kelompoks.created_at', date('Y'))->where('proposals.status', '!=', '10'); // cek status di tabel proposals
-            })
+
+            // ini query untuk menghilangkan nama ketika sudah ada di tabel kelompok
+            // ->whereNotIn('email', function ($query) {
+            //     $query->select('kelompoks.anggota_email')->from('kelompoks')->join('proposals', 'kelompoks.id_kelompok', '=', 'proposals.id_kelompok')->whereNotNull('kelompoks.anggota_email')->whereYear('kelompoks.created_at', date('Y'))->where('proposals.status', '!=', '10'); // cek status di tabel proposals
+            // })
+            // end
+            // ini query untuk menghilangkan nama dosen yang sedang menjadi session auth
+            ->where('email', '!=', auth()->user()->email)
             // end
             // Query untuk menampilkan nama mahasiswa yang memiliki prodi yang sama dengan prodi user login
             ->where(function ($query) use ($userProdi) {
@@ -65,15 +70,6 @@ class UserRepository extends Repository
                 ];
             });
     }
-    // public function getAnggotaOptions()
-    // {
-    //     return User::whereNotNull('prodi')
-    //         ->where('prodi', auth()->user()->prodi)
-    //         ->get()
-    //         ->mapWithKeys(function ($item) {
-    //             return [$item->email => $item->name . ' - ' . implode('; ', json_decode($item->prodi, true))];
-    //         });
-    // }
 
     /**
      * get user id login

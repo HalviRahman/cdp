@@ -147,14 +147,84 @@
                   {{-- END MAHASISWA --}}
                 @endif
 
+                @php
+                  // Cek periode pengajuan proposal (untuk dosen)
+                  $jadwal_pengajuan = \App\Models\Jadwal::where('keterangan', 'Pengajuan Proposal')->first();
+                  $can_edit = $jadwal_pengajuan && now()->between($jadwal_pengajuan->tgl_mulai, $jadwal_pengajuan->tgl_selesai);
 
+                  // Cek periode verifikasi (untuk prodi/koordinator)
+                  $jadwal_verifikasi = \App\Models\Jadwal::where('keterangan', 'Verifikasi Proposal')->first();
+                  $can_verify = $jadwal_verifikasi && now()->between($jadwal_verifikasi->tgl_mulai, $jadwal_verifikasi->tgl_selesai);
+
+                  // Cek periode pengumpulan laporan
+                  $jadwal_laporan = \App\Models\Jadwal::where('keterangan', 'Pengumpulan Laporan')->first();
+                  $can_upload_laporan = $jadwal_laporan && now()->between($jadwal_laporan->tgl_mulai, $jadwal_laporan->tgl_selesai);
+                @endphp
 
                 @if (isset($d))
                   <div class="col-md-12 mb-3">
-                    {{-- <h6><i class="fas fa-file-alt me-2"></i> Judul Proposal:</h6> --}}
-                    <h4>{{ $d->judul_proposal }}</h4>
+                    @if (auth()->user()->hasRole('Dosen') && !$can_edit)
+                      <div class="alert alert-warning">
+                        <i class="fas fa-clock"></i> Periode pengajuan/edit proposal:
+                        {{ \Carbon\Carbon::parse($jadwal_pengajuan->tgl_mulai)->format('d M Y') }} -
+                        {{ \Carbon\Carbon::parse($jadwal_pengajuan->tgl_selesai)->format('d M Y') }}
+                      </div>
+                    @endif
+                    <h5>{{ $d->judul_proposal }}</h5>
                     <hr>
                   </div>
+
+                  {{-- Form edit untuk dosen selama periode pengajuan --}}
+                  @if (auth()->user()->hasRole('Dosen') && $d->status == 0 && $can_edit)
+                    <div class="col-md-12">
+                      @include('stisla.includes.forms.inputs.input', [
+                          'required' => true,
+                          'type' => 'text',
+                          'id' => 'judul_proposal',
+                          'name' => 'judul_proposal',
+                          'label' => __('Judul Proposal'),
+                          'value' => $d->judul_proposal,
+                      ])
+                    </div>
+
+                    <div class="col-md-6">
+                      @include('stisla.includes.forms.selects.select2', [
+                          'required' => false,
+                          'disabled' => true,
+                          'type' => 'text',
+                          'id' => 'anggota_email',
+                          'name' => 'anggota_email',
+                          'label' => __('Anggota Dosen'),
+                          'options' => $anggota,
+                          'multiple' => true,
+                      ])
+                    </div>
+
+                    <div class="col-md-6">
+                      @include('stisla.includes.forms.inputs.input', [
+                          'required' => true,
+                          'type' => 'file',
+                          'id' => 'file_proposal',
+                          'name' => 'file_proposal',
+                          'label' => __('File Proposal Baru'),
+                          'accept' => '.pdf',
+                          'hint' => 'Format File: PDF, Maksimal 5MB',
+                      ])
+                    </div>
+                  @endif
+
+                  {{-- Form verifikasi untuk prodi selama periode verifikasi --}}
+                  @if (auth()->user()->hasRole('Prodi') && $d->status == 0 && $can_verify)
+                    <div class="col-md-12">
+                      @include('stisla.includes.forms.editors.textarea', [
+                          'required' => true,
+                          'id' => 'keterangan',
+                          'name' => 'keterangan',
+                          'label' => __('Catatan Verifikasi'),
+                          'value' => old('keterangan'),
+                      ])
+                    </div>
+                  @endif
 
                   <div class="col-md-12">
                     <h6><i class="fas fa-users me-2"></i> Anggota Kelompok:</h6>
@@ -265,7 +335,79 @@
                   ])
                 </div> --}}
 
+                {{-- Form upload laporan untuk dosen selama periode pengumpulan laporan --}}
+                @if (auth()->user()->hasRole('Dosen') && $d->status == 2 && $can_upload_laporan)
+                  <div class="col-md-12">
+                    <h6 class="mb-3 mt-3"><i class="fas fa-upload me-2"></i> Upload Laporan</h6>
 
+                    <div class="row">
+                      <div class="col-md-6">
+                        @include('stisla.includes.forms.inputs.input', [
+                            'required' => true,
+                            'type' => 'file',
+                            'id' => 'laporan_kegiatan',
+                            'name' => 'laporan_kegiatan',
+                            'label' => __('File Laporan Kegiatan'),
+                            'accept' => '.pdf',
+                            'hint' => 'Format File: PDF, Maksimal 5MB',
+                        ])
+                      </div>
+
+                      <div class="col-md-6">
+                        @include('stisla.includes.forms.inputs.input', [
+                            'required' => true,
+                            'type' => 'file',
+                            'id' => 'laporan_perjalanan',
+                            'name' => 'laporan_perjalanan',
+                            'label' => __('File Laporan Perjalanan'),
+                            'accept' => '.pdf',
+                            'hint' => 'Format File: PDF, Maksimal 5MB',
+                        ])
+                      </div>
+                    </div>
+                  </div>
+                @endif
+
+                {{-- Tampilkan file laporan jika sudah diupload --}}
+                @if ($d->laporan_kegiatan || $d->laporan_perjalanan)
+                  <div class="col-md-12">
+                    <h6 class="mb-3"><i class="fas fa-file-alt me-2"></i> File Laporan</h6>
+
+                    @if ($d->laporan_kegiatan)
+                      <div class="d-flex align-items-center mb-2">
+                        <div class="mr-3">
+                          <i class="fas fa-file-pdf text-danger fs-5"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                          <p class="mb-0">Laporan Kegiatan: {{ basename($d->laporan_kegiatan) }}</p>
+                          <small class="text-muted">Diunggah pada: {{ $d->tgl_upload_laporan }}</small>
+                        </div>
+                        <div>
+                          <a href="{{ asset('storage/' . $d->laporan_kegiatan) }}" class="btn btn-sm btn-primary" target="_blank">
+                            <i class="fas fa-eye"></i> Lihat
+                          </a>
+                        </div>
+                      </div>
+                    @endif
+
+                    @if ($d->laporan_perjalanan)
+                      <div class="d-flex align-items-center mb-2">
+                        <div class="mr-3">
+                          <i class="fas fa-file-pdf text-danger fs-5"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                          <p class="mb-0">Laporan Perjalanan: {{ basename($d->laporan_perjalanan) }}</p>
+                          <small class="text-muted">Diunggah pada: {{ $d->tgl_upload_laporan }}</small>
+                        </div>
+                        <div>
+                          <a href="{{ asset('storage/' . $d->laporan_perjalanan) }}" class="btn btn-sm btn-primary" target="_blank">
+                            <i class="fas fa-eye"></i> Lihat
+                          </a>
+                        </div>
+                      </div>
+                    @endif
+                  </div>
+                @endif
 
                 <div class="col-md-12">
                   <br>
@@ -273,14 +415,29 @@
                   @csrf
 
                   {{-- @include('stisla.includes.forms.buttons.btn-save') --}}
+
+
                   @if (isset($d))
-                    @if (auth()->user()->hasRole('Prodi'))
-                      @if ($d->status == 0 && $d->prodi == auth()->user()->kaprodi)
+                    @if (auth()->user()->hasRole('Prodi') || auth()->user()->hasRole('Koordinator Prodi'))
+                      @if ($d->status == 0 && $d->prodi == auth()->user()->kaprodi && $can_verify)
                         @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Setujui', 'icon' => 'fas fa-check-circle', 'color' => 'success'])
                         @include('stisla.includes.forms.buttons.btn-modal-tolak', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger'])
+                      @elseif(!$can_verify)
+                        <div class="alert alert-warning">
+                          <i class="fas fa-clock"></i> Periode verifikasi proposal:
+                          {{ \Carbon\Carbon::parse($jadwal_verifikasi->tgl_mulai)->format('d M Y') }} -
+                          {{ \Carbon\Carbon::parse($jadwal_verifikasi->tgl_selesai)->format('d M Y') }}
+                        </div>
                       @endif
                     @endif
-                    @if (auth()->user()->hasRole('Dosen'))
+                    @if (auth()->user()->hasRole('Dosen') && $d->status == 0 && $can_edit)
+                      @include('stisla.includes.forms.buttons.btn-save', [
+                          'label' => 'Update Proposal',
+                          'icon' => 'fas fa-save',
+                          'color' => 'warning',
+                          'float' => 'right',
+                          'block' => 'btn-block',
+                      ])
                     @endif
                   @else
                     @if (auth()->user()->hasRole('Dosen'))

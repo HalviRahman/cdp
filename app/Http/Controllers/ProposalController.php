@@ -461,12 +461,47 @@ class ProposalController extends Controller
     {
         $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi']);
 
-        $action = $request->input('action');
+        // Jika sedang periode pengumpulan laporan dan status = 2 (sudah diverifikasi)
+        if (($request->hasFile('laporan_kegiatan') || $request->hasFile('laporan_perjalanan')) && $proposal->status == 2) {
+            $request->validate([
+                'laporan_kegiatan' => 'required|mimes:pdf|max:5120',
+                'laporan_perjalanan' => 'required|mimes:pdf|max:5120',
+            ]);
+
+            // Upload laporan kegiatan menggunakan FileService
+            if ($request->hasFile('laporan_kegiatan')) {
+                $data['laporan_kegiatan'] = $this->fileService->uploadProposal($request->file('laporan_kegiatan'));
+            }
+
+            // Upload laporan perjalanan menggunakan FileService
+            if ($request->hasFile('laporan_perjalanan')) {
+                $data['laporan_perjalanan'] = $this->fileService->uploadProposal($request->file('laporan_perjalanan'));
+            }
+
+            $data['tgl_upload_laporan'] = now();
+
+            // Update data menggunakan repository
+            $newData = $this->proposalRepository->update($data, $proposal->id);
+
+            logUpdate('Proposal', $proposal, $newData);
+
+            $successMessage = successMessageUpdate('Laporan');
+            return redirect()->back()->with('successMessage', $successMessage);
+        }
+
+        if ($request->hasFile('laporan_kegiatan')) {
+            $data['laporan_kegiatan'] = $this->fileService->uploadProposal($request->file('laporan_kegiatan'));
+        }
+        if ($request->hasFile('laporan_perjalanan')) {
+            $data['laporan_perjalanan'] = $this->fileService->uploadProposal($request->file('laporan_perjalanan'));
+        }
+        // Cek periode pengumpulan laporan
 
         // gunakan jika ada file
         // if ($request->hasFile('file')) {
         //     $data['file'] = $this->fileService->methodName($request->file('file'));
         // }
+        $action = $request->input('action');
         if (auth()->user()->hasRole('Prodi')) {
             if ($action == 'reject') {
                 $data['status'] = '10';
@@ -476,20 +511,8 @@ class ProposalController extends Controller
             $data['verifikator'] = auth()->user()->name;
             $data['tgl_verifikasi'] = now();
         }
-        // Simpan ketua_email ke dalam tabel kelompok
+
         $newData = $this->proposalRepository->update($data, $proposal->id);
-
-        // use this if you want to create notification data
-        // $title = 'Notify Title';
-        // $content = 'lorem ipsum dolor sit amet';
-        // $userId = 2;
-        // $notificationType = 'transaksi masuk';
-        // $icon = 'bell'; // font awesome
-        // $bgColor = 'primary'; // primary, danger, success, warning
-        // $this->NotificationRepository->createNotif($title,  $content, $userId,  $notificationType, $icon, $bgColor);
-
-        // gunakan jika mau kirim email
-        // $this->emailService->methodName($newData);
 
         logUpdate('Proposal', $proposal, $newData);
 
