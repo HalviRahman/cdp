@@ -130,15 +130,20 @@
       @if ($dataProposalDosen)
         @foreach ($dataProposalDosen as $proposal)
           <div class="col-12">
-            <div class="card status-card status-pending mb-4 author-box card-{{ $proposal->status == '0' ? 'warning' : ($proposal->status == '1' ? 'success' : 'danger') }}">
+            <div
+              class="card status-card status-pending mb-4 author-box card-{{ $proposal->status == '0' ? 'warning' : ($proposal->status == '1' ? 'warning' : ($proposal->status == '2' ? 'success' : ($proposal->status == '3' ? 'success' : 'danger'))) }}">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                   <div>
                     <h5 class="card-title mb-1">{{ $proposal->judul_proposal }}</h5>
                     <p class="card-text text-muted mb-0">Status: @if ($proposal->status == '0')
-                        Menunggu Verifikasi
+                        Menunggu Verifikasi Koordinator Prodi
                       @elseif($proposal->status == '1')
+                        Menunggu Verifikasi Prodi
+                      @elseif($proposal->status == '2')
                         Disetujui
+                      @elseif($proposal->status == '3')
+                        Silahkan Upload Laporan Kegiatan dan Laporan Perjalanan
                       @elseif($proposal->status == '10')
                         Ditolak
                       @endif
@@ -148,7 +153,7 @@
                     @endif
                   </div>
                   <div>
-                    <a href="{{ route('proposals.edit', $proposal->id) }}" class="btn btn-outline-primary btn-sm">
+                    <a href="{{ route('proposals.edit', $proposal->token) }}" class="btn btn-outline-primary btn-sm">
                       <i class="bi bi-eye me-2"></i>Detail
                     </a>
                   </div>
@@ -289,14 +294,19 @@
       @if ($dataProposalDosen)
         @foreach ($dataProposalDosen as $proposal)
           <div class="col-12">
-            <div class="card status-card status-pending mb-4 author-box card-{{ $proposal->status == '0' ? 'warning' : ($proposal->status == '1' ? 'success' : 'danger') }}">
+            <div
+              class="card status-card status-pending mb-4 author-box card-{{ $proposal->status == '0' ? 'warning' : ($proposal->status == '1' ? 'warning' : ($proposal->status == '2' ? 'success' : ($proposal->status == '3' ? 'success' : 'danger'))) }}">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                   <div>
                     <h5 class="card-title mb-1">{{ $proposal->judul_proposal }}</h5>
                     <p class="card-text text-muted mb-0">Status: @if ($proposal->status == '0')
-                        Menunggu Verifikasi
+                        Menunggu Verifikasi Koordinator Prodi
                       @elseif($proposal->status == '1')
+                        Menunggu Verifikasi Prodi
+                      @elseif($proposal->status == '2')
+                        Disetujui
+                      @elseif($proposal->status == '3')
                         Disetujui
                       @elseif($proposal->status == '10')
                         Ditolak
@@ -307,7 +317,7 @@
                     @endif
                   </div>
                   <div>
-                    <a href="{{ route('proposals.edit', $proposal->id) }}" class="btn btn-outline-primary btn-sm">
+                    <a href="{{ route('proposals.edit', $proposal->token) }}" class="btn btn-outline-primary btn-sm">
                       <i class="bi bi-eye me-2"></i>Detail
                     </a>
                   </div>
@@ -322,14 +332,19 @@
       @if ($dataProposalDosen)
         @foreach ($dataProposalDosen as $proposal)
           <div class="col-12">
-            <div class="card status-card status-pending mb-4 author-box card-{{ $proposal->status == '0' ? 'warning' : ($proposal->status == '1' ? 'success' : 'danger') }}">
+            <div
+              class="card status-card status-pending mb-4 author-box card-{{ $proposal->status == '0' ? 'warning' : ($proposal->status == '1' ? 'warning' : ($proposal->status == '2' ? 'success' : ($proposal->status == '3' ? 'success' : 'danger'))) }}">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                   <div>
                     <h5 class="card-title mb-1">{{ $proposal->judul_proposal }}</h5>
                     <p class="card-text text-muted mb-0">Status: @if ($proposal->status == '0')
-                        Menunggu Verifikasi
+                        Menunggu Verifikasi Koordinator Prodi
                       @elseif($proposal->status == '1')
+                        Menunggu Verifikasi Prodi
+                      @elseif($proposal->status == '2')
+                        Disetujui
+                      @elseif($proposal->status == '3')
                         Disetujui
                       @elseif($proposal->status == '10')
                         Ditolak
@@ -340,7 +355,7 @@
                     @endif
                   </div>
                   <div>
-                    <a href="{{ route('proposals.edit', $proposal->id) }}" class="btn btn-outline-primary btn-sm">
+                    <a href="{{ route('proposals.edit', $proposal->token) }}" class="btn btn-outline-primary btn-sm">
                       <i class="bi bi-eye me-2"></i>Detail
                     </a>
                   </div>
@@ -468,8 +483,12 @@
                 <p class="mb-0"><i class="fas fa-calendar-check me-2"></i> Tanggal Verifikasi: {{ Carbon\Carbon::parse($proposal->tgl_verifikasi)->format('d F Y H:i') }} WIB</p>
               @endif
               @if ($proposal->status == '0')
-                <span class="badge badge-warning">Menunggu Verifikasi</span>
+                <span class="badge badge-warning">Menunggu Verifikasi Koordinator Prodi</span>
               @elseif($proposal->status == '1')
+                <span class="badge badge-success">Menunggu Verifikasi Prodi</span>
+              @elseif($proposal->status == '2')
+                <span class="badge badge-success">Disetujui</span>
+              @elseif($proposal->status == '3')
                 <span class="badge badge-success">Disetujui</span>
               @elseif($proposal->status == '10')
                 <p class="mb-1"><i class="fas fa-exclamation-circle me-2"></i> Alasan: {{ $proposal->keterangan }}</p>
@@ -478,7 +497,7 @@
                 <span class="badge badge-warning">Menunggu Verifikasi</span>
               @endif
               <div class="float-right">
-                <a href="{{ route('proposals.edit', $proposal->id) }}" class="btn btn-outline-info">Detail</a>
+                <a href="{{ route('proposals.edit', $proposal->token) }}" class="btn btn-outline-info">Detail</a>
               </div>
             </div>
           </div>
@@ -553,8 +572,12 @@
                   <td><span class="badge badge-warning">Menunggu</span></td>
                 @endif
                 @if ($proposal->status == '0')
-                  <td><span class="badge badge-warning">Menunggu Verifikasi</span></td>
+                  <td><span class="badge badge-warning">Menunggu Verifikasi Koordinator Prodi</span></td>
                 @elseif($proposal->status == '1')
+                  <td><span class="badge badge-success">Menunggu Verifikasi Prodi</span></td>
+                @elseif($proposal->status == '2')
+                  <td><span class="badge badge-success">Disetujui</span></td>
+                @elseif($proposal->status == '3')
                   <td><span class="badge badge-success">Disetujui</span></td>
                 @elseif($proposal->status == '10')
                   <td><span class="badge badge-danger">Ditolak</span></td>

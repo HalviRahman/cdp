@@ -9,7 +9,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class Repository extends RepositoryAbstract
 {
-
     protected Model $model;
 
     /**
@@ -98,10 +97,7 @@ class Repository extends RepositoryAbstract
      */
     public function find($id, array $columns = ['*'])
     {
-        return $this->model->query()
-            ->where('id', $id)
-            ->select($columns)
-            ->first();
+        return $this->model->query()->where('id', $id)->select($columns)->first();
     }
 
     /**
@@ -148,6 +144,15 @@ class Repository extends RepositoryAbstract
      * @return Model
      */
     public function update(array $data, int $id, array $columns = ['*'])
+    {
+        $model = $this->find($id);
+        if ($model) {
+            $model->update($data);
+            return $this->find($id, $columns);
+        }
+        return 0;
+    }
+    public function update2(array $data, string $id, array $columns = ['*'])
     {
         $model = $this->find($id);
         if ($model) {
@@ -208,7 +213,8 @@ class Repository extends RepositoryAbstract
     public function getPaginate()
     {
         $perPage = request('perPage', 20);
-        return $this->model->query()
+        return $this->model
+            ->query()
             ->when(request('sort') === 'oldest', function ($query) {
                 $query->sortBy('id', 'asc');
             })
@@ -225,8 +231,7 @@ class Repository extends RepositoryAbstract
      */
     public function getFilter()
     {
-        return $this->model
-            ->get();
+        return $this->model->get();
     }
 
     /**
@@ -239,10 +244,7 @@ class Repository extends RepositoryAbstract
      */
     public function getWhereIn(string $column, array $data, array $columns = ['*'])
     {
-        return $this->model->query()
-            ->select($columns)
-            ->whereIn($column, $data)
-            ->get();
+        return $this->model->query()->select($columns)->whereIn($column, $data)->get();
     }
 
     /**
@@ -276,7 +278,7 @@ class Repository extends RepositoryAbstract
      */
     public function getYajraDataTables()
     {
-        return $this->generateDataTables($this->query(),);
+        return $this->generateDataTables($this->query());
         return DataTables::of($this->query())->addIndexColumn()->rawColumns([])->make(true);
     }
 
@@ -299,16 +301,16 @@ class Repository extends RepositoryAbstract
     {
         return json_encode([
             [
-                'data'       => 'DT_RowIndex',
-                'name'       => 'DT_RowIndex',
+                'data' => 'DT_RowIndex',
+                'name' => 'DT_RowIndex',
                 'searchable' => false,
-                'orderable'  => false
+                'orderable' => false,
             ],
             [
                 'data' => 'action',
                 'name' => 'action',
                 'orderable' => false,
-                'searchable' => false
+                'searchable' => false,
             ],
         ]);
     }

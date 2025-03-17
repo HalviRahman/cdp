@@ -214,7 +214,7 @@
                   @endif
 
                   {{-- Form verifikasi untuk prodi selama periode verifikasi --}}
-                  @if (auth()->user()->hasRole('Prodi') && $d->status == 0 && $can_verify)
+                  @if (auth()->user()->hasRole('Prodi') && isset($d) && $d->status == 0 && $can_verify)
                     <div class="col-md-12">
                       @include('stisla.includes.forms.editors.textarea', [
                           'required' => true,
@@ -286,25 +286,22 @@
                 @if (isset($d))
                   <div class="col-md-12">
                     <h6 class="mb-3"><i class="fas fa-file-alt me-2"></i> File Proposal</h6>
-                    <div class="d-flex align-items-center mb-2">
-                      <div class="mr-3">
-                        <i class="fas fa-file-pdf text-danger fs-5"></i>
+                    <div class="d-flex flex-column flex-md-row align-items-md-center mb-3">
+                      <div class="d-flex align-items-center flex-grow-1 mb-2 mb-md-0">
+                        <div class="mr-3">
+                          <i class="fas fa-file-pdf text-danger fs-5"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                          <p class="mb-0">{{ basename($d->file_proposal) }}</p>
+                          <small class="text-muted">Diunggah pada: {{ $d->tgl_upload }}</small>
+                        </div>
                       </div>
-                      <div class="flex-grow-1">
-                        <p class="mb-0">{{ basename($d->file_proposal) }}</p>
-                        <small class="text-muted">Diunggah pada: {{ $d->tgl_upload }}</small>
+                      <div>
+                        <a href="{{ $d->file_proposal }}" class="btn btn-sm btn-primary" target="_blank">
+                          <i class="fas fa-eye"></i> Lihat
+                        </a>
                       </div>
                     </div>
-                    <div class="d-flex align-items-center">
-                      <a href="{{ $d->file_proposal }}" class="btn btn-primary" target="_blank">
-                        <i class="fas fa-eye me-2"></i> Lihat Proposal
-                      </a>
-                    </div>
-                    {{-- <div class="form-group">
-                      <h6 for="file_proposal">File Proposal</h6>
-                      <hr>
-                      <a class="btn " href="{{ $d->file_proposal }}" target="_blank">aa<img src="{{ Storage::url('docs.png') }}" width="150px" alt=""></a>
-                    </div> --}}
                   </div>
                 @else
                 @endif
@@ -336,7 +333,7 @@
                 </div> --}}
 
                 {{-- Form upload laporan untuk dosen selama periode pengumpulan laporan --}}
-                @if (auth()->user()->hasRole('Dosen') && $d->status == 2 && $can_upload_laporan)
+                @if (auth()->user()->hasRole('Dosen') && isset($d) && $d->status == 2 && $can_upload_laporan)
                   <div class="col-md-12">
                     <h6 class="mb-3 mt-3"><i class="fas fa-upload me-2"></i> Upload Laporan</h6>
 
@@ -369,21 +366,23 @@
                 @endif
 
                 {{-- Tampilkan file laporan jika sudah diupload --}}
-                @if ($d->laporan_kegiatan || $d->laporan_perjalanan)
+                @if (isset($d) && ($d->laporan_kegiatan || $d->laporan_perjalanan))
                   <div class="col-md-12">
-                    <h6 class="mb-3"><i class="fas fa-file-alt me-2"></i> File Laporan</h6>
+                    <h6 class="mb-3 mt-3"><i class="fas fa-file-alt me-2"></i> File Laporan</h6>
 
                     @if ($d->laporan_kegiatan)
-                      <div class="d-flex align-items-center mb-2">
-                        <div class="mr-3">
-                          <i class="fas fa-file-pdf text-danger fs-5"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                          <p class="mb-0">Laporan Kegiatan: {{ basename($d->laporan_kegiatan) }}</p>
-                          <small class="text-muted">Diunggah pada: {{ $d->tgl_upload_laporan }}</small>
+                      <div class="d-flex flex-column flex-md-row align-items-md-center mb-3">
+                        <div class="d-flex align-items-center flex-grow-1 mb-2 mb-md-0">
+                          <div class="mr-3">
+                            <i class="fas fa-file-pdf text-danger fs-5"></i>
+                          </div>
+                          <div class="flex-grow-1">
+                            <p class="mb-0">Kegiatan - {{ basename($d->laporan_kegiatan) }}</p>
+                            <small class="text-muted">Diunggah pada: {{ $d->tgl_upload_laporan }}</small>
+                          </div>
                         </div>
                         <div>
-                          <a href="{{ asset('storage/' . $d->laporan_kegiatan) }}" class="btn btn-sm btn-primary" target="_blank">
+                          <a href="{{ $d->laporan_kegiatan }}" class="btn btn-sm btn-primary" target="_blank">
                             <i class="fas fa-eye"></i> Lihat
                           </a>
                         </div>
@@ -391,16 +390,18 @@
                     @endif
 
                     @if ($d->laporan_perjalanan)
-                      <div class="d-flex align-items-center mb-2">
-                        <div class="mr-3">
-                          <i class="fas fa-file-pdf text-danger fs-5"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                          <p class="mb-0">Laporan Perjalanan: {{ basename($d->laporan_perjalanan) }}</p>
-                          <small class="text-muted">Diunggah pada: {{ $d->tgl_upload_laporan }}</small>
+                      <div class="d-flex flex-column flex-md-row align-items-md-center mb-3">
+                        <div class="d-flex align-items-center flex-grow-1 mb-2 mb-md-0">
+                          <div class="mr-3">
+                            <i class="fas fa-file-pdf text-danger fs-5"></i>
+                          </div>
+                          <div class="flex-grow-1">
+                            <p class="mb-0">Perjalanan - {{ basename($d->laporan_perjalanan) }}</p>
+                            <small class="text-muted">Diunggah pada: {{ $d->tgl_upload_laporan }}</small>
+                          </div>
                         </div>
                         <div>
-                          <a href="{{ asset('storage/' . $d->laporan_perjalanan) }}" class="btn btn-sm btn-primary" target="_blank">
+                          <a href="{{ $d->laporan_perjalanan }}" class="btn btn-sm btn-primary" target="_blank">
                             <i class="fas fa-eye"></i> Lihat
                           </a>
                         </div>
@@ -409,28 +410,19 @@
                   </div>
                 @endif
 
+                {{-- Tombol aksi --}}
                 <div class="col-md-12">
                   <br>
-
                   @csrf
-
-                  {{-- @include('stisla.includes.forms.buttons.btn-save') --}}
-
-
-                  @if (isset($d))
-                    @if (auth()->user()->hasRole('Prodi') || auth()->user()->hasRole('Koordinator Prodi'))
-                      @if ($d->status == 0 && $d->prodi == auth()->user()->kaprodi && $can_verify)
-                        @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Setujui', 'icon' => 'fas fa-check-circle', 'color' => 'success'])
-                        @include('stisla.includes.forms.buttons.btn-modal-tolak', ['label' => 'Tolak', 'icon' => 'fas fa-times', 'color' => 'danger'])
-                      @elseif(!$can_verify)
-                        <div class="alert alert-warning">
-                          <i class="fas fa-clock"></i> Periode verifikasi proposal:
-                          {{ \Carbon\Carbon::parse($jadwal_verifikasi->tgl_mulai)->format('d M Y') }} -
-                          {{ \Carbon\Carbon::parse($jadwal_verifikasi->tgl_selesai)->format('d M Y') }}
-                        </div>
-                      @endif
-                    @endif
-                    @if (auth()->user()->hasRole('Dosen') && $d->status == 0 && $can_edit)
+                  @if (auth()->user()->hasRole('Dosen'))
+                    @if (!isset($d))
+                      @include('stisla.includes.forms.buttons.btn-save', [
+                          'label' => 'Ajukan Proposal',
+                          'icon' => 'fas fa-save',
+                          'color' => 'primary',
+                          'block' => 'btn-block',
+                      ])
+                    @elseif (isset($d) && $d->status == 0 && $can_edit)
                       @include('stisla.includes.forms.buttons.btn-save', [
                           'label' => 'Update Proposal',
                           'icon' => 'fas fa-save',
@@ -438,14 +430,43 @@
                           'float' => 'right',
                           'block' => 'btn-block',
                       ])
-                    @endif
-                  @else
-                    @if (auth()->user()->hasRole('Dosen'))
-                      @include('stisla.includes.forms.buttons.btn-save', ['label' => 'Ajukan Proposal', 'icon' => 'fas fa-paper-plane'])
+                    @elseif (isset($d) && $d->status == 2 && $can_upload_laporan)
+                      @include('stisla.includes.forms.buttons.btn-save', [
+                          'label' => 'Upload Laporan',
+                          'icon' => 'fas fa-upload',
+                          'color' => 'info',
+                          'float' => 'right',
+                          'block' => 'btn-block',
+                      ])
+                    @elseif (isset($d) && !$can_upload_laporan && $d->status == 2)
+                      <div class="alert alert-warning">
+                        <i class="fas fa-clock"></i> Periode pengumpulan laporan:
+                        {{ \Carbon\Carbon::parse($jadwal_laporan->tgl_mulai)->format('d M Y') }} -
+                        {{ \Carbon\Carbon::parse($jadwal_laporan->tgl_selesai)->format('d M Y') }}
+                      </div>
                     @endif
                   @endif
 
-                  {{-- @include('stisla.includes.forms.buttons.btn-reset') --}}
+                  @if (auth()->user()->hasRole('Prodi'))
+                    @if (isset($d) && $d->status == 0 && $d->prodi == auth()->user()->kaprodi && $can_verify)
+                      @include('stisla.includes.forms.buttons.btn-save', [
+                          'label' => 'Setujui',
+                          'icon' => 'fas fa-check-circle',
+                          'color' => 'success',
+                      ])
+                      @include('stisla.includes.forms.buttons.btn-modal-tolak', [
+                          'label' => 'Tolak',
+                          'icon' => 'fas fa-times',
+                          'color' => 'danger',
+                      ])
+                    @elseif(!$can_verify)
+                      <div class="alert alert-warning">
+                        <i class="fas fa-clock"></i> Periode verifikasi proposal:
+                        {{ \Carbon\Carbon::parse($jadwal_verifikasi->tgl_mulai)->format('d M Y') }} -
+                        {{ \Carbon\Carbon::parse($jadwal_verifikasi->tgl_selesai)->format('d M Y') }}
+                      </div>
+                    @endif
+                  @endif
                 </div>
               </div>
             </form>

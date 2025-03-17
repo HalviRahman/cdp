@@ -340,7 +340,7 @@ class ProposalController extends Controller
             $data['file_proposal'] = $this->fileService->uploadProposal($request->file('file_proposal'));
         }
         $data['tgl_upload'] = now();
-        $data['token'] = Str::random(64);
+        $data['token'] = Str::random(96);
         if (count(auth()->user()->prodi) > 1) {
             $data['prodi'] = $request->prodi; // ambil dari form request
         } else {
@@ -425,8 +425,9 @@ class ProposalController extends Controller
      * @param Proposal $proposal
      * @return Response
      */
-    public function edit(Proposal $proposal)
+    public function edit($token)
     {
+        $proposal = Proposal::where('token', $token)->first();
         $kelompoks = Kelompok::with('user')->get();
         $mahasiswas = User::where('remember_token', $proposal->id_kelompok)->get();
         $anggotas = $proposal->kelompoks->map(function ($kelompok) {
@@ -443,7 +444,7 @@ class ProposalController extends Controller
             'title' => __('Proposal'),
             'fullTitle' => __('Proposal'),
             'routeIndex' => route('proposals.index'),
-            'action' => route('proposals.update', [$proposal->id]),
+            'action' => route('proposals.update', [$proposal->token]),
             'anggota' => $this->UserRepository->getAnggotaOptions(),
             'anggotas' => $anggotas,
             'mahasiswas' => $mahasiswas,
@@ -457,8 +458,9 @@ class ProposalController extends Controller
      * @param Proposal $proposal
      * @return Response
      */
-    public function update(ProposalRequest $request, Proposal $proposal)
+    public function update(ProposalRequest $request, $token)
     {
+        $proposal = Proposal::where('token', $token)->first();
         $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi']);
 
         // Jika sedang periode pengumpulan laporan dan status = 2 (sudah diverifikasi)
@@ -479,6 +481,7 @@ class ProposalController extends Controller
             }
 
             $data['tgl_upload_laporan'] = now();
+            $data['status'] = 3;
 
             // Update data menggunakan repository
             $newData = $this->proposalRepository->update($data, $proposal->id);
@@ -489,18 +492,46 @@ class ProposalController extends Controller
             return redirect()->back()->with('successMessage', $successMessage);
         }
 
-        if ($request->hasFile('laporan_kegiatan')) {
-            $data['laporan_kegiatan'] = $this->fileService->uploadProposal($request->file('laporan_kegiatan'));
+        // Edit anggota kelompok
+        if ($request->has('anggota_email') && $proposal->status == 0) {
+            // Hapus semua anggota lama kecuali ketua
+            Kelompok::where('id_kelompok', $proposal->id_kelompok)->where('peran', 'Anggota')->delete();
+
+            // Tambah anggota baru
+            foreach ($request->anggota_email as $email) {
+                $this->kelompokRepository->create([
+                    'id_kelompok' => $proposal->id_kelompok,
+                    'anggota_email' => $email,
+                    'peran' => 'Anggota',
+                ]);
+            }
         }
-        if ($request->hasFile('laporan_perjalanan')) {
-            $data['laporan_perjalanan'] = $this->fileService->uploadProposal($request->file('laporan_perjalanan'));
+
+        // Edit mahasiswa
+        if ($request->filled('nim_mahasiswa') && $request->filled('nama_mahasiswa') && $proposal->status == 0) {
+            // Hapus data mahasiswa lama
+            User::where('remember_token', $proposal->id_kelompok)->where('is_mahasiswa', 1)->delete();
+
+            // Tambah data mahasiswa baru
+            foreach ($request->nim_mahasiswa as $key => $nim) {
+                if (!empty($nim) && !empty($request->nama_mahasiswa[$key])) {
+                    User::create([
+                        'nip' => $nim,
+                        'name' => $request->nama_mahasiswa[$key],
+                        'remember_token' => $proposal->id_kelompok,
+                        'is_mahasiswa' => 1,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
         }
-        // Cek periode pengumpulan laporan
 
         // gunakan jika ada file
-        // if ($request->hasFile('file')) {
-        //     $data['file'] = $this->fileService->methodName($request->file('file'));
-        // }
+        if ($request->hasFile('file_proposal')) {
+            $data['file_proposal'] = $this->fileService->uploadProposal($request->file('file_proposal'));
+        }
+
         $action = $request->input('action');
         if (auth()->user()->hasRole('Prodi')) {
             if ($action == 'reject') {
@@ -543,7 +574,7 @@ class ProposalController extends Controller
         // gunakan jika mau kirim email
         // $this->emailService->methodName($proposal);
 
-        $this->proposalRepository->delete($proposal->id);
+        $this->proposalRepository->delete($proposal->token);
         logDelete('Proposal', $proposal);
 
         $successMessage = successMessageDelete('Proposal');

@@ -7,9 +7,12 @@ use App\Http\Controllers\ProposalController as WebController;
 use App\Http\Middleware\ViewShare;
 
 # API
-Route::prefix('api/v1')->as('api.')->middleware(['api', EnsureAppKey::class, 'auth:api'])->group(function () {
-    Route::apiResource('proposals', ApiController::class);
-});
+Route::prefix('api/v1')
+    ->as('api.')
+    ->middleware(['api', EnsureAppKey::class, 'auth:api'])
+    ->group(function () {
+        Route::apiResource('proposals', ApiController::class);
+    });
 
 # WEB
 Route::middleware(['web', ViewShare::class, 'auth'])->group(function () {
@@ -20,5 +23,8 @@ Route::middleware(['web', ViewShare::class, 'auth'])->group(function () {
     Route::get('proposals/excel', [WebController::class, 'excel'])->name('proposals.excel');
     Route::get('proposals/import-excel-example', [WebController::class, 'importExcelExample'])->name('proposals.import-excel-example');
     Route::post('proposals/import-excel', [WebController::class, 'importExcel'])->name('proposals.import-excel');
-    Route::resource('proposals', WebController::class);
+    // Route::resource('proposals', WebController::class);
+    Route::resource('proposals', WebController::class)->parameters([
+        'proposals' => 'token',
+    ]);
 });
