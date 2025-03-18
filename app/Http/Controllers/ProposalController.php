@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ProposalController extends Controller
 {
@@ -463,8 +464,8 @@ class ProposalController extends Controller
         $proposal = Proposal::where('token', $token)->first();
         $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi']);
 
-        // Jika sedang periode pengumpulan laporan dan status = 2 (sudah diverifikasi)
-        if (($request->hasFile('laporan_kegiatan') || $request->hasFile('laporan_perjalanan')) && $proposal->status == 2) {
+        // Jika sedang periode pengumpulan laporan dan status = 3 (sudah disetujui)
+        if (($request->hasFile('laporan_kegiatan') || $request->hasFile('laporan_perjalanan')) && $proposal->status == 3) {
             $request->validate([
                 'laporan_kegiatan' => 'required|mimes:pdf|max:5120',
                 'laporan_perjalanan' => 'required|mimes:pdf|max:5120',
@@ -472,12 +473,32 @@ class ProposalController extends Controller
 
             // Upload laporan kegiatan menggunakan FileService
             if ($request->hasFile('laporan_kegiatan')) {
-                $data['laporan_kegiatan'] = $this->fileService->uploadProposal($request->file('laporan_kegiatan'));
+                if ($proposal->laporan_kegiatan) {
+                    // Ambil nama file dari URL lengkap
+                    $oldFileName = basename($proposal->laporan_kegiatan);
+                    // Bentuk path relatif untuk storage
+                    $oldPath = 'proposal/' . $oldFileName;
+
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
+                    }
+                }
+                $data['laporan_kegiatan'] = $this->fileService->uploadLaporanKegiatan($request->file('laporan_kegiatan'));
             }
 
             // Upload laporan perjalanan menggunakan FileService
             if ($request->hasFile('laporan_perjalanan')) {
-                $data['laporan_perjalanan'] = $this->fileService->uploadProposal($request->file('laporan_perjalanan'));
+                if ($proposal->laporan_perjalanan) {
+                    // Ambil nama file dari URL lengkap
+                    $oldFileName = basename($proposal->laporan_perjalanan);
+                    // Bentuk path relatif untuk storage
+                    $oldPath = 'proposal/' . $oldFileName;
+
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
+                    }
+                }
+                $data['laporan_perjalanan'] = $this->fileService->uploadLaporanPerjalanan($request->file('laporan_perjalanan'));
             }
 
             $data['tgl_upload_laporan'] = now();
@@ -533,11 +554,20 @@ class ProposalController extends Controller
         }
 
         $action = $request->input('action');
-        if (auth()->user()->hasRole('Prodi')) {
+        if (auth()->user()->hasRole('Koordinator Prodi')) {
             if ($action == 'reject') {
                 $data['status'] = '10';
             } else {
                 $data['status'] = '1';
+            }
+            $data['verifikator'] = auth()->user()->name;
+            $data['tgl_verifikasi'] = now();
+        }
+        if (auth()->user()->hasRole('Prodi')) {
+            if ($action == 'reject') {
+                $data['status'] = '10';
+            } else {
+                $data['status'] = '2';
             }
             $data['verifikator'] = auth()->user()->name;
             $data['tgl_verifikasi'] = now();

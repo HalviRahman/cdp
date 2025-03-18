@@ -214,7 +214,7 @@
                   @endif
 
                   {{-- Form verifikasi untuk prodi selama periode verifikasi --}}
-                  @if (auth()->user()->hasRole('Prodi') && isset($d) && $d->status == 0 && $can_verify)
+                  {{-- @if (auth()->user()->hasRole('Prodi') && isset($d) && $d->status == 0 && $can_verify)
                     <div class="col-md-12">
                       @include('stisla.includes.forms.editors.textarea', [
                           'required' => true,
@@ -224,7 +224,7 @@
                           'value' => old('keterangan'),
                       ])
                     </div>
-                  @endif
+                  @endif --}}
 
                   <div class="col-md-12">
                     <h6><i class="fas fa-users me-2"></i> Anggota Kelompok:</h6>
@@ -333,7 +333,7 @@
                 </div> --}}
 
                 {{-- Form upload laporan untuk dosen selama periode pengumpulan laporan --}}
-                @if (auth()->user()->hasRole('Dosen') && isset($d) && $d->status == 2 && $can_upload_laporan)
+                @if (auth()->user()->hasRole('Dosen') && isset($d) && $d->status == 3 && $can_upload_laporan)
                   <div class="col-md-12">
                     <h6 class="mb-3 mt-3"><i class="fas fa-upload me-2"></i> Upload Laporan</h6>
 
@@ -430,7 +430,7 @@
                           'float' => 'right',
                           'block' => 'btn-block',
                       ])
-                    @elseif (isset($d) && $d->status == 2 && $can_upload_laporan)
+                    @elseif (isset($d) && $d->status == 3 && $can_upload_laporan)
                       @include('stisla.includes.forms.buttons.btn-save', [
                           'label' => 'Upload Laporan',
                           'icon' => 'fas fa-upload',
@@ -438,7 +438,7 @@
                           'float' => 'right',
                           'block' => 'btn-block',
                       ])
-                    @elseif (isset($d) && !$can_upload_laporan && $d->status == 2)
+                    @elseif (isset($d) && !$can_upload_laporan && $d->status == 3)
                       <div class="alert alert-warning">
                         <i class="fas fa-clock"></i> Periode pengumpulan laporan:
                         {{ \Carbon\Carbon::parse($jadwal_laporan->tgl_mulai)->format('d M Y') }} -
@@ -447,8 +447,9 @@
                     @endif
                   @endif
 
-                  @if (auth()->user()->hasRole('Prodi'))
-                    @if (isset($d) && $d->status == 0 && $d->prodi == auth()->user()->kaprodi && $can_verify)
+                  {{-- Verifikasi oleh Koordinator Prodi --}}
+                  @if (auth()->user()->hasRole('Koordinator Prodi'))
+                    @if (isset($d) && $d->status == 0 && $can_verify)
                       @include('stisla.includes.forms.buttons.btn-save', [
                           'label' => 'Setujui',
                           'icon' => 'fas fa-check-circle',
@@ -467,6 +468,29 @@
                       </div>
                     @endif
                   @endif
+
+                  {{-- Verifikasi oleh Prodi --}}
+                  @if (auth()->user()->hasRole('Prodi'))
+                    @if (isset($d) && $d->status == 1 && $can_verify)
+                      @include('stisla.includes.forms.buttons.btn-save', [
+                          'label' => 'Setujui',
+                          'icon' => 'fas fa-check-circle',
+                          'color' => 'success',
+                      ])
+                      @include('stisla.includes.forms.buttons.btn-modal-tolak', [
+                          'label' => 'Tolak',
+                          'icon' => 'fas fa-times',
+                          'color' => 'danger',
+                      ])
+                    @elseif(!$can_verify)
+                      <div class="alert alert-warning">
+                        <i class="fas fa-clock"></i> Periode verifikasi proposal:
+                        {{ \Carbon\Carbon::parse($jadwal_verifikasi->tgl_mulai)->format('d M Y') }} -
+                        {{ \Carbon\Carbon::parse($jadwal_verifikasi->tgl_selesai)->format('d M Y') }}
+                      </div>
+                    @endif
+                  @endif
+
                 </div>
               </div>
             </form>

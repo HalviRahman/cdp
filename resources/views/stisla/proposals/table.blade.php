@@ -48,8 +48,12 @@
                   </td>
                   <td>
                     @if ($item->status == '0')
-                      <span class="badge badge-warning">Menunggu</span>
+                      <span class="badge badge-warning">Menunggu Verifikasi Koordinator Prodi</span>
                     @elseif($item->status == '1')
+                      <span class="badge badge-success">Menunggu Verifikasi Prodi</span>
+                    @elseif($item->status == '2')
+                      <span class="badge badge-success">Disetujui</span>
+                    @elseif($item->status == '3')
                       <span class="badge badge-success">Disetujui</span>
                     @elseif($item->status == '10')
                       <span class="badge badge-danger">Ditolak</span>

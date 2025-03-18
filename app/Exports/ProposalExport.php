@@ -124,8 +124,12 @@ class ProposalExport implements FromCollection, WithHeadings, WithMapping, WithT
     {
         switch ($status) {
             case '0':
-                return 'Menunggu';
+                return 'Menunggu Verifikasi Koordinator Prodi';
             case '1':
+                return 'Menunggu Verifikasi Prodi';
+            case '2':
+                return 'Disetujui';
+            case '3':
                 return 'Disetujui';
             case '10':
                 return 'Ditolak';

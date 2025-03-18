@@ -120,7 +120,7 @@ class DashboardController extends StislaController
             // $query->where('anggota_email', $userEmail)->where('peran', 'Ketua')->whereYear('created_at', now()->year);
         })
             ->where(function ($query) {
-                $query->where('status', '0')->orWhere('status', '1');
+                $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2')->orWhere('status', '3');
             })
             ->exists();
         $dataProposalDosen = Proposal::whereHas('kelompoks', function ($query) use ($userEmail) {
@@ -129,7 +129,7 @@ class DashboardController extends StislaController
         })->get();
         // dd($dataProposalDosen);
 
-        if (auth()->user()->hasRole('Prodi')) {
+        if (auth()->user()->hasRole('Prodi') || auth()->user()->hasRole('Koordinator Prodi')) {
             $tahunSekarang = date('Y');
             $userProdi = auth()->user()->prodi[0];
 
@@ -140,7 +140,7 @@ class DashboardController extends StislaController
             $existingProposals = Proposal::where('prodi', $userProdi)
                 ->whereYear('created_at', $tahunSekarang)
                 ->where(function ($query) {
-                    $query->where('status', '0')->orWhere('status', '1');
+                    $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2');
                 })
                 ->count();
             // dd($existingProposals);

@@ -69,6 +69,14 @@
         </div>
       </div>
     </div>
+    <div>
+      <a href="{{ route('proposals.excel', [
+          'tahun' => request('tahun', date('Y')),
+      ]) }}" class="btn btn-success btn-block">
+        <i class="fas fa-file-excel"></i> Export Rekap Proposal
+      </a>
+    </div>
+    <hr>
     <div class="row">
       <div class="col-12">
         <h4>Rekap Proposal Masuk per Program Studi</h4>

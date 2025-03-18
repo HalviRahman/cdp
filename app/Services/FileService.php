@@ -47,6 +47,16 @@ class FileService
         return $this->executeUpload($file, 'proposal');
     }
 
+    public function uploadLaporanKegiatan(\Illuminate\Http\UploadedFile $file)
+    {
+        return $this->executeUpload($file, 'laporan_kegiatan');
+    }
+
+    public function uploadLaporanPerjalanan(\Illuminate\Http\UploadedFile $file)
+    {
+        return $this->executeUpload($file, 'laporan_perjalanan');
+    }
+
     /**
      * execute delete from storage
      *
@@ -459,5 +469,25 @@ class FileService
         $link = 'storage/' . str_replace(storage_path('app/public/'), '', $pathToSave);
 
         return asset($link);
+    }
+
+    public function deleteOldFile($path)
+    {
+        if (!$path) {
+            return;
+        }
+
+        // Hapus 'public/' atau 'storage/' dari path jika ada
+        $path = str_replace('public/', '', $path);
+        $path = str_replace('storage/', '', $path);
+
+        if (Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+            \Log::info('File berhasil dihapus: ' . $path);
+            return true;
+        }
+
+        \Log::warning('File tidak ditemukan: ' . $path);
+        return false;
     }
 }

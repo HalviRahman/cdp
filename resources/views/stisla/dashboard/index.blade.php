@@ -99,7 +99,7 @@
       </div>
     @endif --}}
 
-    @if (auth()->user()->hasRole('Prodi'))
+    @if (auth()->user()->hasRole('Prodi') || auth()->user()->hasRole('Koordinator Prodi'))
       <div class="col-12">
         <div class="card">
           <div class="card-body">
@@ -290,7 +290,7 @@
     @endif
 
 
-    @if (auth()->user()->hasRole('Prodi'))
+    @if (auth()->user()->hasRole('Prodi') || auth()->user()->hasRole('Koordinator Prodi'))
       @if ($dataProposalDosen)
         @foreach ($dataProposalDosen as $proposal)
           <div class="col-12">
@@ -411,7 +411,7 @@
                     <p>Upload laporan kegiatan dan laporan keuangan CDP</p>
                   </div>
                   <div class="author-box-job text-center">
-                    <a href="{{ route('laporans.create') }}" class="btn btn-success mt-3">
+                    <a href="{{ route('proposals.edit', $proposal->token) }}" class="btn btn-success mt-3">
                       <i class="fa fa-upload"></i> Upload
                     </a>
                   </div>
@@ -422,7 +422,7 @@
         </div>
       @endif
     @endif
-    @if (auth()->user()->hasRole('Prodi'))
+    @if (auth()->user()->hasRole('Prodi') || auth()->user()->hasRole('Koordinator Prodi'))
       <div class="col-lg-4 col-md-4 col-sm-6 stats-card">
         <div class="card card-statistic-1">
           <div class="card-icon bg-info">
@@ -485,7 +485,7 @@
               @if ($proposal->status == '0')
                 <span class="badge badge-warning">Menunggu Verifikasi Koordinator Prodi</span>
               @elseif($proposal->status == '1')
-                <span class="badge badge-success">Menunggu Verifikasi Prodi</span>
+                <span class="badge badge-warning">Menunggu Verifikasi Prodi</span>
               @elseif($proposal->status == '2')
                 <span class="badge badge-success">Disetujui</span>
               @elseif($proposal->status == '3')
@@ -574,7 +574,7 @@
                 @if ($proposal->status == '0')
                   <td><span class="badge badge-warning">Menunggu Verifikasi Koordinator Prodi</span></td>
                 @elseif($proposal->status == '1')
-                  <td><span class="badge badge-success">Menunggu Verifikasi Prodi</span></td>
+                  <td><span class="badge badge-warning">Menunggu Verifikasi Prodi</span></td>
                 @elseif($proposal->status == '2')
                   <td><span class="badge badge-success">Disetujui</span></td>
                 @elseif($proposal->status == '3')
