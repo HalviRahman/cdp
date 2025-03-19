@@ -716,8 +716,9 @@ class ProposalController extends Controller
         ]);
     }
 
-    public function exportCompleted()
+    public function exportCompleted(Request $request)
     {
-        return Excel::download(new ProposalCompletedExport(), 'proposal-completed-' . date('Y-m-d') . '.csv');
+        $tahun = $request->get('tahun', date('Y'));
+        return Excel::download(new ProposalCompletedExport($tahun), 'proposal-completed-' . $tahun . '.csv');
     }
 }

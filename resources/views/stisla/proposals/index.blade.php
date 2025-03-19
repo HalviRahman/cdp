@@ -75,7 +75,7 @@
       ]) }}" class="btn btn-success btn-block">
         <i class="fas fa-file-excel"></i> Export Rekap Proposal
       </a>
-      <a href="{{ route('proposal.export-completed') }}" class="btn btn-info btn-block">
+      <a href="{{ route('proposal.export-completed', ['tahun' => request('tahun', date('Y'))]) }}" class="btn btn-info btn-block">
         <i class="fas fa-file-csv"></i> Export CSV Proposal
       </a>
     </div>

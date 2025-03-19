@@ -10,18 +10,26 @@ use App\Models\User;
 
 class ProposalCompletedExport implements FromCollection, WithHeadings, WithMapping
 {
+    protected $tahun;
+
+    public function __construct($tahun = null)
+    {
+        $this->tahun = $tahun ?? date('Y');
+    }
+
     public function collection()
     {
         return Proposal::with(['kelompoks.user', 'ketuaKelompok.user'])
             ->where('status', 3)
-            ->whereNotNull('laporan_kegiatan')
-            ->whereNotNull('laporan_perjalanan')
+            // ->whereNotNull('laporan_kegiatan')
+            // ->whereNotNull('laporan_perjalanan')
+            ->whereYear('created_at', $this->tahun)
             ->get();
     }
 
     public function headings(): array
     {
-        return ['NO', 'NAMA PELAKSANA', 'NIP/NIPPPK/NIM', 'JUDUL'];
+        return ['NAMA PELAKSANA', 'NIP/NIPPPK/NIM', 'JUDUL', 'PROGRAM STUDI'];
     }
 
     public function map($proposal): array
@@ -58,6 +66,7 @@ class ProposalCompletedExport implements FromCollection, WithHeadings, WithMappi
                 $allMembers->push([
                     'name' => $mhs->name,
                     'nip' => $mhs->nip,
+                    'prodi' => $mhs->prodi,
                 ]);
             });
 
@@ -66,7 +75,7 @@ class ProposalCompletedExport implements FromCollection, WithHeadings, WithMappi
 
         // Setiap anggota mendapatkan nomor dan judul yang sama
         foreach ($allMembers as $member) {
-            $rows[] = [$no, $member['name'], $member['nip'], $proposal->judul_proposal];
+            $rows[] = [$member['name'], $member['nip'], $proposal->judul_proposal, $proposal->prodi];
         }
 
         return $rows;
