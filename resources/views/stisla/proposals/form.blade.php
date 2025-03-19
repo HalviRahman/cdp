@@ -211,6 +211,33 @@
                           'hint' => 'Format File: PDF, Maksimal 5MB',
                       ])
                     </div>
+                    <div class="col-md-12 mb-3">
+                      <h6 class="mb-3"><i class="fas fa-users me-2"></i> Tambah Mahasiswa</h6>
+                      <div id="mahasiswaInputs">
+                        <div class="row mahasiswa-row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>{{ __('NIM Mahasiswa') }}</label>
+                              <input type="text" class="form-control" name="nim_mahasiswa[]" placeholder="{{ __('Masukkan NIM') }}">
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>{{ __('Nama Mahasiswa') }}</label>
+                              <input type="text" class="form-control" name="nama_mahasiswa[]" placeholder="{{ __('Masukkan Nama') }}">
+                            </div>
+                          </div>
+                          <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-danger btn-remove-mahasiswa mb-3" style="display:none;">
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-info" id="addMahasiswaBtn">
+                        <i class="fas fa-plus"></i> {{ __('Tambah Mahasiswa') }}
+                      </button>
+                    </div>
                   @endif
 
                   {{-- Form verifikasi untuk prodi selama periode verifikasi --}}
@@ -366,7 +393,8 @@
                 @endif
 
                 {{-- Tampilkan file laporan jika sudah diupload --}}
-                @if (isset($d) && ($d->laporan_kegiatan || $d->laporan_perjalanan))
+                @if (isset($d) && $d->status == 0)
+                @elseif (isset($d) && ($d->laporan_kegiatan || $d->laporan_perjalanan))
                   <div class="col-md-12">
                     <h6 class="mb-3 mt-3"><i class="fas fa-file-alt me-2"></i> File Laporan</h6>
 

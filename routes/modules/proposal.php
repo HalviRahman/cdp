@@ -27,4 +27,5 @@ Route::middleware(['web', ViewShare::class, 'auth'])->group(function () {
     Route::resource('proposals', WebController::class)->parameters([
         'proposals' => 'token',
     ]);
+    Route::get('proposal/export-completed', [WebController::class, 'exportCompleted'])->name('proposal.export-completed');
 });

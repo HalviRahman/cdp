@@ -75,6 +75,9 @@
       ]) }}" class="btn btn-success btn-block">
         <i class="fas fa-file-excel"></i> Export Rekap Proposal
       </a>
+      <a href="{{ route('proposal.export-completed') }}" class="btn btn-info btn-block">
+        <i class="fas fa-file-csv"></i> Export CSV Proposal
+      </a>
     </div>
     <hr>
     <div class="row">

@@ -9,7 +9,6 @@ Route::middleware([
     // 'auth'
     ViewShare::class,
 ])->group(function () {
-
     # DASHBOARD
     Route::get('/', [DashboardController::class, 'home'])->name('home');
 

@@ -9,8 +9,8 @@
 
   <div class="section-body">
 
-    <h2 class="section-title">{{ $fullTitle }}</h2>
-    <p class="section-lead">{{ __('Merupakan halaman yang menampilkan form ' . $title) }}.</p>
+    <h2 class="section-title">Jadwal CDP</h2>
+    {{-- <p class="section-lead">{{ __('Merupakan halaman yang menampilkan form ' . $title) }}.</p> --}}
 
     {{-- gunakan jika ingin menampilkan sesuatu informasi --}}
     {{-- <div class="alert alert-info alert-has-icon">
@@ -36,16 +36,32 @@
               @endisset
 
               <div class="row">
-				<div class="col-md-6">
-                  @include('stisla.includes.forms.inputs.input', ['required'=>true, 'type'=>'date', 'id'=>'tgl_mulai', 'name'=>'tgl_mulai', 'label'=>__('Tanggal Mulai')])
+                <div class="col-md-6">
+                  @include('stisla.includes.forms.inputs.input', ['required' => true, 'type' => 'date', 'id' => 'tgl_mulai', 'name' => 'tgl_mulai', 'label' => __('Tanggal Mulai')])
                 </div>
 
-				<div class="col-md-6">
-                  @include('stisla.includes.forms.inputs.input', ['required'=>true, 'type'=>'date', 'id'=>'tgl_selesai', 'name'=>'tgl_selesai', 'label'=>__('Tanggal Selesai')])
+                <div class="col-md-6">
+                  @include('stisla.includes.forms.inputs.input', ['required' => true, 'type' => 'date', 'id' => 'tgl_selesai', 'name' => 'tgl_selesai', 'label' => __('Tanggal Selesai')])
                 </div>
 
-				<div class="col-md-6">
-                  @include('stisla.includes.forms.inputs.input', ['required'=>true, 'type'=>'text', 'id'=>'keterangan', 'name'=>'keterangan', 'label'=>__('Kegiatan')])
+                <div class="col-md-12">
+                  @include('stisla.includes.forms.selects.select', [
+                      'required' => true,
+                      'type' => 'text',
+                      'id' => 'keterangan',
+                      'name' => 'keterangan',
+                      'label' => __('Kegiatan'),
+                      'options' => [
+                          'Sosialisasi' => 'Sosialisasi',
+                          'Pengajuan Proposal' => 'Pengajuan Proposal',
+                          'Verifikasi Proposal' => 'Verifikasi Proposal',
+                          'Penerbitan SK' => 'Penerbitan SK',
+                          'Pelaksanaan Pengabdian' => 'Pelaksanaan Pengabdian',
+                          'Pengumpulan Laporan' => 'Pengumpulan Laporan',
+                          'Review Laporan' => 'Review Laporan',
+                          'Proses Pencairan' => 'Proses Pencairan',
+                      ],
+                  ])
                 </div>
 
 
@@ -70,9 +86,7 @@
 @endsection
 
 @push('css')
-
 @endpush
 
 @push('js')
-
 @endpush

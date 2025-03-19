@@ -9,8 +9,8 @@
 
   <div class="section-body">
 
-    <h2 class="section-title">{{ $fullTitle }}</h2>
-    <p class="section-lead">{{ __('Merupakan halaman yang menampilkan form ' . $title) }}.</p>
+    <h2 class="section-title">Kelompok</h2>
+    {{-- <p class="section-lead">{{ __('Merupakan halaman yang menampilkan form ' . $title) }}.</p> --}}
 
     {{-- gunakan jika ingin menampilkan sesuatu informasi --}}
     {{-- <div class="alert alert-info alert-has-icon">

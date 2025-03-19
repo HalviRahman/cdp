@@ -14,6 +14,8 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Font;
+use App\Models\User;
 
 class ProposalExport implements FromCollection, WithHeadings, WithMapping, WithTitle, WithStyles, ShouldAutoSize
 {
@@ -38,20 +40,20 @@ class ProposalExport implements FromCollection, WithHeadings, WithMapping, WithT
 
     public function headings(): array
     {
-        return [['Detail Pendaftaran - SIM-CDP'], ['Program Studi: ' . $this->prodi], ['No', 'Tanggal Upload', 'Judul Proposal', 'Ketua', 'Program Studi', 'Status Prodi']];
+        return [['Detail Pendaftaran - SIM-CDP'], ['Program Studi: ' . $this->prodi], ['No', 'Tanggal Upload', 'Judul Proposal', 'Ketua', 'Anggota', 'Program Studi', 'Status Prodi', 'File Proposal', 'Laporan Kegiatan', 'Laporan Perjalanan']];
     }
 
     public function styles(Worksheet $sheet)
     {
         // Merge cells untuk judul
-        $sheet->mergeCells('A1:F1');
-        $sheet->mergeCells('A2:F2');
+        $sheet->mergeCells('A1:J1');
+        $sheet->mergeCells('A2:J2');
 
         // Dapatkan jumlah baris data
         $dataCount = $this->proposals->count() + 3; // +3 untuk header rows
 
         // Tambahkan border untuk seluruh data
-        $sheet->getStyle('A1:F' . $dataCount)->applyFromArray([
+        $sheet->getStyle('A1:J' . $dataCount)->applyFromArray([
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
@@ -59,6 +61,14 @@ class ProposalExport implements FromCollection, WithHeadings, WithMapping, WithT
                 ],
             ],
         ]);
+
+        // Style untuk hyperlink
+        $hyperlinkStyle = [
+            'font' => [
+                'color' => ['rgb' => '0000FF'], // Warna biru
+                'underline' => Font::UNDERLINE_SINGLE,
+            ],
+        ];
 
         return [
             1 => [
@@ -109,6 +119,10 @@ class ProposalExport implements FromCollection, WithHeadings, WithMapping, WithT
             'D' => ['width' => 20],
             'E' => ['width' => 20],
             'F' => ['width' => 15],
+            'G' => ['width' => 15],
+            'H' => ['width' => 20],
+            'I' => ['width' => 20],
+            'J' => ['width' => 20],
         ];
     }
 
@@ -117,7 +131,21 @@ class ProposalExport implements FromCollection, WithHeadings, WithMapping, WithT
         static $no = 0;
         $no++;
 
-        return [$no, $proposal->created_at->format('d M Y'), $proposal->judul_proposal, $proposal->ketuaKelompok->user->name, $proposal->prodi, $this->getStatus($proposal->status)];
+        // Ambil nama-nama anggota dosen
+        $anggotaNames = $proposal->kelompoks->where('peran', 'Anggota')->pluck('user.name')->filter();
+
+        // Ambil mahasiswa dengan NIP dan nama
+        $mahasiswaNames = User::where('remember_token', $proposal->id_kelompok)
+            ->where('is_mahasiswa', 1)
+            ->get()
+            ->map(function ($mhs) {
+                return $mhs->nip . ' - ' . $mhs->name;
+            });
+
+        // Gabungkan anggota dosen dan mahasiswa
+        $allAnggota = $anggotaNames->concat($mahasiswaNames)->implode(', ');
+
+        return [$no, $proposal->created_at->format('d M Y'), $proposal->judul_proposal, $proposal->ketuaKelompok->user->name, $allAnggota ?: '-', $proposal->prodi, $this->getStatus($proposal->status), $proposal->file_proposal ? '=HYPERLINK("' . $proposal->file_proposal . '", "Lihat")' : '-', $proposal->laporan_kegiatan ? '=HYPERLINK("' . $proposal->laporan_kegiatan . '", "Lihat")' : '-', $proposal->laporan_perjalanan ? '=HYPERLINK("' . $proposal->laporan_perjalanan . '", "Lihat")' : '-'];
     }
 
     private function getStatus($status)
@@ -136,5 +164,17 @@ class ProposalExport implements FromCollection, WithHeadings, WithMapping, WithT
             default:
                 return 'Unknown';
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function columnFormats(): array
+    {
+        return [
+            'H' => 'HYPERLINK',
+            'I' => 'HYPERLINK',
+            'J' => 'HYPERLINK',
+        ];
     }
 }

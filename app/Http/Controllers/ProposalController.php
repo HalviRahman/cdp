@@ -22,6 +22,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Exports\ProposalCompletedExport;
 
 class ProposalController extends Controller
 {
@@ -713,5 +714,10 @@ class ProposalController extends Controller
             'data' => $data,
             'isPrint' => true,
         ]);
+    }
+
+    public function exportCompleted()
+    {
+        return Excel::download(new ProposalCompletedExport(), 'proposal-completed-' . date('Y-m-d') . '.csv');
     }
 }
