@@ -104,14 +104,16 @@ class ProposalController extends Controller
      */
     public function index(Request $request)
     {
-        if (auth()->user()->hasRole('Keuangan')) {
+        $user = auth()->user();
+
+        if ($user->hasRole('Keuangan')) {
             return redirect()->route('dashboard.index');
         }
-        if (auth()->user()->hasRole('Fakultas')) {
+        if ($user->hasRole('Fakultas') || $user->hasRole('Prodi')) {
             // Hitung total proposal masuk
             $proposalMasuk = Proposal::whereYear('created_at', request('tahun', date('Y')))
                 ->where(function ($query) {
-                    $query->where('status', '0')->orWhere('status', '1');
+                    $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2')->orWhere('status', '3');
                 })
                 ->count();
 
@@ -144,8 +146,7 @@ class ProposalController extends Controller
                 )
                 ->get();
         }
-        // dd($programStudi);
-        $user = auth()->user();
+
         if ($user->hasRole('Dosen')) {
             $tahunSekarang = date('Y');
             // Cek apakah user sudah terdaftar sebagai anggota di kelompok manapun
@@ -167,15 +168,18 @@ class ProposalController extends Controller
 
             // Cek setiap prodi yang diampu user
             foreach (auth()->user()->prodi as $userProdi) {
+                $namaProdi = explode(' ', $userProdi, 2)[1];
+                $jenjang = explode(' ', $userProdi)[0];
+
                 // Cek kuota di program studi
-                $programStudis = ProgramStudi::where('nama_prodi', explode(' ', $userProdi, 2)[1])->where('jenjang', explode(' ', $userProdi)[0])->where('tahun', $tahunSekarang)->first();
+                $programStudis = ProgramStudi::where('nama_prodi', $namaProdi)->where('jenjang', $jenjang)->where('tahun', $tahunSekarang)->first();
 
                 if ($programStudis) {
                     // Hitung jumlah proposal yang sudah ada
                     $existingProposals = Proposal::where('prodi', $userProdi)
                         ->whereYear('created_at', $tahunSekarang)
                         ->where(function ($query) {
-                            $query->where('status', '0')->orWhere('status', '1');
+                            $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2')->orWhere('status', '3');
                         })
                         ->count();
 
@@ -273,20 +277,21 @@ class ProposalController extends Controller
         // Siapkan array untuk menyimpan prodi yang masih available
         $availableProdi = [];
 
-        // Cek setiap prodi yang diampu user
         foreach (auth()->user()->prodi as $userProdi) {
             // Cek kuota di program studi
-            $programStudis = ProgramStudi::where('nama_prodi', explode(' ', $userProdi, 2)[1])->where('jenjang', explode(' ', $userProdi)[0])->where('tahun', $tahunSekarang)->first();
-
+            // $userProdi = trim($userProdi);
+            $namaProdi = explode(' ', $userProdi, 2)[1];
+            $jenjang = explode(' ', $userProdi)[0];
+            $programStudis = ProgramStudi::where('nama_prodi', $namaProdi)->where('jenjang', $jenjang)->where('tahun', $tahunSekarang)->first();
             if ($programStudis) {
                 // Hitung jumlah proposal yang sudah ada
                 $existingProposals = Proposal::where('prodi', $userProdi)
                     ->whereYear('created_at', $tahunSekarang)
                     ->where(function ($query) {
-                        $query->where('status', '0')->orWhere('status', '1');
+                        $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2')->orWhere('status', '3');
                     })
                     ->count();
-
+                // dd($existingProposals);
                 // Jika masih ada kuota, tambahkan ke array available
                 if ($existingProposals < $programStudis->kuota) {
                     $availableProdi[$userProdi] = [
@@ -296,6 +301,7 @@ class ProposalController extends Controller
                 }
             }
         }
+        // dd($availableProdi[auth()->user()->prodi[1]]);
 
         // Cek apakah dosen sudah menjadi ketua
         $isKetuaExist = Kelompok::where('anggota_email', auth()->user()->email)
@@ -316,6 +322,9 @@ class ProposalController extends Controller
                 ->route('dashboard.index')
                 ->with('errorMessage', 'Tidak ada prodi yang memiliki kuota tersedia untuk tahun ' . $tahunSekarang);
         }
+        // foreach ($availableProdi as $key => $value) {
+        //     dd($key, $value);
+        // }
 
         return view('stisla.proposals.form', [
             'title' => __('Proposal'),
@@ -362,22 +371,6 @@ class ProposalController extends Controller
 
         $data['id_kelompok'] = $idKelompok;
 
-        // Cek apakah ada input mahasiswa
-        if ($request->filled('nim_mahasiswa') && $request->filled('nama_mahasiswa')) {
-            foreach ($request->nim_mahasiswa as $key => $nim) {
-                // Pastikan NIM dan nama tidak kosong
-                if (!empty($nim) && !empty($request->nama_mahasiswa[$key])) {
-                    User::create([
-                        'nip' => $nim,
-                        'name' => $request->nama_mahasiswa[$key],
-                        'remember_token' => $idKelompok, // atau ID yang relevan
-                        'is_mahasiswa' => 1,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                }
-            }
-        }
         $result = $this->proposalRepository->create($data);
         // foreach ($request->nim_mahasiswa as $key => $nim) {
         //     User::create([
@@ -403,6 +396,22 @@ class ProposalController extends Controller
             ]);
         }
 
+        // Cek apakah ada input mahasiswa
+        if ($request->filled('nim_mahasiswa') && $request->filled('nama_mahasiswa')) {
+            foreach ($request->nim_mahasiswa as $key => $nim) {
+                // Pastikan NIM dan nama tidak kosong
+                if (!empty($nim) && !empty($request->nama_mahasiswa[$key])) {
+                    User::create([
+                        'nip' => $nim,
+                        'name' => $request->nama_mahasiswa[$key],
+                        'remember_token' => $idKelompok, // atau ID yang relevan
+                        'is_mahasiswa' => 1,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        }
         // use this if you want to create notification data
         // $title = 'Notify Title';
         // $content = 'lorem ipsum dolor sit amet';
@@ -465,8 +474,8 @@ class ProposalController extends Controller
         $proposal = Proposal::where('token', $token)->first();
         $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi']);
 
-        // Jika sedang periode pengumpulan laporan dan status = 3 (sudah disetujui)
-        if (($request->hasFile('laporan_kegiatan') || $request->hasFile('laporan_perjalanan')) && $proposal->status == 3) {
+        // Jika sedang periode pengumpulan laporan dan status = 2 (sudah disetujui)
+        if (($request->hasFile('laporan_kegiatan') || $request->hasFile('laporan_perjalanan')) && $proposal->status == 2) {
             $request->validate([
                 'laporan_kegiatan' => 'required|mimes:pdf|max:5120',
                 'laporan_perjalanan' => 'required|mimes:pdf|max:5120',
@@ -503,7 +512,7 @@ class ProposalController extends Controller
             }
 
             $data['tgl_upload_laporan'] = now();
-            $data['status'] = 3;
+            // $data['status'] = 3;
 
             // Update data menggunakan repository
             $newData = $this->proposalRepository->update($data, $proposal->id);
@@ -553,9 +562,9 @@ class ProposalController extends Controller
         if ($request->hasFile('file_proposal')) {
             $data['file_proposal'] = $this->fileService->uploadProposal($request->file('file_proposal'));
         }
-
+        // dd(auth()->user()->prodi, $proposal->prodi);
         $action = $request->input('action');
-        if (auth()->user()->hasRole('Koordinator Prodi')) {
+        if (auth()->user()->hasRole('Koordinator Prodi') && in_array($proposal->prodi, auth()->user()->prodi)) {
             if ($action == 'reject') {
                 $data['status'] = '10';
             } else {
@@ -564,7 +573,7 @@ class ProposalController extends Controller
             $data['verifikator'] = auth()->user()->name;
             $data['tgl_verifikasi'] = now();
         }
-        if (auth()->user()->hasRole('Prodi')) {
+        if (auth()->user()->hasRole('Prodi') && auth()->user()->kaprodi == $proposal->prodi) {
             if ($action == 'reject') {
                 $data['status'] = '10';
             } else {

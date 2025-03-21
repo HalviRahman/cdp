@@ -360,7 +360,7 @@
                 </div> --}}
 
                 {{-- Form upload laporan untuk dosen selama periode pengumpulan laporan --}}
-                @if (auth()->user()->hasRole('Dosen') && isset($d) && $d->status == 3 && $can_upload_laporan)
+                @if (auth()->user()->hasRole('Dosen') && isset($d) && $d->status == 2 && $can_upload_laporan)
                   <div class="col-md-12">
                     <h6 class="mb-3 mt-3"><i class="fas fa-upload me-2"></i> Upload Laporan</h6>
 
@@ -458,7 +458,7 @@
                           'float' => 'right',
                           'block' => 'btn-block',
                       ])
-                    @elseif (isset($d) && $d->status == 3 && $can_upload_laporan)
+                    @elseif (isset($d) && $d->status == 2 && $can_upload_laporan)
                       @include('stisla.includes.forms.buttons.btn-save', [
                           'label' => 'Upload Laporan',
                           'icon' => 'fas fa-upload',
@@ -466,7 +466,7 @@
                           'float' => 'right',
                           'block' => 'btn-block',
                       ])
-                    @elseif (isset($d) && !$can_upload_laporan && $d->status == 3)
+                    @elseif (isset($d) && !$can_upload_laporan && $d->status == 2)
                       <div class="alert alert-warning">
                         <i class="fas fa-clock"></i> Periode pengumpulan laporan:
                         {{ \Carbon\Carbon::parse($jadwal_laporan->tgl_mulai)->format('d M Y') }} -
@@ -498,7 +498,7 @@
                   @endif
 
                   {{-- Verifikasi oleh Prodi --}}
-                  @if (auth()->user()->hasRole('Prodi'))
+                  @if (auth()->user()->hasRole('Prodi') && auth()->user()->kaprodi == $d->prodi)
                     @if (isset($d) && $d->status == 1 && $can_verify)
                       @include('stisla.includes.forms.buttons.btn-save', [
                           'label' => 'Setujui',

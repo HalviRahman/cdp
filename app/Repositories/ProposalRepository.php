@@ -35,11 +35,17 @@ class ProposalRepository extends Repository
         $tahun = request('tahun', date('Y'));
 
         $query->whereYear('tgl_upload', $tahun);
-        $query->where(function ($q) use ($user) {
-            $q->where('prodi', $user->kaprodi);
-            $q->orWhere('prodi', $user->prodi);
-            // $q->orWhere('prodi', $user->prodi);
-        });
+        if ($user->hasRole('Prodi')) {
+            $query->where(function ($q) use ($user) {
+                $q->where('prodi', $user->kaprodi);
+                // $q->orWhere('prodi', $user->prodi);
+            });
+        }
+        if ($user->hasRole('Koordinator Prodi')) {
+            $query->where(function ($q) use ($user) {
+                $q->where('prodi', $user->prodi);
+            });
+        }
         // $query->where('prodi', $user->prodi);
         // $query->orWhere('prodi', $user->kaprodi);
 

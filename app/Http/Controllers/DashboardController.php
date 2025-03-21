@@ -120,7 +120,7 @@ class DashboardController extends StislaController
             // $query->where('anggota_email', $userEmail)->where('peran', 'Ketua')->whereYear('created_at', now()->year);
         })
             ->where(function ($query) {
-                $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2')->orWhere('status', '3');
+                $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2');
             })
             ->exists();
         $dataProposalDosen = Proposal::whereHas('kelompoks', function ($query) use ($userEmail) {
@@ -131,7 +131,11 @@ class DashboardController extends StislaController
 
         if (auth()->user()->hasRole('Prodi') || auth()->user()->hasRole('Koordinator Prodi')) {
             $tahunSekarang = date('Y');
-            $userProdi = auth()->user()->prodi[0];
+            if (auth()->user()->hasRole('Koordinator Prodi')) {
+                $userProdi = auth()->user()->prodi[0];
+            } else {
+                $userProdi = auth()->user()->kaprodi;
+            }
 
             // Ambil data program studi
             $programStudi = ProgramStudi::where('nama_prodi', explode(' ', $userProdi, 2)[1])->where('jenjang', explode(' ', $userProdi)[0])->where('tahun', $tahunSekarang)->first();

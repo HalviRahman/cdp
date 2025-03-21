@@ -327,8 +327,9 @@
           </div>
         @endforeach
       @endif
-    @endif
-    @if (auth()->user()->hasRole('Dosen'))
+      {{-- @endif --}}
+      {{-- sebelumnya pakai if --}}
+    @elseif (auth()->user()->hasRole('Dosen'))
       @if ($dataProposalDosen)
         @foreach ($dataProposalDosen as $proposal)
           <div class="col-12">
