@@ -201,7 +201,10 @@ class UserRepository extends Repository
      */
     public function getRoleOptions()
     {
-        return $this->getRoles()->pluck('name', 'id')->toArray();
+        return $this->getRoles()
+            ->whereNotIn('name', ['superadmin', 'user', 'admin'])
+            ->pluck('name', 'id')
+            ->toArray();
     }
 
     /**

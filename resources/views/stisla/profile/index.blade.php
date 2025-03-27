@@ -98,12 +98,12 @@
               @method('PUT')
               @csrf
               <div class="row">
-                @if ($user->twitter_id)
+                {{-- @if ($user->twitter_id)
                   <div class="col-md-6">
                     @include('stisla.includes.forms.inputs.input', ['value' => $user->twitter_id, 'label' => 'Twitter ID', 'disabled' => true])
                   </div>
-                @endif
-                <div class="col-md-6">
+                @endif --}}
+                <div class="col-md-12">
                   @include('stisla.includes.forms.inputs.input-email', ['value' => $user->email, 'disabled' => true])
                 </div>
                 {{-- <div class="col-md-12">
@@ -117,9 +117,9 @@
         </form>
       </div>
 
-      <div class="col-12">
-        {{-- <h2 class="section-title">{{ __('Perbarui Password') }}</h2>
-        <p class="section-lead">{{ __('Perbarui kapan saja password anda di halaman ini') }}.</p> --}}
+      {{-- <div class="col-12">
+        <h2 class="section-title">{{ __('Perbarui Password') }}</h2>
+        <p class="section-lead">{{ __('Perbarui kapan saja password anda di halaman ini') }}.</p>
         <div class="alert alert-{{ $totalDay > 30 ? 'danger' : 'info' }} alert-has-icon">
           <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
           <div class="alert-body">
@@ -158,7 +158,7 @@
           </div>
 
         </form>
-      </div>
+      </div> --}}
     </div>
   </div>
 @endsection

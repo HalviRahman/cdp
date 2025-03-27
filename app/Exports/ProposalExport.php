@@ -40,20 +40,20 @@ class ProposalExport implements FromCollection, WithHeadings, WithMapping, WithT
 
     public function headings(): array
     {
-        return [['Detail Pendaftaran - SIM-CDP'], ['Program Studi: ' . $this->prodi], ['No', 'Tanggal Upload', 'Judul Proposal', 'Ketua', 'Anggota', 'Program Studi', 'Status Prodi', 'File Proposal', 'Laporan Kegiatan', 'Laporan Perjalanan']];
+        return [['Detail Pendaftaran - SIM-CDP'], ['Program Studi: ' . $this->prodi], ['No', 'Judul Proposal', 'Ketua', 'Anggota', 'Program Studi', 'Status Prodi', 'File Proposal', 'Laporan Kegiatan', 'Laporan Perjalanan']];
     }
 
     public function styles(Worksheet $sheet)
     {
         // Merge cells untuk judul
-        $sheet->mergeCells('A1:J1');
-        $sheet->mergeCells('A2:J2');
+        $sheet->mergeCells('A1:I1');
+        $sheet->mergeCells('A2:I2');
 
         // Dapatkan jumlah baris data
         $dataCount = $this->proposals->count() + 3; // +3 untuk header rows
 
         // Tambahkan border untuk seluruh data
-        $sheet->getStyle('A1:J' . $dataCount)->applyFromArray([
+        $sheet->getStyle('A1:I' . $dataCount)->applyFromArray([
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
@@ -114,7 +114,7 @@ class ProposalExport implements FromCollection, WithHeadings, WithMapping, WithT
                 ],
             ],
             'A' => ['width' => 5],
-            'B' => ['width' => 15],
+            'B' => ['width' => 50],
             'C' => ['width' => 50],
             'D' => ['width' => 20],
             'E' => ['width' => 20],
@@ -122,7 +122,6 @@ class ProposalExport implements FromCollection, WithHeadings, WithMapping, WithT
             'G' => ['width' => 15],
             'H' => ['width' => 20],
             'I' => ['width' => 20],
-            'J' => ['width' => 20],
         ];
     }
 
@@ -145,7 +144,7 @@ class ProposalExport implements FromCollection, WithHeadings, WithMapping, WithT
         // Gabungkan anggota dosen dan mahasiswa
         $allAnggota = $anggotaNames->concat($mahasiswaNames)->implode(', ');
 
-        return [$no, $proposal->created_at->format('d M Y'), $proposal->judul_proposal, $proposal->ketuaKelompok->user->name, $allAnggota ?: '-', $proposal->prodi, $this->getStatus($proposal->status), $proposal->file_proposal ? '=HYPERLINK("' . $proposal->file_proposal . '", "Lihat")' : '-', $proposal->laporan_kegiatan ? '=HYPERLINK("' . $proposal->laporan_kegiatan . '", "Lihat")' : '-', $proposal->laporan_perjalanan ? '=HYPERLINK("' . $proposal->laporan_perjalanan . '", "Lihat")' : '-'];
+        return [$no, $proposal->judul_proposal, $proposal->ketuaKelompok->user->name, $allAnggota ?: '-', $proposal->prodi, $this->getStatus($proposal->status), $proposal->file_proposal ? '=HYPERLINK("' . $proposal->file_proposal . '", "Lihat")' : '-', $proposal->laporan_kegiatan ? '=HYPERLINK("' . $proposal->laporan_kegiatan . '", "Lihat")' : '-', $proposal->laporan_perjalanan ? '=HYPERLINK("' . $proposal->laporan_perjalanan . '", "Lihat")' : '-'];
     }
 
     private function getStatus($status)
@@ -172,9 +171,9 @@ class ProposalExport implements FromCollection, WithHeadings, WithMapping, WithT
     public function columnFormats(): array
     {
         return [
+            'G' => 'HYPERLINK',
             'H' => 'HYPERLINK',
             'I' => 'HYPERLINK',
-            'J' => 'HYPERLINK',
         ];
     }
 }

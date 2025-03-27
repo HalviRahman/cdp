@@ -533,64 +533,65 @@
         </form>
       </div>
     </div>
-    <div class="card">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5>Daftar Pengajuan CDP (Community Development Program)</h5>
-          <a href="{{ route('proposals.excel', [
-              'tahun' => request('tahun', date('Y')),
-          ]) }}" class="btn btn-success">
-            <i class="fas fa-file-excel"></i> Export Excel
-          </a>
-        </div>
-        <table class="table table-striped table-hovered">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Nama Ketua</th>
-              <th>Program Studi</th>
-              <th>Judul Proposal</th>
-              <th>Proposal CDP</th>
-              <th>Laporan Kegiatan</th>
-              <th>Laporan Keuangan</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach ($dataProposalKeuangan as $proposal)
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5>Daftar Pengajuan CDP (Community Development Program)</h5>
+            <a href="{{ route('proposals.excel', [
+                'tahun' => request('tahun', date('Y')),
+            ]) }}" class="btn btn-success">
+              <i class="fas fa-file-excel"></i> Export Excel
+            </a>
+          </div>
+          <table class="table table-striped table-hovered">
+            <thead>
               <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $proposal->ketuaKelompok->user->name }}</td>
-                <td>{{ implode('; ', $proposal->ketuaKelompok->user->prodi) }}</td>
-                <td>{{ $proposal->judul_proposal }}</td>
-                <td><a href="{{ $proposal->file_proposal }}" class="btn btn-outline-info" target="_blank"><i class="fa fa-file-pdf"></i> Unduh</a></td>
-                @if ($proposal->laporan_kegiatan)
-                  <td><a href="{{ $proposal->laporan_kegiatan }}" class="btn btn-outline-info" target="_blank"><i class="fa fa-file-pdf"></i> Unduh</a></td>
-                @else
-                  <td><span class="badge badge-warning">Menunggu</span></td>
-                @endif
-                @if ($proposal->laporan_keuangan)
-                  <td><a href="{{ $proposal->laporan_keuangan }}" class="btn btn-outline-info" target="_blank"><i class="fa fa-file-pdf"></i> Unduh</a></td>
-                @else
-                  <td><span class="badge badge-warning">Menunggu</span></td>
-                @endif
-                @if ($proposal->status == '0')
-                  <td><span class="badge badge-warning">Menunggu Verifikasi Koordinator Prodi</span></td>
-                @elseif($proposal->status == '1')
-                  <td><span class="badge badge-warning">Menunggu Verifikasi Prodi</span></td>
-                @elseif($proposal->status == '2')
-                  <td><span class="badge badge-success">Disetujui</span></td>
-                @elseif($proposal->status == '3')
-                  <td><span class="badge badge-success">Disetujui</span></td>
-                @elseif($proposal->status == '10')
-                  <td><span class="badge badge-danger">Ditolak</span></td>
-                @endif
+                <th>No</th>
+                <th>Nama Ketua</th>
+                <th>Program Studi</th>
+                <th>Judul Proposal</th>
+                <th>Proposal CDP</th>
+                <th>Laporan Kegiatan</th>
+                <th>Laporan Keuangan</th>
+                <th>Status</th>
               </tr>
-            @endforeach
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @foreach ($dataProposalKeuangan as $proposal)
+                <tr>
+                  <td>{{ $loop->iteration }}</td>
+                  <td>{{ $proposal->ketuaKelompok->user->name }}</td>
+                  <td>{{ implode('; ', $proposal->ketuaKelompok->user->prodi) }}</td>
+                  <td>{{ $proposal->judul_proposal }}</td>
+                  <td><a href="{{ $proposal->file_proposal }}" class="btn btn-outline-info" target="_blank"><i class="fa fa-file-pdf"></i> Unduh</a></td>
+                  @if ($proposal->laporan_kegiatan)
+                    <td><a href="{{ $proposal->laporan_kegiatan }}" class="btn btn-outline-info" target="_blank"><i class="fa fa-file-pdf"></i> Unduh</a></td>
+                  @else
+                    <td><span class="badge badge-warning">Menunggu</span></td>
+                  @endif
+                  @if ($proposal->laporan_keuangan)
+                    <td><a href="{{ $proposal->laporan_keuangan }}" class="btn btn-outline-info" target="_blank"><i class="fa fa-file-pdf"></i> Unduh</a></td>
+                  @else
+                    <td><span class="badge badge-warning">Menunggu</span></td>
+                  @endif
+                  @if ($proposal->status == '0')
+                    <td><span class="badge badge-warning">Menunggu Verifikasi Koordinator Prodi</span></td>
+                  @elseif($proposal->status == '1')
+                    <td><span class="badge badge-warning">Menunggu Verifikasi Prodi</span></td>
+                  @elseif($proposal->status == '2')
+                    <td><span class="badge badge-success">Disetujui</span></td>
+                  @elseif($proposal->status == '3')
+                    <td><span class="badge badge-success">Disetujui</span></td>
+                  @elseif($proposal->status == '10')
+                    <td><span class="badge badge-danger">Ditolak</span></td>
+                  @endif
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
   @endif
 
   {{-- <div class="col-12"> --}}
