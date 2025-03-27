@@ -15,6 +15,8 @@ use Spatie\Permission\Models\Role;
 use App\Models\Proposal;
 use App\Repositories\ProposalRepository;
 use App\Models\ProgramStudi;
+use App\Models\Jadwal;
+use Carbon\Carbon;
 
 class DashboardController extends StislaController
 {
@@ -115,6 +117,8 @@ class DashboardController extends StislaController
         $logs = $this->activityLogRepository->getMineLatest();
 
         $userEmail = auth()->user()->email;
+        // Cek jadwal pengajuan proposal
+        $jadwalPengajuan = Jadwal::where('keterangan', 'Pengajuan Proposal')->where('tgl_mulai', '<=', now())->where('tgl_selesai', '>=', now())->exists();
         $hasProposal = Proposal::whereHas('kelompoks', function ($query) use ($userEmail) {
             $query->where('anggota_email', $userEmail)->whereYear('created_at', now()->year);
             // $query->where('anggota_email', $userEmail)->where('peran', 'Ketua')->whereYear('created_at', now()->year);
@@ -123,6 +127,26 @@ class DashboardController extends StislaController
                 $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2');
             })
             ->exists();
+
+        // $canCreateProposal = $hasProposal || $jadwalPengajuan;
+        // if (!$jadwalPengajuan) {
+        //     // Ambil jadwal pengajuan untuk mendapatkan tanggal
+        //     $jadwalInfo = Jadwal::where('keterangan', 'Pengajuan Proposal')->first();
+
+        //     if ($jadwalInfo) {
+        //         $tglMulai = Carbon::parse($jadwalInfo->tgl_mulai)->format('d M Y');
+        //         $tglSelesai = Carbon::parse($jadwalInfo->tgl_selesai)->format('d M Y');
+        //         return redirect()
+        //             ->back()
+        //             ->with('errorMessage', "Pengajuan proposal hanya dapat dilakukan pada tanggal $tglMulai sampai $tglSelesai");
+        //     } else {
+        //         return redirect()->route('dashboard')->with('errorMessage', 'Jadwal pengajuan proposal belum ditentukan');
+        //     }
+        // }
+
+        // if ($hasProposal) {
+        //     return redirect()->back()->with('errorMessage', 'Anda sudah memiliki proposal yang aktif di tahun ini');
+        // }
         $dataProposalDosen = Proposal::whereHas('kelompoks', function ($query) use ($userEmail) {
             $tahun = request('tahun', date('Y'));
             $query->where('anggota_email', $userEmail)->whereYear('tgl_upload', $tahun);
@@ -164,6 +188,7 @@ class DashboardController extends StislaController
             'dataProposalKeuangan' => $this->proposalRepository->getFilterTahun(),
             'dataProposalDosen' => $dataProposalDosen,
             'hasProposal' => $hasProposal,
+            'jadwalPengajuan' => $jadwalPengajuan,
             'sisaKuota' => $sisaKuota ?? 0,
         ]);
     }

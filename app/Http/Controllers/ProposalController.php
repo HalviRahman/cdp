@@ -23,6 +23,8 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Exports\ProposalCompletedExport;
+use App\Models\Jadwal;
+use Carbon\Carbon;
 
 class ProposalController extends Controller
 {
@@ -148,6 +150,38 @@ class ProposalController extends Controller
         }
 
         if ($user->hasRole('Dosen')) {
+            // Cek Jadwal Pengajuan Proposal
+            $userEmail = auth()->user()->email;
+            $jadwalPengajuan = Jadwal::where('keterangan', 'Pengajuan Proposal')->where('tgl_mulai', '<=', now())->where('tgl_selesai', '>=', now())->exists();
+            $hasProposal = Proposal::whereHas('kelompoks', function ($query) use ($userEmail) {
+                $query->where('anggota_email', $userEmail)->whereYear('created_at', now()->year);
+                // $query->where('anggota_email', $userEmail)->where('peran', 'Ketua')->whereYear('created_at', now()->year);
+            })
+                ->where(function ($query) {
+                    $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2');
+                })
+                ->exists();
+
+            if (!$jadwalPengajuan) {
+                // Ambil jadwal pengajuan untuk mendapatkan tanggal
+                $jadwalInfo = Jadwal::where('keterangan', 'Pengajuan Proposal')->first();
+
+                if ($jadwalInfo) {
+                    $tglMulai = Carbon::parse($jadwalInfo->tgl_mulai)->format('d M Y');
+                    $tglSelesai = Carbon::parse($jadwalInfo->tgl_selesai)->format('d M Y');
+                    return redirect()
+                        ->back()
+                        ->with('errorMessage', "Pengajuan proposal hanya dapat dilakukan pada tanggal $tglMulai sampai $tglSelesai");
+                } else {
+                    return redirect()->route('dashboard')->with('errorMessage', 'Jadwal pengajuan proposal belum ditentukan');
+                }
+            }
+
+            if ($hasProposal) {
+                return redirect()->back()->with('errorMessage', 'Anda sudah memiliki proposal yang aktif di tahun ini');
+            }
+            // End of Cek Jadwal Pengajuan Proposal
+
             $tahunSekarang = date('Y');
             // Cek apakah user sudah terdaftar sebagai anggota di kelompok manapun
             $isAnggotaExist = Kelompok::where('anggota_email', auth()->user()->email)
@@ -257,6 +291,38 @@ class ProposalController extends Controller
      */
     public function create()
     {
+        $userEmail = auth()->user()->email;
+        $jadwalPengajuan = Jadwal::where('keterangan', 'Pengajuan Proposal')->where('tgl_mulai', '<=', now())->where('tgl_selesai', '>=', now())->exists();
+        $hasProposal = Proposal::whereHas('kelompoks', function ($query) use ($userEmail) {
+            $query->where('anggota_email', $userEmail)->whereYear('created_at', now()->year);
+            // $query->where('anggota_email', $userEmail)->where('peran', 'Ketua')->whereYear('created_at', now()->year);
+        })
+            ->where(function ($query) {
+                $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2');
+            })
+            ->exists();
+
+        if (!$jadwalPengajuan) {
+            // Ambil jadwal pengajuan untuk mendapatkan tanggal
+            $jadwalInfo = Jadwal::where('keterangan', 'Pengajuan Proposal')->first();
+
+            if ($jadwalInfo) {
+                $tglMulai = Carbon::parse($jadwalInfo->tgl_mulai)->format('d M Y');
+                $tglSelesai = Carbon::parse($jadwalInfo->tgl_selesai)->format('d M Y');
+                return redirect()
+                    ->back()
+                    ->with('errorMessage', "Pengajuan proposal hanya dapat dilakukan pada tanggal $tglMulai sampai $tglSelesai");
+            } else {
+                return redirect()->route('dashboard')->with('errorMessage', 'Jadwal pengajuan proposal belum ditentukan');
+            }
+        }
+
+        if ($hasProposal) {
+            return redirect()->back()->with('errorMessage', 'Anda sudah memiliki proposal yang aktif di tahun ini');
+        }
+        // End of Cek Jadwal Pengajuan Proposal
+
+        // Cek Apakah User Sudah Terdaftar Sebagai Anggota Di Kelompok Manapun
         $user = auth()->user();
         $tahunSekarang = date('Y');
 

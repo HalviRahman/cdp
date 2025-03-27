@@ -20,7 +20,7 @@ class ProposalCompletedExport implements FromCollection, WithHeadings, WithMappi
     public function collection()
     {
         return Proposal::with(['kelompoks.user', 'ketuaKelompok.user'])
-            ->where('status', 3)
+            ->where('status', 2)
             // ->whereNotNull('laporan_kegiatan')
             // ->whereNotNull('laporan_perjalanan')
             ->whereYear('created_at', $this->tahun)

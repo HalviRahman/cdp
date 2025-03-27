@@ -170,6 +170,18 @@
                         {{ \Carbon\Carbon::parse($jadwal_pengajuan->tgl_selesai)->format('d M Y') }}
                       </div>
                     @endif
+                    {{-- @if (auth()->user()->hasRole('Dosen') && !$can_upload_laporan)
+                      <div class="alert alert-warning">
+                        <i class="fas fa-clock"></i> Periode pengumpulan laporan:
+                        {{ \Carbon\Carbon::parse($jadwal_laporan->tgl_mulai)->format('d M Y') }} -
+                        {{ \Carbon\Carbon::parse($jadwal_laporan->tgl_selesai)->format('d M Y') }}
+                      </div> --}}
+                    @if (auth()->user()->hasRole('Dosen') && $can_upload_laporan && $d->status == 2)
+                      <div class="alert alert-warning">
+                        <i class="fas fa-clock"></i> Anda masih bisa mengedit laporan kegiatan dan laporan perjalanan selama periode pengumpulan laporan
+                        ( {{ \Carbon\Carbon::parse($jadwal_laporan->tgl_mulai)->format('d M Y') }} - {{ \Carbon\Carbon::parse($jadwal_laporan->tgl_selesai)->format('d M Y') }} ).
+                      </div>
+                    @endif
                     <h5>{{ $d->judul_proposal }}</h5>
                     <hr>
                   </div>

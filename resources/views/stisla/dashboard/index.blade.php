@@ -143,7 +143,7 @@
                       @elseif($proposal->status == '2')
                         Disetujui
                       @elseif($proposal->status == '3')
-                        Silahkan Upload Laporan Kegiatan dan Laporan Perjalanan
+                        Disetujui
                       @elseif($proposal->status == '10')
                         Ditolak
                       @endif
@@ -368,6 +368,7 @@
       @endif
       {{-- Box 5 - Ajukan Proposal --}}
       @if ($hasProposal)
+      @elseif (!$jadwalPengajuan)
       @else
         <div class="col-12 col-sm-12 col-lg-6">
           <div class="card author-box card-primary">
@@ -376,7 +377,7 @@
                 <div class="author-box-name text-center">
                   <a href="#" class="text-dark">Ajukan Proposal</a>
                   <div class="author-box-job text-center">
-                    <p>Ajukan proposal CDP baru sebagai ketua atau anggota kelompok</p>
+                    <p>Ajukan proposal CDP baru sebagai ketua kelompok</p>
                   </div>
                   <div class="author-box-job text-center">
                     @if ($hasProposal)
@@ -399,9 +400,10 @@
         $kelompok = \App\Models\Kelompok::where('anggota_email', auth()->user()->email)
             ->where('peran', 'Ketua')
             ->first();
-        $proposal = $kelompok ? \App\Models\Proposal::where('id_kelompok', $kelompok->id_kelompok)->where('status', '3')->first() : null;
+        $proposal = $kelompok ? \App\Models\Proposal::where('id_kelompok', $kelompok->id_kelompok)->where('status', '2')->first() : null;
+        $jadwalUpload = \App\Models\Jadwal::where('keterangan', 'Pengumpulan Laporan')->where('tgl_mulai', '<=', now())->where('tgl_selesai', '>=', now())->first();
       @endphp
-      @if ($proposal)
+      @if ($proposal && $jadwalUpload)
         <div class="col-12 col-sm-12 col-lg-6">
           <div class="card author-box card-success">
             <div class="card-body">
@@ -409,7 +411,7 @@
                 <div class="author-box-name text-center">
                   <a href="#" class="text-dark">Upload Laporan</a>
                   <div class="author-box-job text-center">
-                    <p>Upload laporan kegiatan dan laporan keuangan CDP</p>
+                    <p>Upload laporan kegiatan dan laporan perjalanan CDP</p>
                   </div>
                   <div class="author-box-job text-center">
                     <a href="{{ route('proposals.edit', $proposal->token) }}" class="btn btn-success mt-3">
@@ -591,7 +593,73 @@
     </div>
   @endif
 
+  {{-- <div class="col-12"> --}}
+  <hr>
+  <hr>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Informasi Penting:</h5>
+      <p class="card-text">
+        {{-- <i class="fas fa-info-circle"></i> Anda masih bisa mengubah proposal hingga jadwal pengajuan proposal selesai (deadline). --}}
+        <i class="fas fa-info-circle"></i> Jadwal Kegiatan CDP
+        @php
+          $jadwalAll = \App\Models\Jadwal::orderBy('id', 'asc')
+              ->get()
+              ->groupBy(function ($date) {
+                  return Carbon\Carbon::parse($date->tgl_mulai)->format('Y');
+              });
+        @endphp
 
+        @if ($jadwalAll->count() > 0)
+          @foreach ($jadwalAll as $tahun => $jadwalTahun)
+            <div class="mt-3">
+              <h6>Tahun {{ $tahun }}</h6>
+              <div class="table-responsive">
+                <table class="table table-sm table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Kegiatan</th>
+                      <th>Tanggal Mulai</th>
+                      <th>Tanggal Selesai</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach ($jadwalTahun as $jadwal)
+                      <tr>
+                        <td>{{ $jadwal->keterangan }}</td>
+                        <td>{{ Carbon\Carbon::parse($jadwal->tgl_mulai)->format('d F Y') }}</td>
+                        <td>{{ Carbon\Carbon::parse($jadwal->tgl_selesai)->format('d F Y') }}</td>
+                        <td>
+                          @php
+                            $now = now();
+                            $status = '';
+                            if ($now->between($jadwal->tgl_mulai, $jadwal->tgl_selesai)) {
+                                $status = '<span class="badge badge-success">Sedang Berlangsung</span>';
+                            } elseif ($now->lt($jadwal->tgl_mulai)) {
+                                $status = '<span class="badge badge-info">Akan Datang</span>';
+                            } else {
+                                $status = '<span class="badge badge-secondary">Selesai</span>';
+                            }
+                          @endphp
+                          {!! $status !!}
+                        </td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          @endforeach
+        @else
+          <div class="alert alert-info mt-3">
+            Belum ada jadwal kegiatan yang ditentukan.
+          </div>
+        @endif
+      </p>
+    </div>
+  </div>
+  {{-- </div> --}}
 
 @endsection
 

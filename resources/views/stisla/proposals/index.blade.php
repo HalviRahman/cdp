@@ -139,17 +139,19 @@
               <p>Tanggal Verifikasi: {{ $proposal->tgl_verifikasi }} WIB</p>
             @endif
             @if ($proposal->status == '0')
-              <span class="badge badge-warning">Menunggu Verifikasi</span>
+              <span class="badge badge-warning">Menunggu Verifikasi Koordinator Prodi</span>
             @elseif($proposal->status == '1')
+              <span class="badge badge-warning">Menunggu Verifikasi Prodi</span>
+            @elseif($proposal->status == '2')
               <span class="badge badge-success">Disetujui</span>
             @elseif($proposal->status == '10')
               <span class="badge badge-danger">Ditolak</span>
               <p>Alasan: {{ $proposal->keterangan }}</p>
-            @else
-              <span class="badge badge-warning">Menunggu Verifikasi</span>
+              {{-- @else
+              <span class="badge badge-warning">Menunggu Verifikasi</span> --}}
             @endif
             <div class="float-right">
-              <a href="{{ route('proposals.edit', $proposal->id) }}" class="btn btn-outline-info">Detail</a>
+              <a href="{{ route('proposals.edit', $proposal->token) }}" class="btn btn-outline-info">Detail</a>
             </div>
           </div>
         </div>
