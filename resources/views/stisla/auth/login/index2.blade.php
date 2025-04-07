@@ -1,12 +1,12 @@
 @extends('stisla.layouts.app-auth-simple')
 
 @section('title')
-  {{ $title = __('Masuk') }}
+  {{ $title = __('SIM CDP') }}
 @endsection
 
 @section('content')
   <div class="card-body">
-    <form method="POST" action="{{ route('login-post') }}" class="needs-validation" novalidate="" id="formAuth">
+    {{-- <form method="POST" action="{{ route('login-post') }}" class="needs-validation" novalidate="" id="formAuth">
       @csrf
 
       @include('stisla.includes.forms.inputs.input-email')
@@ -26,9 +26,9 @@
           {{ $title }}
         </button>
       </div>
-    </form>
+    </form> --}}
 
-    <div class="row">
+    {{-- <div class="row">
       @if ($_is_login_must_verified)
         <div class="col-md-6">
           <a href=" {{ route('send-email-verification') }}" class="text-small">
@@ -41,12 +41,14 @@
           <a href="{{ route('register') }}" class="text-small text-primary">Belum punya akun?</a>
         </div>
       @endif
-    </div>
-
+    </div> --}}
+    <h3 class="text-center text-primary">Sistem Informasi Community Development Program</h3>
     @include('stisla.auth.login.includes.btn-social')
 
     <div class="mt-5">
       <!-- Tabel Jadwal -->
+      <h5 class="text-center text-primary">Jadwal Kegiatan</h5>
+      <h5 class="text-center text-primary">Community Development Program Tahun {{ date('Y') }}</h5>
       <div class="schedule">
         {{-- <h3>Jadwal</h3> --}}
         <table class="table table-sm table-bordered table-striped table-hover">

@@ -1,6 +1,6 @@
 @if ($_is_login_with_google || $_is_login_with_facebook || $_is_login_with_twitter || $_is_login_with_github)
   <div class="text-center mt-4 mb-3">
-    <div class="text-job text-muted">Atau Masuk Dengan</div>
+    {{-- <div class="text-job text-muted">Atau Masuk Dengan</div> --}}
   </div>
 
   <div class="row">

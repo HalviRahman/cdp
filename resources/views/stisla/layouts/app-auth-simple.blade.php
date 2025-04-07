@@ -19,7 +19,7 @@
             </div>
 
             <div class="card card-primary">
-              <div class="card-header">
+              <div class="card-header text-center">
                 <h4>{{ $title }}</h4>
               </div>
 
