@@ -11,8 +11,11 @@
     </div>
 
     <div class="sidebar-brand sidebar-brand-sm">
-      <a href="{{ url('') }}">{{ $_app_name_mobile }}</a>
+      <a href="{{ url('') }}">CDP</a>
     </div>
+    {{-- <div class="sidebar-brand sidebar-brand-sm">
+      <a href="{{ url('') }}">{{ $_app_name_mobile }}</a>
+    </div> --}}
 
     <ul class="sidebar-menu">
       @foreach ($_sidebar_menus as $_group)
