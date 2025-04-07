@@ -38,23 +38,31 @@
 
               <div class="row">
 
-
-                <div class="col-md-2">
-                  @include('stisla.includes.forms.selects.select', [
-                      'required' => true,
-                      'type' => 'text',
-                      'id' => 'jenjang',
-                      'name' => 'jenjang',
-                      'label' => __('Jenjang'),
-                      'options' => ['S1' => 'S1', 'S2' => 'S2', 'Kolaborasi' => 'Kolaborasi'],
-                  ])
-                </div>
-                {{-- @if (auth()->user()->hasRole('Sysadmin')) --}}
-                <div class="col-md-10">
-                  @include('stisla.includes.forms.inputs.input', ['required' => true, 'type' => 'text', 'id' => 'nama_prodi', 'name' => 'nama_prodi', 'label' => __('Program Studi')])
-                </div>
-                {{-- @elseif (auth()->user()->hasRole('Fakultas')) --}}
-                {{-- <div class="col-md-10">
+                @if (auth()->user()->hasRole('Fakultas'))
+                  <div class="col-md-2">
+                    @include('stisla.includes.forms.inputs.input', [
+                        'disabled' => true,
+                        'required' => true,
+                        'type' => 'text',
+                        'id' => 'jenjang',
+                        'name' => 'jenjang',
+                        'label' => __('Jenjang'),
+                        'options' => ['S1' => 'S1', 'S2' => 'S2', 'Kolaborasi' => 'Kolaborasi'],
+                    ])
+                  </div>
+                  {{-- @if (auth()->user()->hasRole('Sysadmin')) --}}
+                  <div class="col-md-10">
+                    @include('stisla.includes.forms.inputs.input', [
+                        'disabled' => true,
+                        'required' => true,
+                        'type' => 'text',
+                        'id' => 'nama_prodi',
+                        'name' => 'nama_prodi',
+                        'label' => __('Program Studi'),
+                    ])
+                  </div>
+                  {{-- @elseif (auth()->user()->hasRole('Fakultas')) --}}
+                  {{-- <div class="col-md-10">
                     @include('stisla.includes.forms.selects.select', [
                         'required' => true,
                         'type' => 'text',
@@ -74,19 +82,68 @@
                         ],
                     ])
                   </div> --}}
-                {{-- @endif --}}
+                  {{-- @endif --}}
 
-                <div class="col-md-2">
-                  @include('stisla.includes.forms.selects.select', [
-                      'required' => true,
-                      'type' => 'text',
-                      'id' => 'tahun',
-                      'name' => 'tahun',
-                      'label' => __('Tahun'),
-                      'options' => array_combine(range(date('Y'), date('Y') + 5), range(date('Y'), date('Y') + 5)),
-                  ])
-                </div>
+                  <div class="col-md-2">
+                    @include('stisla.includes.forms.inputs.input', [
+                        'required' => true,
+                        'type' => 'text',
+                        'id' => 'tahun',
+                        'name' => 'tahun',
+                        'label' => __('Tahun'),
+                        'disabled' => true,
+                        'options' => array_combine(range(date('Y'), date('Y') + 5), range(date('Y'), date('Y') + 5)),
+                    ])
+                  </div>
+                @else
+                  <div class="col-md-2">
+                    @include('stisla.includes.forms.selects.select', [
+                        'required' => true,
+                        'type' => 'text',
+                        'id' => 'jenjang',
+                        'name' => 'jenjang',
+                        'label' => __('Jenjang'),
+                        'options' => ['S1' => 'S1', 'S2' => 'S2', 'Kolaborasi' => 'Kolaborasi'],
+                    ])
+                  </div>
+                  {{-- @if (auth()->user()->hasRole('Sysadmin')) --}}
+                  <div class="col-md-10">
+                    @include('stisla.includes.forms.inputs.input', ['required' => true, 'type' => 'text', 'id' => 'nama_prodi', 'name' => 'nama_prodi', 'label' => __('Program Studi')])
+                  </div>
+                  {{-- @elseif (auth()->user()->hasRole('Fakultas')) --}}
+                  {{-- <div class="col-md-10">
+                    @include('stisla.includes.forms.selects.select', [
+                        'required' => true,
+                        'type' => 'text',
+                        'id' => 'nama_prodi',
+                        'name' => 'nama_prodi',
+                        'label' => __('Program Studi'),
+                        'options' => [
+                            'Biologi' => 'Biologi',
+                            'Matematika' => 'Matematika',
+                            'Kimia' => 'Kimia',
+                            'Fisika' => 'Fisika',
+                            'Teknik Informatika' => 'Teknik Informatika',
+                            'Teknik Arsitektur' => 'Teknik Arsitektur',
+                            'Perpustakaan dan Sains Informasi' => 'Perpustakaan dan Sains Informasi',
+                            'Magister Informatika' => 'Magister Informatika',
+                            'Magister Biologi' => 'Magister Biologi',
+                        ],
+                    ])
+                  </div> --}}
+                  {{-- @endif --}}
 
+                  <div class="col-md-2">
+                    @include('stisla.includes.forms.selects.select', [
+                        'required' => true,
+                        'type' => 'text',
+                        'id' => 'tahun',
+                        'name' => 'tahun',
+                        'label' => __('Tahun'),
+                        'options' => array_combine(range(date('Y'), date('Y') + 5), range(date('Y'), date('Y') + 5)),
+                    ])
+                  </div>
+                @endif
                 <div class="col-md-10">
                   @include('stisla.includes.forms.inputs.input', ['required' => true, 'type' => 'number', 'id' => 'kuota', 'name' => 'kuota', 'label' => __('Kuota')])
                 </div>

@@ -80,6 +80,13 @@
           @endif
         @endforeach
       @endforeach
+      <li class="menu-header">Panduan</li>
+      <li>
+        <a class="nav-link" href="https://drive.google.com/file/d/16q1UtC1WAyHJJ-uzhHdYADrZHPXltZDF/view?usp=sharing" target="_blank">
+          <i class="fas fa-book"></i>
+          <span>Panduan SIM-CDP</span>
+        </a>
+      </li>
     </ul>
   </aside>
 </div>

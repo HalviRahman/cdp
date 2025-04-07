@@ -97,9 +97,15 @@
                   @include('stisla.includes.forms.buttons.btn-import-excel')
                 @endif
 
-                @if ($canCreate)
-                  @include('stisla.includes.forms.buttons.btn-add', ['link' => $routeCreate])
+                @if (!auth()->user()->hasRole('Fakultas'))
+                  @if ($canCreate)
+                    @include('stisla.includes.forms.buttons.btn-add', ['link' => $routeCreate])
+                  @endif
                 @endif
+
+                {{-- @if ($canCreate)
+                  @include('stisla.includes.forms.buttons.btn-add', ['link' => $routeCreate])
+                @endif --}}
               </div>
 
             </div>
@@ -129,8 +135,10 @@
                           @if ($canUpdate)
                             @include('stisla.includes.forms.buttons.btn-edit', ['link' => route('program-studis.edit', [$item->id])])
                           @endif
-                          @if ($canDelete)
-                            @include('stisla.includes.forms.buttons.btn-delete', ['link' => route('program-studis.destroy', [$item->id])])
+                          @if (!auth()->user()->hasRole('Fakultas'))
+                            @if ($canDelete)
+                              @include('stisla.includes.forms.buttons.btn-delete', ['link' => route('program-studis.destroy', [$item->id])])
+                            @endif
                           @endif
                         </td>
                       </tr>

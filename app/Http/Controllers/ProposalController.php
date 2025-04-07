@@ -507,6 +507,7 @@ class ProposalController extends Controller
         $proposal = Proposal::where('token', $token)->first();
         $kelompoks = Kelompok::with('user')->get();
         $mahasiswas = User::where('remember_token', $proposal->id_kelompok)->get();
+        $peran = $kelompoks->where('anggota_email', auth()->user()->email)->first()->peran ?? 'Anggota';
         $anggotas = $proposal->kelompoks->map(function ($kelompok) {
             return [
                 // 'nip' => $kelompok->user->nip,
@@ -525,6 +526,7 @@ class ProposalController extends Controller
             'anggota' => $this->UserRepository->getAnggotaOptions(),
             'anggotas' => $anggotas,
             'mahasiswas' => $mahasiswas,
+            'peran' => $peran,
         ]);
     }
 
@@ -586,7 +588,7 @@ class ProposalController extends Controller
             logUpdate('Proposal', $proposal, $newData);
 
             $successMessage = successMessageUpdate('Laporan');
-            return redirect()->back()->with('successMessage', $successMessage);
+            return redirect()->route('dashboard.index')->with('successMessage', $successMessage);
         }
 
         // Edit anggota kelompok

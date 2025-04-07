@@ -6,9 +6,10 @@ use App\Models\Proposal;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use App\Models\User;
 
-class ProposalCompletedExport implements FromCollection, WithHeadings, WithMapping
+class ProposalCompletedExport implements FromCollection, WithMapping, WithCustomCsvSettings
 {
     protected $tahun;
 
@@ -27,10 +28,10 @@ class ProposalCompletedExport implements FromCollection, WithHeadings, WithMappi
             ->get();
     }
 
-    public function headings(): array
-    {
-        return ['NAMA PELAKSANA', 'NIP/NIPPPK/NIM', 'JUDUL', 'PROGRAM STUDI'];
-    }
+    // public function headings(): array
+    // {
+    //     return ['NIP/NIPPPK/NIM', 'NAMA PELAKSANA', 'PROGRAM STUDI', 'JUDUL'];
+    // }
 
     public function map($proposal): array
     {
@@ -45,6 +46,7 @@ class ProposalCompletedExport implements FromCollection, WithHeadings, WithMappi
             $allMembers->push([
                 'name' => $proposal->ketuaKelompok->user->name,
                 'nip' => $proposal->ketuaKelompok->user->nip,
+                // 'prodi' => $proposal->ketuaKelompok->user->prodi,
             ]);
         }
 
@@ -54,6 +56,7 @@ class ProposalCompletedExport implements FromCollection, WithHeadings, WithMappi
                 $allMembers->push([
                     'name' => $anggota->user->name,
                     'nip' => $anggota->user->nip,
+                    // 'prodi' => $anggota->user->prodi,
                 ]);
             }
         });
@@ -75,9 +78,16 @@ class ProposalCompletedExport implements FromCollection, WithHeadings, WithMappi
 
         // Setiap anggota mendapatkan nomor dan judul yang sama
         foreach ($allMembers as $member) {
-            $rows[] = [$member['name'], $member['nip'], $proposal->judul_proposal, $proposal->prodi];
+            $rows[] = [$member['nip'], $member['name'], $proposal->prodi, $proposal->judul_proposal];
         }
 
         return $rows;
+    }
+
+    public function getCsvSettings(): array
+    {
+        return [
+            'delimiter' => ';',
+        ];
     }
 }

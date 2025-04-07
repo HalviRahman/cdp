@@ -162,11 +162,14 @@ class DashboardController extends StislaController
             }
 
             // Ambil data program studi
-            $programStudi = ProgramStudi::where('nama_prodi', explode(' ', $userProdi, 2)[1])->where('jenjang', explode(' ', $userProdi)[0])->where('tahun', $tahunSekarang)->first();
+            $programStudi = ProgramStudi::where('nama_prodi', explode(' ', $userProdi, 2)[1])
+                ->where('jenjang', explode(' ', $userProdi)[0])
+                ->where('tahun', request('tahun', date('Y')))
+                ->first();
 
             // Hitung jumlah proposal yang sudah ada
             $existingProposals = Proposal::where('prodi', $userProdi)
-                ->whereYear('created_at', $tahunSekarang)
+                ->whereYear('created_at', request('tahun', date('Y')))
                 ->where(function ($query) {
                     $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2');
                 })
@@ -174,7 +177,7 @@ class DashboardController extends StislaController
             // dd($existingProposals);
             // dd($programStudi->kuota, );
             // Hitung sisa kuota
-            $sisaKuota = $programStudi->kuota - $existingProposals;
+            $sisaKuota = ($programStudi->kuota ?? 0) - $existingProposals;
         }
 
         return view('stisla.dashboard.index', [

@@ -187,7 +187,7 @@
                   </div>
 
                   {{-- Form edit untuk dosen selama periode pengajuan --}}
-                  @if (auth()->user()->hasRole('Dosen') && $d->status == 0 && $can_edit)
+                  @if (auth()->user()->hasRole('Dosen') && $d->status == 0 && $can_edit && $peran == 'Ketua')
                     <div class="col-md-12">
                       @include('stisla.includes.forms.inputs.input', [
                           'required' => true,
@@ -462,7 +462,7 @@
                           'color' => 'primary',
                           'block' => 'btn-block',
                       ])
-                    @elseif (isset($d) && $d->status == 0 && $can_edit)
+                    @elseif (isset($d) && $d->status == 0 && $can_edit && $peran == 'Ketua')
                       @include('stisla.includes.forms.buttons.btn-save', [
                           'label' => 'Update Proposal',
                           'icon' => 'fas fa-save',
