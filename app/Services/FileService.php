@@ -36,6 +36,8 @@ class FileService
         // vps
         $file->storeAs('public/' . $folderName, $filename);
         return asset('storage/' . $folderName . '/' . $filename);
+        // gunakan ini kalau di hosting
+        // return asset('storage/app/public/' . $folderName . '/' . $filename);
 
         // shared hosting
         $file->move('uploads/' . $folderName, $filename);

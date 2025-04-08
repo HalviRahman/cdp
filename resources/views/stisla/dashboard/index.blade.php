@@ -553,7 +553,7 @@
                 <th>Judul Proposal</th>
                 <th>Proposal CDP</th>
                 <th>Laporan Kegiatan</th>
-                <th>Laporan Keuangan</th>
+                <th>Laporan Perjalanan</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -570,8 +570,8 @@
                   @else
                     <td><span class="badge badge-warning">Menunggu</span></td>
                   @endif
-                  @if ($proposal->laporan_keuangan)
-                    <td><a href="{{ $proposal->laporan_keuangan }}" class="btn btn-outline-info" target="_blank"><i class="fa fa-file-pdf"></i> Unduh</a></td>
+                  @if ($proposal->laporan_perjalanan)
+                    <td><a href="{{ $proposal->laporan_perjalanan }}" class="btn btn-outline-info" target="_blank"><i class="fa fa-file-pdf"></i> Unduh</a></td>
                   @else
                     <td><span class="badge badge-warning">Menunggu</span></td>
                   @endif

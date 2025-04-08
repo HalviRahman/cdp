@@ -80,13 +80,50 @@
           @endif
         @endforeach
       @endforeach
+      @php
+        $user = auth()->user();
+      @endphp
       <li class="menu-header">Panduan</li>
-      <li>
-        <a class="nav-link" href="https://drive.google.com/file/d/16q1UtC1WAyHJJ-uzhHdYADrZHPXltZDF/view?usp=sharing" target="_blank">
-          <i class="fas fa-book"></i>
-          <span>Panduan SIM-CDP</span>
-        </a>
-      </li>
+      @if ($user->hasRole('Dosen'))
+        <li>
+          <a class="nav-link" href="https://cdp-saintek.uin-malang.ac.id/storage/app/public/panduan/PANDUAN SIM CDP - DOSEN KETUA KELOMPOK.pdf" target="_blank">
+            <i class="fas fa-book"></i>
+            <span>Panduan Dosen</span>
+          </a>
+        </li>
+      @endif
+      @if ($user->hasRole('Fakultas'))
+        <li>
+          <a class="nav-link" href="https://cdp-saintek.uin-malang.ac.id/storage/app/public/panduan/PANDUAN SIM CDP - FAKULTAS.pdf" target="_blank">
+            <i class="fas fa-book"></i>
+            <span>Panduan Fakultas</span>
+          </a>
+        </li>
+      @endif
+      @if ($user->hasRole('Keuangan'))
+        <li>
+          <a class="nav-link" href="https://cdp-saintek.uin-malang.ac.id/storage/app/public/panduan/PANDUAN SIM CDP - KEUANGAN.pdf" target="_blank">
+            <i class="fas fa-book"></i>
+            <span>Panduan Keuangan</span>
+          </a>
+        </li>
+      @endif
+      @if ($user->hasRole('Prodi'))
+        <li>
+          <a class="nav-link" href="https://cdp-saintek.uin-malang.ac.id/storage/app/public/panduan/PANDUAN SIM CDP - KAPRODI.pdf" target="_blank">
+            <i class="fas fa-book"></i>
+            <span>Panduan Kaprodi</span>
+          </a>
+        </li>
+      @endif
+      @if ($user->hasRole('Koordinator Prodi'))
+        <li>
+          <a class="nav-link" href="https://cdp-saintek.uin-malang.ac.id/storage/app/public/panduan/PANDUAN SIM CDP - KOORDINATOR CDP PRODI.pdf" target="_blank">
+            <i class="fas fa-book"></i>
+            <span>Panduan Koordinator Prodi</span>
+          </a>
+        </li>
+      @endif
     </ul>
   </aside>
 </div>
