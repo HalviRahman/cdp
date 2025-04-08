@@ -510,7 +510,7 @@ class ProposalController extends Controller
         $peran = $kelompoks->where('anggota_email', auth()->user()->email)->first()->peran ?? 'Anggota';
         $anggotas = $proposal->kelompoks->map(function ($kelompok) {
             return [
-                // 'nip' => $kelompok->user->nip,
+                'nip' => $kelompok->user->nip,
                 'nama' => $kelompok->user->name,
                 'prodi' => $kelompok->user->prodi,
                 'peran' => $kelompok->peran,

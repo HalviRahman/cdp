@@ -41,7 +41,7 @@
                 @if (auth()->user()->hasRole('Fakultas'))
                   <div class="col-md-2">
                     @include('stisla.includes.forms.inputs.input', [
-                        'disabled' => true,
+                        'readonly' => true,
                         'required' => true,
                         'type' => 'text',
                         'id' => 'jenjang',
@@ -53,7 +53,7 @@
                   {{-- @if (auth()->user()->hasRole('Sysadmin')) --}}
                   <div class="col-md-10">
                     @include('stisla.includes.forms.inputs.input', [
-                        'disabled' => true,
+                        'readonly' => true,
                         'required' => true,
                         'type' => 'text',
                         'id' => 'nama_prodi',
@@ -91,7 +91,7 @@
                         'id' => 'tahun',
                         'name' => 'tahun',
                         'label' => __('Tahun'),
-                        'disabled' => true,
+                        'readonly' => true,
                         'options' => array_combine(range(date('Y'), date('Y') + 5), range(date('Y'), date('Y') + 5)),
                     ])
                   </div>

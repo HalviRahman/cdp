@@ -170,6 +170,18 @@
                         {{ \Carbon\Carbon::parse($jadwal_pengajuan->tgl_selesai)->format('d M Y') }}
                       </div>
                     @endif
+                    @if (auth()->user()->hasRole('Dosen') && $can_edit)
+                      <div class="alert alert-warning">
+                        <i class="fas fa-info-circle"></i> <strong>Informasi:</strong>
+                        <p>
+                          Perubahan proposal mewajibkan pengisian ulang data seluruh anggota Dosen ataupun Mahasiswa.
+                        </p>
+                        {{-- <p>
+                          <strong>Catatan:</strong>
+                          Opsional untuk mengisi data Mahasiswa.
+                        </p> --}}
+                      </div>
+                    @endif
                     {{-- @if (auth()->user()->hasRole('Dosen') && !$can_upload_laporan)
                       <div class="alert alert-warning">
                         <i class="fas fa-clock"></i> Periode pengumpulan laporan:
@@ -280,7 +292,7 @@
                         @foreach ($anggotas as $anggota)
                           <tr>
                             {{-- <td>{{ $anggota['nip'] }}</td> --}}
-                            <td>{{ $anggota['nama'] }}</td>
+                            <td>{{ $anggota['nama'] }} ({{ $anggota['nip'] }})</td>
                             <td>{{ implode(', ', $anggota['prodi']) }}</td>
                             <td><span class="badge badge-primary">{{ $anggota['peran'] }}</span></td>
                           </tr>
@@ -288,7 +300,7 @@
                         @foreach ($mahasiswas as $mahasiswa)
                           <tr>
                             {{-- <td>{{ $anggota['nip'] }}</td> --}}
-                            <td>{{ $mahasiswa['nip'] }} - {{ $mahasiswa['name'] }}</td>
+                            <td>{{ $mahasiswa['name'] }} ({{ $mahasiswa['nip'] }})</td>
                             <td><span class="badge badge-info">Mahasiswa</span></td>
                             <td><span class="badge badge-primary">Anggota</span></td>
                           </tr>
@@ -564,6 +576,25 @@
       $(document).on('click', '.btn-remove-mahasiswa', function() {
         if ($('.mahasiswa-row').length > 1) {
           $(this).closest('.mahasiswa-row').remove();
+        }
+      });
+
+      // Konfirmasi saat tombol Setujui diklik
+      $('button[type="submit"]').click(function(e) {
+        if ($(this).text().trim() === 'Setujui') {
+          if (!confirm('Apakah anda yakin menyetujui proposal ini ?')) {
+            e.preventDefault();
+          }
+        }
+        if ($(this).text().trim() === 'Update Proposal') {
+          if (!confirm('Apakah anda yakin akan mengupdate proposal ?')) {
+            e.preventDefault();
+          }
+        }
+        if ($(this).text().trim() === 'Tolak') {
+          if (!confirm('Apakah anda yakin menolak proposal ini ?')) {
+            e.preventDefault();
+          }
         }
       });
     });
