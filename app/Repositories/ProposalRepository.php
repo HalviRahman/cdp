@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Proposal;
+use Illuminate\Support\Facades\Storage;
 
 class ProposalRepository extends Repository
 {
@@ -63,5 +64,33 @@ class ProposalRepository extends Repository
         // $query->orWhere('prodi', $user->kaprodi);
 
         return $query->count();
+    }
+
+    public function findByToken($token)
+    {
+        return $this->model->where('token', $token)->first();
+    }
+
+    public function deleteByToken($token)
+    {
+        $proposal = $this->findByToken($token);
+        if ($proposal) {
+            // Hapus file proposal jika ada
+            if ($proposal->file_proposal) {
+                Storage::delete($proposal->file_proposal);
+            }
+
+            // Hapus file laporan jika ada
+            if ($proposal->laporan_kegiatan) {
+                Storage::delete($proposal->laporan_kegiatan);
+            }
+            if ($proposal->laporan_perjalanan) {
+                Storage::delete($proposal->laporan_perjalanan);
+            }
+
+            // Hapus data dari database
+            return $proposal->delete();
+        }
+        return false;
     }
 }

@@ -143,7 +143,8 @@ class AuthController extends StislaController
                 }
             }
             $this->userRepository->login($user);
-            return Helper::redirectSuccess(route('dashboard.index'), __('Berhasil masuk ke dalam sistem'));
+            // return Helper::redirectSuccess(route('dashboard.index'), __('Berhasil masuk ke dalam sistem'));
+            return redirect()->route('dashboard.index');
         } else {
             $maxWrongLogin = 4;
             $userNew = $this->userRepository->update(['wrong_login' => $user->wrong_login + 1], $user->id);
@@ -426,7 +427,14 @@ class AuthController extends StislaController
                 if ($provider === 'twitter') {
                     $userModel = $this->userRepository->findByTwitterId($user->getId());
                 } else {
-                    $userModel = $this->userRepository->findByEmail($email = $user->getEmail());
+                    $email = $user->getEmail();
+
+                    // Validasi email untuk memastikan menggunakan domain uin-malang.ac.id atau student.uin-malang.ac.id
+                    if (!str_ends_with($email, 'uin-malang.ac.id')) {
+                        return redirect()->route('login')->with('errorMessage', __('Harus menggunakan email UIN Malang'));
+                    }
+
+                    $userModel = $this->userRepository->findByEmail($email);
                 }
 
                 if ($isRegister || ($isRegister && $provider === 'twitter')) {
@@ -453,12 +461,14 @@ class AuthController extends StislaController
                 }
 
                 if ($userModel === null) {
-                    $msg = $provider === 'twitter' ? __('Akun anda belum terdaftar') : __('Akun ' . $email . ' belum terdaftar');
+                    // $msg = $provider === 'twitter' ? __('Akun anda belum terdaftar') : __('Akun ' . $email . ' belum terdaftar');
+                    $msg = $provider === 'twitter' ? __('Akun anda belum terdaftar') : __('Akun anda belum terdaftar. Hubungi Panitia CDP untuk melakukan pendaftaran');
                     return redirect()->route('login')->with('errorMessage', $msg);
                 }
 
                 $this->userRepository->login($userModel);
-                return Helper::redirectSuccess(route('dashboard.index'), $successMsg);
+                // return Helper::redirectSuccess(route('dashboard.index'), $successMsg);
+                return redirect()->route('dashboard.index');
             }
             return redirect()->route('login')->with('errorMessage', __('Akun tidak ditemukan'));
         } catch (Exception $e) {

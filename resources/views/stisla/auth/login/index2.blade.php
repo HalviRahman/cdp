@@ -43,6 +43,8 @@
       @endif
     </div> --}}
     <h3 class="text-center text-primary">Sistem Informasi Community Development Program</h3>
+    <h3 class="text-center text-primary">Fakultas Sains dan Teknologi</h3>
+    <h3 class="text-center text-primary">UIN Maulana Malik Ibrahim Malang</h3>
     @include('stisla.auth.login.includes.btn-social')
 
     <div class="mt-5">

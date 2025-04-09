@@ -153,6 +153,14 @@
                     @endif
                   </div>
                   <div>
+                    @if ($proposal->kelompok->peran == 'Ketua')
+                      @if ($proposal->status == '0' || $proposal->status == '10')
+                        @include('stisla.includes.forms.buttons.btn-delete2', [
+                            'link' => route('proposals.destroy', [$proposal->token]),
+                            'label' => 'Hapus',
+                        ])
+                      @endif
+                    @endif
                     <a href="{{ route('proposals.edit', $proposal->token) }}" class="btn btn-outline-primary btn-sm">
                       <i class="bi bi-eye me-2"></i>Detail
                     </a>
@@ -317,6 +325,14 @@
                     @endif
                   </div>
                   <div>
+                    @if ($proposal->kelompok->peran == 'Ketua')
+                      @if ($proposal->status == '0' || $proposal->status == '10')
+                        @include('stisla.includes.forms.buttons.btn-delete2', [
+                            'link' => route('proposals.destroy', [$proposal->token]),
+                            'label' => 'Hapus',
+                        ])
+                      @endif
+                    @endif
                     <a href="{{ route('proposals.edit', $proposal->token) }}" class="btn btn-outline-primary btn-sm">
                       <i class="bi bi-eye me-2"></i>Detail
                     </a>
@@ -356,6 +372,14 @@
                     @endif
                   </div>
                   <div>
+                    @if ($proposal->kelompok->peran == 'Ketua')
+                      @if ($proposal->status == '0' || $proposal->status == '10')
+                        @include('stisla.includes.forms.buttons.btn-delete2', [
+                            'link' => route('proposals.destroy', [$proposal->token]),
+                            'label' => 'Hapus',
+                        ])
+                      @endif
+                    @endif
                     <a href="{{ route('proposals.edit', $proposal->token) }}" class="btn btn-outline-primary btn-sm">
                       <i class="bi bi-eye me-2"></i>Detail
                     </a>

@@ -180,18 +180,19 @@ class Repository extends RepositoryAbstract
     }
 
     /**
-     * delete data by id
+     * delete data by id or token
      *
-     * @param int $id
-     * @return Model
+     * @param mixed $identifier
+     * @return bool
      */
-    public function delete(int $id)
+    public function delete($identifier)
     {
-        $model = $this->find($id);
+        $model = is_numeric($identifier) ? $this->model->find($identifier) : $this->model->where('token', $identifier)->first();
+
         if ($model) {
             return $model->delete();
         }
-        return 0;
+        return false;
     }
 
     /**

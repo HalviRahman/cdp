@@ -15,7 +15,7 @@ class RegisterRequest extends FormRequest
      */
     public function authorize()
     {
-        return (new SettingRepository)->isActiveRegisterPage();
+        return (new SettingRepository())->isActiveRegisterPage();
     }
 
     /**
@@ -27,23 +27,23 @@ class RegisterRequest extends FormRequest
     {
         if (Route::is('api.register')) {
             return [
-                'name'                  => 'required',
-                'email'                 => 'required|email|unique:users,email',
-                'password'              => 'required|min:4|confirmed',
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|min:4|confirmed',
                 'password_confirmation' => 'required|min:4',
-                'phone_number'          => 'nullable|numeric',
+                'phone_number' => 'nullable|numeric',
             ];
         }
 
         $isGoogleCaptcha = SettingRepository::isGoogleCaptchaRegister();
 
         return [
-            'name'                  => 'required',
-            'email'                 => 'required|email|unique:users,email',
-            'password'              => 'required|min:4|confirmed',
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:4|confirmed',
             'password_confirmation' => 'required|min:4',
-            'g-recaptcha-response'  => $isGoogleCaptcha ? 'required|captcha' : 'nullable',
-            'phone_number'          => 'nullable|numeric',
+            'g-recaptcha-response' => $isGoogleCaptcha ? 'required|captcha' : 'nullable',
+            'phone_number' => 'nullable|numeric',
         ];
     }
 }

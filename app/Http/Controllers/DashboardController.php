@@ -150,7 +150,13 @@ class DashboardController extends StislaController
         $dataProposalDosen = Proposal::whereHas('kelompoks', function ($query) use ($userEmail) {
             $tahun = request('tahun', date('Y'));
             $query->where('anggota_email', $userEmail)->whereYear('tgl_upload', $tahun);
-        })->get();
+        })
+            ->with([
+                'kelompok' => function ($query) use ($userEmail) {
+                    $query->where('anggota_email', $userEmail);
+                },
+            ])
+            ->get();
         // dd($dataProposalDosen);
 
         if (auth()->user()->hasRole('Prodi') || auth()->user()->hasRole('Koordinator Prodi')) {

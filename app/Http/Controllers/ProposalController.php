@@ -665,24 +665,27 @@ class ProposalController extends Controller
      * @param Proposal $proposal
      * @return Response
      */
-    public function destroy(Proposal $proposal)
+    public function destroy($token)
     {
-        // delete file from storage if exists
-        // $this->fileService->methodName($proposal);
+        $proposal = $this->proposalRepository->findByToken($token);
 
-        // use this if you want to create notification data
-        // $title = 'Notify Title';
-        // $content = 'lorem ipsum dolor sit amet';
-        // $userId = 2;
-        // $notificationType = 'transaksi masuk';
-        // $icon = 'bell'; // font awesome
-        // $bgColor = 'primary'; // primary, danger, success, warning
-        // $this->NotificationRepository->createNotif($title,  $content, $userId,  $notificationType, $icon, $bgColor);
+        if (!$proposal) {
+            return redirect()->back()->with('errorMessage', 'Proposal tidak ditemukan');
+        }
 
-        // gunakan jika mau kirim email
-        // $this->emailService->methodName($proposal);
+        // Hapus file-file terkait
+        if ($proposal->file_proposal) {
+            Storage::delete($proposal->file_proposal);
+        }
+        if ($proposal->laporan_kegiatan) {
+            Storage::delete($proposal->laporan_kegiatan);
+        }
+        if ($proposal->laporan_perjalanan) {
+            Storage::delete($proposal->laporan_perjalanan);
+        }
 
-        $this->proposalRepository->delete($proposal->token);
+        // Hapus data proposal
+        $this->proposalRepository->delete($token);
         logDelete('Proposal', $proposal);
 
         $successMessage = successMessageDelete('Proposal');
@@ -797,5 +800,47 @@ class ProposalController extends Controller
     {
         $tahun = $request->get('tahun', date('Y'));
         return Excel::download(new ProposalCompletedExport($tahun), 'proposal-completed-' . $tahun . '.csv');
+    }
+
+    public function deleteByToken($token)
+    {
+        try {
+            $proposal = $this->proposalRepository->findByToken($token);
+            if (!$proposal) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'Proposal tidak ditemukan',
+                    ],
+                    404,
+                );
+            }
+
+            // Cek apakah user yang login memiliki akses untuk menghapus proposal ini
+            if (auth()->user()->id !== $proposal->user_id && !auth()->user()->hasRole('admin')) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'Anda tidak memiliki akses untuk menghapus proposal ini',
+                    ],
+                    403,
+                );
+            }
+
+            $this->proposalRepository->deleteByToken($token);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Proposal berhasil dihapus',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Terjadi kesalahan saat menghapus proposal',
+                ],
+                500,
+            );
+        }
     }
 }

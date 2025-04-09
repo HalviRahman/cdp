@@ -27,16 +27,16 @@ class LoginRequest extends FormRequest
     {
         if (Route::is('api.login')) {
             return [
-                'email'    => 'required|exists:users,email',
+                'email' => 'required|exists:users,email',
                 'password' => 'required|min:4',
             ];
         }
 
         $isGoogleCaptcha = SettingRepository::isGoogleCaptchaLogin();
         return [
-            'email'                => 'required|exists:users,email',
-            'password'             => 'required|min:4',
-            'g-recaptcha-response' => $isGoogleCaptcha ? 'required|captcha' : 'nullable'
+            'email' => 'required|exists:users,email',
+            'password' => 'required|min:4',
+            'g-recaptcha-response' => $isGoogleCaptcha ? 'required|captcha' : 'nullable',
         ];
     }
 }

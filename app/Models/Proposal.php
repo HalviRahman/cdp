@@ -60,6 +60,10 @@ class Proposal extends Model
     {
         return $this->hasMany(Kelompok::class, 'id_kelompok', 'id_kelompok');
     }
+    public function kelompok()
+    {
+        return $this->hasOne(Kelompok::class, 'id_kelompok', 'id_kelompok');
+    }
 
     public function programStudi()
     {
