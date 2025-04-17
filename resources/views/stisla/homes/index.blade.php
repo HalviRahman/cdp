@@ -20,11 +20,11 @@
                 <a class="btn btn-primary" href="{{ route('dashboard.index') }}">Kembali ke {{ __('Dashboard') }}</a>
               @else
                 <a class="btn btn-primary" href="{{ route('login') }}">Masuk</a>
-                @if ($_is_active_register_page)
+                {{-- @if ($_is_active_register_page)
                   &nbsp;
                   atau
                   <a class="btn btn-success" href="{{ route('register') }}">Daftar</a>
-                @endif
+                @endif --}}
               @endif
             </div>
           </div>

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\Jadwal;
+use App\Repositories\UserRepository;
 
 class AuthController extends StislaController
 {
@@ -59,8 +60,9 @@ class AuthController extends StislaController
         // return view('stisla.auth.login.index');
         $isGoogleCaptcha = $this->settingRepository->isGoogleCaptchaRegister();
         if (TEMPLATE === STISLA) {
-            return view('stisla.auth.register.index', [
+            return view('stisla.auth.register.index2', [
                 'isGoogleCaptcha' => $isGoogleCaptcha,
+                'prodiOptions' => $this->userRepository->getProdiOptions(),
             ]);
         }
     }
@@ -75,7 +77,7 @@ class AuthController extends StislaController
     {
         try {
             DB::beginTransaction();
-            $data = $request->only(['name', 'email', 'phone_number', 'birth_date', 'address']);
+            $data = $request->only(['name', 'nip', 'prodi','email', 'phone_number', 'birth_date', 'address']);
             $data = array_merge(
                 [
                     'password' => bcrypt($request->password),
@@ -83,7 +85,7 @@ class AuthController extends StislaController
                 $data,
             );
             $user = $this->userRepository->create($data);
-            $this->userRepository->assignRole($user, 'user');
+            $this->userRepository->assignRole($user, 'Dosen');
             if ($this->settingRepository->loginMustVerified()) {
                 $user->update(['email_token' => Str::random(150)]);
                 $this->emailService->verifyAccount($user);

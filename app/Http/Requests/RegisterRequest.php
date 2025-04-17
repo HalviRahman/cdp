@@ -39,9 +39,11 @@ class RegisterRequest extends FormRequest
 
         return [
             'name' => 'required',
+            'nip' => 'required',
+            'prodi' => 'required',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:4|confirmed',
-            'password_confirmation' => 'required|min:4',
+            // 'password' => 'required|min:4|confirmed',
+            // 'password_confirmation' => 'required|min:4',
             'g-recaptcha-response' => $isGoogleCaptcha ? 'required|captcha' : 'nullable',
             'phone_number' => 'nullable|numeric',
         ];

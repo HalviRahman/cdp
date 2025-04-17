@@ -6,7 +6,7 @@
 
 @section('content')
   <div class="card-body">
-    {{-- <form method="POST" action="{{ route('login-post') }}" class="needs-validation" novalidate="" id="formAuth">
+    <form method="POST" action="{{ route('login-post') }}" class="needs-validation" novalidate="" id="formAuth">
       @csrf
 
       @include('stisla.includes.forms.inputs.input-email')
@@ -26,7 +26,7 @@
           {{ $title }}
         </button>
       </div>
-    </form> --}}
+    </form>
 
     {{-- <div class="row">
       @if ($_is_login_must_verified)
