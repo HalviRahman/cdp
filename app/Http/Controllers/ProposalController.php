@@ -843,4 +843,66 @@ class ProposalController extends Controller
             );
         }
     }
+
+    public function rekap_proposal(Request $request) {
+        $user = auth()->user();
+        // Hitung total proposal masuk
+        $proposalMasuk = Proposal::whereYear('created_at', request('tahun', date('Y')))
+        ->where(function ($query) {
+            $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2')->orWhere('status', '3');
+        })
+        ->count();
+
+        // Hitung total kuota dari semua prodi
+        $totalKuota = ProgramStudi::where('tahun', request('tahun', date('Y')))->sum('kuota');
+        $tahun = $request->tahun ?? date('Y');
+
+        // Jika parameter view=table, tampilkan tabel
+        if ($request->view == 'table') {
+            $data = Proposal::with(['ketuaKelompok.user'])
+                ->where('prodi', $request->prodi)
+                ->whereYear('created_at', $tahun)
+                ->get();
+
+            return view('stisla.proposals.table', [
+                'title' => __('Proposal'),
+                'data' => $data,
+                'prodi' => $request->prodi,
+            ]);
+        }
+        $tahun = $request->tahun ?? date('Y');
+        // Jika tidak ada parameter view, tampilkan dashboard seperti biasa
+        $programStudi = ProgramStudi::where('tahun', $tahun)
+            ->select('program_studis.*')
+            ->selectRaw(
+                '(SELECT COUNT(*) FROM proposals
+                        WHERE proposals.prodi = CONCAT(program_studis.jenjang, " ", program_studis.nama_prodi)
+                        AND YEAR(proposals.tgl_upload) = ?) as proposals_count',
+                [$tahun],
+            )
+        ->get();
+
+        return view('stisla.proposals.index', [
+            'data' => $this->proposalRepository->getFilterProdi(),
+            'programStudi' => $programStudi,
+            'totalKuota' => $totalKuota,
+            // 'proposalMasuk' => $proposalMasuk,
+            'proposalMasuk' => $this->proposalRepository->getFilterProdiCount(),
+            // 'data' => $this->proposalRepository->getLatest(),
+            'canCreate' => $user->can('Proposal Tambah'),
+            'canUpdate' => $user->can('Proposal Ubah'),
+            'canDelete' => $user->can('Proposal Hapus'),
+            'canImportExcel' => $user->can('Order Impor Excel') && $this->importable,
+            'canExport' => $user->can('Order Ekspor') && $this->exportable,
+            'title' => __('Proposal'),
+            'routeCreate' => route('proposals.create'),
+            'routePdf' => route('proposals.pdf'),
+            'routePrint' => route('proposals.print'),
+            'routeExcel' => route('proposals.excel'),
+            'routeCsv' => route('proposals.csv'),
+            'routeJson' => route('proposals.json'),
+            'routeImportExcel' => route('proposals.import-excel'),
+            'excelExampleLink' => route('proposals.import-excel-example'),
+        ]);
+    }
 }

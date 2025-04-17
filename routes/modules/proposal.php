@@ -28,4 +28,5 @@ Route::middleware(['web', ViewShare::class, 'auth'])->group(function () {
         'proposals' => 'token',
     ]);
     Route::get('proposal/export-completed', [WebController::class, 'exportCompleted'])->name('proposal.export-completed');
+    Route::get('proposal/rekap-pendaftaran', [WebController::class, 'rekap_proposal'])->name('proposal.rekap-pendaftaran');
 });

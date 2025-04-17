@@ -87,7 +87,7 @@
     </div>
     <div class="row">
       @foreach ($programStudi as $prodi)
-        <a href="{{ route('proposals.index', [
+        <a href="{{ route('proposal.rekap-pendaftaran', [
             'prodi' => $prodi->jenjang . ' ' . $prodi->nama_prodi,
             'tahun' => request('tahun', date('Y')),
             'view' => 'table',
