@@ -111,6 +111,43 @@ class ProposalController extends Controller
         if ($user->hasRole('Keuangan')) {
             return redirect()->route('dashboard.index');
         }
+        if ($user->hasRole('Fakultas') && $user->hasRole('Dosen') && $user->hasRole('Keuangan')) {
+            // Hitung total proposal masuk
+            $proposalMasuk = Proposal::whereYear('created_at', request('tahun', date('Y')))
+                ->where(function ($query) {
+                    $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2')->orWhere('status', '3');
+                })
+                ->count();
+
+            // Hitung total kuota dari semua prodi
+            $totalKuota = ProgramStudi::where('tahun', request('tahun', date('Y')))->sum('kuota');
+            $tahun = $request->tahun ?? date('Y');
+
+            // Jika parameter view=table, tampilkan tabel
+            if ($request->view == 'table') {
+                $data = Proposal::with(['ketuaKelompok.user'])
+                    ->where('prodi', $request->prodi)
+                    ->whereYear('created_at', $tahun)
+                    ->get();
+
+                return view('stisla.proposals.table', [
+                    'title' => __('Proposal'),
+                    'data' => $data,
+                    'prodi' => $request->prodi,
+                ]);
+            }
+            $tahun = $request->tahun ?? date('Y');
+            // Jika tidak ada parameter view, tampilkan dashboard seperti biasa
+            $programStudi = ProgramStudi::where('tahun', $tahun)
+                ->select('program_studis.*')
+                ->selectRaw(
+                    '(SELECT COUNT(*) FROM proposals
+                            WHERE proposals.prodi = CONCAT(program_studis.jenjang, " ", program_studis.nama_prodi)
+                            AND YEAR(proposals.tgl_upload) = ?) as proposals_count',
+                    [$tahun],
+                )
+                ->get();
+        }
         if ($user->hasRole('Fakultas') || $user->hasRole('Prodi')) {
             // Hitung total proposal masuk
             $proposalMasuk = Proposal::whereYear('created_at', request('tahun', date('Y')))
@@ -411,6 +448,7 @@ class ProposalController extends Controller
     public function store(ProposalRequest $request)
     {
         $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi', 'anggota_email', 'remember_token']);
+        $data['judul_proposal'] = strtoupper($data['judul_proposal']);
 
         // gunakan jika ada file
         if ($request->hasFile('file_proposal')) {
@@ -469,7 +507,7 @@ class ProposalController extends Controller
                 if (!empty($nim) && !empty($request->nama_mahasiswa[$key])) {
                     User::create([
                         'nip' => $nim,
-                        'name' => $request->nama_mahasiswa[$key],
+                        'name' => strtoupper($request->nama_mahasiswa[$key]),
                         'remember_token' => $idKelompok, // atau ID yang relevan
                         'is_mahasiswa' => 1,
                         'created_at' => now(),
@@ -541,6 +579,7 @@ class ProposalController extends Controller
     {
         $proposal = Proposal::where('token', $token)->first();
         $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi']);
+        $data['judul_proposal'] = strtoupper($data['judul_proposal']);
 
         // Jika sedang periode pengumpulan laporan dan status = 2 (sudah disetujui)
         if (($request->hasFile('laporan_kegiatan') || $request->hasFile('laporan_perjalanan')) && $proposal->status == 2) {
@@ -616,7 +655,7 @@ class ProposalController extends Controller
                 if (!empty($nim) && !empty($request->nama_mahasiswa[$key])) {
                     User::create([
                         'nip' => $nim,
-                        'name' => $request->nama_mahasiswa[$key],
+                        'name' => strtoupper($request->nama_mahasiswa[$key]),
                         'remember_token' => $proposal->id_kelompok,
                         'is_mahasiswa' => 1,
                         'created_at' => now(),
@@ -844,14 +883,15 @@ class ProposalController extends Controller
         }
     }
 
-    public function rekap_proposal(Request $request) {
+    public function rekap_proposal(Request $request)
+    {
         $user = auth()->user();
         // Hitung total proposal masuk
         $proposalMasuk = Proposal::whereYear('created_at', request('tahun', date('Y')))
-        ->where(function ($query) {
-            $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2')->orWhere('status', '3');
-        })
-        ->count();
+            ->where(function ($query) {
+                $query->where('status', '0')->orWhere('status', '1')->orWhere('status', '2')->orWhere('status', '3');
+            })
+            ->count();
 
         // Hitung total kuota dari semua prodi
         $totalKuota = ProgramStudi::where('tahun', request('tahun', date('Y')))->sum('kuota');
@@ -880,7 +920,7 @@ class ProposalController extends Controller
                         AND YEAR(proposals.tgl_upload) = ?) as proposals_count',
                 [$tahun],
             )
-        ->get();
+            ->get();
 
         return view('stisla.proposals.index', [
             'data' => $this->proposalRepository->getFilterProdi(),
