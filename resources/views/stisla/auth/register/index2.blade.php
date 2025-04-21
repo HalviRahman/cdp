@@ -24,6 +24,7 @@
           'multiple' => true,
           'label' => 'Program Studi',
           'options' => $prodiOptions,
+          'hint' => 'Dapat memilih lebih dari 1 apabila dosen mengampu di beberapa program studi',
       ])
 
       @include('stisla.includes.forms.inputs.input-email', ['hint' => 'Gunakan email UIN Malang (uin-malang.ac.id)'])

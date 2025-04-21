@@ -41,7 +41,7 @@ class RegisterRequest extends FormRequest
             'name' => 'required',
             'nip' => 'required',
             'prodi' => 'required',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:users,email|ends_with:uin-malang.ac.id',
             // 'password' => 'required|min:4|confirmed',
             // 'password_confirmation' => 'required|min:4',
             'g-recaptcha-response' => $isGoogleCaptcha ? 'required|captcha' : 'nullable',
