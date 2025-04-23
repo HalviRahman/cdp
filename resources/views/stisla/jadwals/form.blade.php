@@ -37,11 +37,25 @@
 
               <div class="row">
                 <div class="col-md-6">
-                  @include('stisla.includes.forms.inputs.input', ['required' => true, 'type' => 'date', 'id' => 'tgl_mulai', 'name' => 'tgl_mulai', 'label' => __('Tanggal Mulai')])
+                  @include('stisla.includes.forms.inputs.input', [
+                      'required' => true,
+                      // 'type' => 'date',
+                      'type' => 'datetime-local',
+                      'id' => 'tgl_mulai',
+                      'name' => 'tgl_mulai',
+                      'label' => __('Tanggal Mulai'),
+                  ])
                 </div>
 
                 <div class="col-md-6">
-                  @include('stisla.includes.forms.inputs.input', ['required' => true, 'type' => 'date', 'id' => 'tgl_selesai', 'name' => 'tgl_selesai', 'label' => __('Tanggal Selesai')])
+                  @include('stisla.includes.forms.inputs.input', [
+                      'required' => true,
+                      // 'type' => 'date',
+                      'type' => 'datetime-local',
+                      'id' => 'tgl_selesai',
+                      'name' => 'tgl_selesai',
+                      'label' => __('Tanggal Selesai'),
+                  ])
                 </div>
 
                 <div class="col-md-12">

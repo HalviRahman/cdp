@@ -16,6 +16,7 @@ use Illuminate\Http\Response;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 
 class JadwalController extends Controller
 {
@@ -144,6 +145,8 @@ class JadwalController extends Controller
 			'tgl_selesai',
 			'keterangan',
         ]);
+        // Pastikan tgl_selesai diatur ke akhir hari
+        $data['tgl_selesai'] = Carbon::parse($data['tgl_selesai'])->endOfDay();
 
         // gunakan jika ada file
         // if ($request->hasFile('file')) {
@@ -201,7 +204,8 @@ class JadwalController extends Controller
 			'tgl_selesai',
 			'keterangan',
         ]);
-
+        // Pastikan tgl_selesai diatur ke akhir hari
+        $data['tgl_selesai'] = Carbon::parse($data['tgl_selesai'])->endOfDay();
         // gunakan jika ada file
         // if ($request->hasFile('file')) {
         //     $data['file'] = $this->fileService->methodName($request->file('file'));

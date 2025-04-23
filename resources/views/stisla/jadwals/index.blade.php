@@ -122,8 +122,8 @@
                     @foreach ($data as $item)
                       <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ \Carbon\Carbon::parse($item->tgl_mulai)->translatedFormat('d F Y') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($item->tgl_selesai)->translatedFormat('d F Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->tgl_mulai)->translatedFormat('d F Y, H:i:s') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->tgl_selesai)->translatedFormat('d F Y, H:i:s') }}</td>
                         <td>{{ $item->keterangan }}</td>
                         <td>
                           @if ($canUpdate)
