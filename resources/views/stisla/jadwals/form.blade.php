@@ -39,8 +39,8 @@
                 <div class="col-md-6">
                   @include('stisla.includes.forms.inputs.input', [
                       'required' => true,
-                      // 'type' => 'date',
-                      'type' => 'datetime-local',
+                      'type' => 'date',
+                      // 'type' => 'datetime-local',
                       'id' => 'tgl_mulai',
                       'name' => 'tgl_mulai',
                       'label' => __('Tanggal Mulai'),
@@ -50,8 +50,8 @@
                 <div class="col-md-6">
                   @include('stisla.includes.forms.inputs.input', [
                       'required' => true,
-                      // 'type' => 'date',
-                      'type' => 'datetime-local',
+                      'type' => 'date',
+                      // 'type' => 'datetime-local',
                       'id' => 'tgl_selesai',
                       'name' => 'tgl_selesai',
                       'label' => __('Tanggal Selesai'),

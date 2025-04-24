@@ -124,7 +124,7 @@
                         <div class="col-md-6">
                           <div class="form-group">
                             <label>{{ __('NIM Mahasiswa') }}</label>
-                            <input type="text" class="form-control" name="nim_mahasiswa[]" placeholder="{{ __('Masukkan NIM') }}">
+                            <input type="number" class="form-control" name="nim_mahasiswa[]" placeholder="{{ __('Masukkan NIM') }}">
                           </div>
                         </div>
                         <div class="col-md-6">
@@ -164,13 +164,14 @@
                 @if (isset($d))
                   <div class="col-md-12 mb-3">
                     @if (auth()->user()->hasRole('Dosen') && !$can_edit)
+                      {{-- @if (auth()->user()->hasRole('Dosen') && $d->status == 0) --}}
                       <div class="alert alert-warning">
                         <i class="fas fa-clock"></i> Periode pengajuan/edit proposal:
                         {{ \Carbon\Carbon::parse($jadwal_pengajuan->tgl_mulai)->format('d M Y') }} -
                         {{ \Carbon\Carbon::parse($jadwal_pengajuan->tgl_selesai)->format('d M Y') }}
                       </div>
                     @endif
-                    @if (auth()->user()->hasRole('Dosen') && $can_edit)
+                    @if (auth()->user()->hasRole('Dosen') && $can_edit && $d->status == 0)
                       <div class="alert alert-warning">
                         <i class="fas fa-info-circle"></i> <strong>Informasi:</strong>
                         <p>
@@ -242,7 +243,7 @@
                           <div class="col-md-6">
                             <div class="form-group">
                               <label>{{ __('NIM Mahasiswa') }}</label>
-                              <input type="text" class="form-control" name="nim_mahasiswa[]" placeholder="{{ __('Masukkan NIM') }}">
+                              <input type="number" class="form-control" name="nim_mahasiswa[]" placeholder="{{ __('Masukkan NIM') }}">
                             </div>
                           </div>
                           <div class="col-md-6">

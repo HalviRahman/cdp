@@ -579,7 +579,10 @@ class ProposalController extends Controller
     {
         $proposal = Proposal::where('token', $token)->first();
         $data = $request->only(['id_kelompok', 'judul_proposal', 'file_proposal', 'tgl_upload', 'status', 'verifikator', 'keterangan', 'tgl_verifikasi']);
-        $data['judul_proposal'] = strtoupper($data['judul_proposal']);
+        
+        if (isset($data['judul_proposal'])) {
+            $data['judul_proposal'] = strtoupper($data['judul_proposal']);
+        }
 
         // Jika sedang periode pengumpulan laporan dan status = 2 (sudah disetujui)
         if (($request->hasFile('laporan_kegiatan') || $request->hasFile('laporan_perjalanan')) && $proposal->status == 2) {
