@@ -281,7 +281,7 @@ class ProposalController extends Controller
             if (empty($availableProdi)) {
                 return redirect()
                     ->route('dashboard.index')
-                    ->with('errorMessage', 'Tidak ada prodi yang memiliki kuota tersedia untuk tahun ' . $tahunSekarang);
+                    ->with('errorMessage', 'Kuota prodi sudah terpenuhi, silahkan hubungi Koordinator CDP Program Studi');
             }
 
             return view('stisla.proposals.form', [
